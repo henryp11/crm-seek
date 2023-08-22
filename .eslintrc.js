@@ -14,6 +14,6 @@ module.exports = {
     "next/core-web-vitals",
   ],
   rules: {
-    semi: ["1", "always"],
+    semi: ["warn", "always"],
   },
 };
