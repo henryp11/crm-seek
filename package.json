@@ -10,9 +10,17 @@
   },
   "dependencies": {
     "eslint": "8.47.0",
-    "eslint-config-next": "13.4.16",
+    "eslint-config-next": "^13.4.16",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "firebase": "^10.1.0",
     "next": "13.4.16",
+    "prettier": "^3.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "mini-css-extract-plugin": "^2.7.6"
   }
 }
