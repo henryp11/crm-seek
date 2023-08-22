@@ -2,7 +2,7 @@
 // sitio es decir la aplicaicón como tal ya que las rutas en next se manejan por archivos
 
 import Head from "next/head";
-import ModulesMain from "../containers/modulesMain";
+import ModulesMain from "../containers/ModulesMain";
 
 export default function Home() {
   return (
