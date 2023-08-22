@@ -1,5 +1,5 @@
 import React from "react";
-import ModuleCard from "../components/moduleCard";
+import ModuleCard from "../components/ModuleCard";
 import styles from "../styles/modulGeneral.module.css";
 const ModulesMain = () => {
   return (
