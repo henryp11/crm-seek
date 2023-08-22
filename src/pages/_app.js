@@ -3,7 +3,6 @@
 //También colocaré los componentes a repetir como si fuese el layout en React
 import Head from "next/head";
 import Header from "../containers/Header";
-import Script from "next/script";
 import Appcontext from "../context/AppContext";
 //import Header from "components/Header";
 import useInitialState from "../hooks/useInitialState";

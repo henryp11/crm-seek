@@ -5,9 +5,7 @@ import HeadersColumns from "../components/HeadersColumns.js";
 //import MenuLateral from "../components/MenuLateral";
 import SectionSearch from "../containers/SectionSearch";
 import Appcontext from "../context/AppContext";
-import { db } from "../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
-import { collection, getDocs } from "firebase/firestore"; //Conectarse a colecciones y traer los datos
-import styles from "../styles/products.module.css";
+//import styles from "../styles/products.module.css";
 
 function useSearchItem(itemData) {
   const [query, setQuery] = useState("");
@@ -44,15 +42,13 @@ const moduleHeaders = {
 
 const Products = () => {
   // Funciones y objetos desde contexto inicial
-  const { getProducts, itemsList } = useContext(Appcontext);
+  const { getProducts, itemsList, loadData } = useContext(Appcontext);
 
-  const [loadData, setLoadData] = useState({
-    loading: false,
-    error: null,
-  });
   const [openItem, setOpenItem] = useState(false);
-  const [itemCapture, setItemCapture] = useState("");
-  const [dataItemCap, setDataItemCap] = useState({});
+  // const [itemCapture, setItemCapture] = useState("");
+  // const [dataItemCap, setDataItemCap] = useState({});
+  const [setItemCapture] = useState("");
+  const [setDataItemCap] = useState({});
   // const [productos, setProductos] = useState([]);
   const { query, setQuery, filteredItems } = useSearchItem(itemsList); //USANDO CUSTOM HOOK
 

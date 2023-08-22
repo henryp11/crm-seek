@@ -115,10 +115,7 @@ const useInitialState = () => {
   const showAlert = () => {
     setState({ ...state, showAlert: !state.showAlert });
   };
-  //Función para mostrar el componente que contendrá el listado de items al facturar
-  const showModalPago = () => {
-    setState({ ...state, showModalPago: !state.showModalPago });
-  };
+
   //Función para mostrar el componente que contendrá el listado de items al facturar
   const showFormClient = () => {
     setState({ ...state, showFormClient: !state.showFormClient });
@@ -186,85 +183,85 @@ const useInitialState = () => {
     });
   };
 
-  const calculaTotales = async () => {
-    const listaDetItems = await state.itemsCotiza;
-    if (listaDetItems.length > 0) {
-      //Las siguientes líneas son para obtener los valores totales de cada columna
-      const addTotalesItems = state.itemsCotiza.map((item) => {
-        return {
-          ...item,
-          precioTot: item.cantFact * item.precios[0].precio,
-          valDcto: +calcDcto(
-            item.cantFact * item.precios[0].precio,
-            item.precios[0].dcto
-          ).toFixed(2),
-          subTotal: +calcSubTotal(
-            item.cantFact * item.precios[0].precio,
-            item.precios[0].dcto
-          ).toFixed(2),
-          valIva: +calcIVA(
-            item.cantFact * item.precios[0].precio,
-            item.precios[0].dcto,
-            item.precios[0].iva
-          ).toFixed(2),
-          totalFinal: +calcTotFinal(
-            item.cantFact * item.precios[0].precio,
-            item.precios[0].dcto,
-            item.precios[0].iva
-          ).toFixed(2),
-        };
-      });
+  // const calculaTotales = async () => {
+  //   const listaDetItems = await state.itemsCotiza;
+  //   if (listaDetItems.length > 0) {
+  //     //Las siguientes líneas son para obtener los valores totales de cada columna
+  //     const addTotalesItems = state.itemsCotiza.map((item) => {
+  //       return {
+  //         ...item,
+  //         precioTot: item.cantFact * item.precios[0].precio,
+  //         valDcto: +calcDcto(
+  //           item.cantFact * item.precios[0].precio,
+  //           item.precios[0].dcto
+  //         ).toFixed(2),
+  //         subTotal: +calcSubTotal(
+  //           item.cantFact * item.precios[0].precio,
+  //           item.precios[0].dcto
+  //         ).toFixed(2),
+  //         valIva: +calcIVA(
+  //           item.cantFact * item.precios[0].precio,
+  //           item.precios[0].dcto,
+  //           item.precios[0].iva
+  //         ).toFixed(2),
+  //         totalFinal: +calcTotFinal(
+  //           item.cantFact * item.precios[0].precio,
+  //           item.precios[0].dcto,
+  //           item.precios[0].iva
+  //         ).toFixed(2),
+  //       };
+  //     });
 
-      console.log(addTotalesItems);
-      //Con el nuevo Array con los totales de cada item se procede a calcular la
-      //Sumatoria total de la factura, almacenando en el objeto de totales del estado del contexto
+  //     console.log(addTotalesItems);
+  //     //Con el nuevo Array con los totales de cada item se procede a calcular la
+  //     //Sumatoria total de la factura, almacenando en el objeto de totales del estado del contexto
 
-      const tieneDescuento = (item) => item.valDcto > 0; //Predicado para verificar que items tienen descuento
-      const obtenerSoloDcto = (item) => item.valDcto; //Obtengo solo el valor de Descuento de cada objeto
-      const acumulador = (acumulador, valores) => acumulador + valores; //predicado de acumulación a usar en cada caso
-      const itemsConDcto = addTotalesItems
-        .filter(tieneDescuento)
-        .map(obtenerSoloDcto)
-        .reduce(acumulador, 0)
-        .toFixed(2);
+  //     const tieneDescuento = (item) => item.valDcto > 0; //Predicado para verificar que items tienen descuento
+  //     const obtenerSoloDcto = (item) => item.valDcto; //Obtengo solo el valor de Descuento de cada objeto
+  //     const acumulador = (acumulador, valores) => acumulador + valores; //predicado de acumulación a usar en cada caso
+  //     const itemsConDcto = addTotalesItems
+  //       .filter(tieneDescuento)
+  //       .map(obtenerSoloDcto)
+  //       .reduce(acumulador, 0)
+  //       .toFixed(2);
 
-      // Declaro predicados para combinación de map, filter y reduce para IVA
-      const tieneIva = (item) => item.valIva > 0; //Predicado para verificar que items tienen IVA
-      const sinIva = (item) => !tieneIva(item); //Niego la función anterior para obtener items sin IVA
-      const obtenerSoloIva = (item) => item.valIva; //Obtengo solo el valor de IVA de cada objeto
-      const itemsConIva = addTotalesItems
-        .filter(tieneIva)
-        .map(obtenerSoloIva)
-        .reduce(acumulador, 0)
-        .toFixed(2);
+  //     // Declaro predicados para combinación de map, filter y reduce para IVA
+  //     const tieneIva = (item) => item.valIva > 0; //Predicado para verificar que items tienen IVA
+  //     const sinIva = (item) => !tieneIva(item); //Niego la función anterior para obtener items sin IVA
+  //     const obtenerSoloIva = (item) => item.valIva; //Obtengo solo el valor de IVA de cada objeto
+  //     const itemsConIva = addTotalesItems
+  //       .filter(tieneIva)
+  //       .map(obtenerSoloIva)
+  //       .reduce(acumulador, 0)
+  //       .toFixed(2);
 
-      // Con lo obtenido anteriormente puedo extraer el subtotal de los items con IVA
-      const obtenerSubTotal = (item) => item.precioTot;
-      const subtotConIva = addTotalesItems
-        .filter(tieneIva)
-        .map(obtenerSubTotal)
-        .reduce(acumulador, 0)
-        .toFixed(2);
+  //     // Con lo obtenido anteriormente puedo extraer el subtotal de los items con IVA
+  //     const obtenerSubTotal = (item) => item.precioTot;
+  //     const subtotConIva = addTotalesItems
+  //       .filter(tieneIva)
+  //       .map(obtenerSubTotal)
+  //       .reduce(acumulador, 0)
+  //       .toFixed(2);
 
-      const subtotSinIva = addTotalesItems
-        .filter(sinIva)
-        .map(obtenerSubTotal)
-        .reduce(acumulador, 0)
-        .toFixed(2);
+  //     const subtotSinIva = addTotalesItems
+  //       .filter(sinIva)
+  //       .map(obtenerSubTotal)
+  //       .reduce(acumulador, 0)
+  //       .toFixed(2);
 
-      setState({
-        ...state,
-        itemsCotiza: addTotalesItems,
-        totalesFactura: {
-          ...state.totalesFactura,
-          totalDcto: +itemsConDcto,
-          ivaTotal: +itemsConIva,
-          subTotIva: +subtotConIva,
-          subTotIva0: +subtotSinIva,
-        },
-      });
-    }
-  };
+  //     setState({
+  //       ...state,
+  //       itemsCotiza: addTotalesItems,
+  //       totalesFactura: {
+  //         ...state.totalesFactura,
+  //         totalDcto: +itemsConDcto,
+  //         ivaTotal: +itemsConIva,
+  //         subTotIva: +subtotConIva,
+  //         subTotIva0: +subtotSinIva,
+  //       },
+  //     });
+  //   }
+  // };
 
   //Detecta cambios realizados en el formulario del detalle principal al cambiar
   //El los inputs datos camo cantidad, precioUnitario, descuentos, etc
@@ -340,7 +337,7 @@ const useInitialState = () => {
     showAlert,
     showFormClient,
     closeAllModal,
-    calculaTotales,
+    // calculaTotales,
   }; //retorno el estado y funciones a usar
 };
 
