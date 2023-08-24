@@ -23,8 +23,9 @@
   --font-xl: 20px;
   --font-xxl: 28px;
   /* GRIDS */
-  --grid-column-items: 10% repeat(2, 30%) 10% 10%;
-  --grid-column-items-mobile: 10% repeat(2, 30%) 20%;
+  --grid-column-items: 13% repeat(2, 30%) 10% 10%;
+  --grid-column-items-tablet: 13% repeat(2, 30%) 10% 15%;
+  --grid-column-items-mobile: 13% repeat(2, 31%) 25%;
 }
 
 * {
@@ -56,6 +57,22 @@ h5 {
 
 header {
   background: var(--background-hk);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 4px 4px 4px;
+  margin: 0 0 4px 0;
+}
+
+header svg {
+  cursor: pointer;
+}
+
+nav,
+ul {
+  margin: 0;
+  border: 0;
+  list-style: none;
 }
 
 table {
@@ -193,7 +210,7 @@ svg {
 
 /* iconos en general */
 .icons-container {
-  font-size: 28px;
+  /* font-size: 28px; */
   color: var(--button-color-hk);
   background: none;
   border: none;
@@ -228,8 +245,8 @@ svg:active {
 
 #iconAdd {
   color: var(--button-color-hk-hover);
-  width: 55px;
-  height: 55px;
+  width: 50px;
+  height: 50px;
   background: var(--tittles-hk);
   transition: all 0.2s ease;
   position: fixed;
@@ -251,17 +268,31 @@ svg:active {
   display: none;
 }
 
+/* RESPONSIVE DESIGN */
 @media screen and (max-width: 768px) {
   /* Tablet  */
+  #iconAdd {
+    width: 55px;
+    height: 55px;
+  }
+
+  .item_grid {
+    grid-template-columns: var(--grid-column-items-tablet);
+    padding: 2px 0;
+    gap: 3px;
+  }
 }
 
+/* Mobile  Normal*/
 @media screen and (max-width: 480px) {
-  /* Mobile  */
+  .search_container {
+    width: 98%;
+  }
   .search_bar {
-    width: 95%;
+    width: 98%;
     border-radius: 6px;
-    padding: 2px;
-    font-size: 0.8em;
+    padding: 3px;
+    font-size: 0.9em;
     transition: 0.2s ease;
     color: var(--background-hk);
   }
@@ -272,14 +303,25 @@ svg:active {
 
   .item_grid {
     grid-template-columns: var(--grid-column-items-mobile);
-    padding: 2px 0;
-    gap: 2px;
+  }
+
+  .icons-container {
+    justify-content: flex-start;
+    gap: 5px;
   }
 
   .hideElement {
     display: none;
   }
+
+  .item_detail {
+    font-size: var(--font-sm);
+  }
 }
-@media screen and (min-width: 320px) {
-  /* Mobile small */
+/* Mobile  Small*/
+@media screen and (max-width: 320px) {
+  svg {
+    width: 30px;
+    height: 30px;
+  }
 }

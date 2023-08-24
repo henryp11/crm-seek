@@ -5,7 +5,6 @@
   grid-column: 1/-1;
   display: grid;
   grid-template-columns: auto auto auto auto;
-  align-items: center;
   border: 1px solid var(--dark-transparent);
   border-radius: 12px;
   padding: 16px;
@@ -20,7 +19,6 @@
   display: grid;
   grid-template-columns: 15% 15% auto auto auto;
   grid-template-rows: repeat(2, 1fr);
-  align-items: center;
   border: 1px solid var(--dark-transparent);
   border-radius: 12px;
   padding: 16px;
@@ -58,4 +56,51 @@
   position: relative;
   width: 100%;
   height: 200px;
+}
+
+/* RESPONSIVE DESIGN */
+/* Tablet  */
+@media screen and (max-width: 768px) {
+  .itemWrapContainer {
+    grid-template-columns: auto auto auto;
+    padding: 8px;
+    gap: 8px 16px;
+  }
+
+  .itemWrapContainerImage {
+    grid-template-columns: repeat(2, 25%) auto auto;
+    grid-template-rows: repeat(3, 1fr);
+    padding: 8px;
+    gap: 8px 16px;
+  }
+
+  .fieldSpanAll {
+    grid-column: 2 span;
+  }
+}
+
+/* Mobile  Normal*/
+@media screen and (max-width: 480px) {
+  .itemWrapContainer {
+    grid-template-columns: auto auto auto;
+    border-radius: 8px;
+    padding: 8px;
+    gap: 8px 12px;
+  }
+
+  .itemWrapContainerImage {
+    grid-template-columns: repeat(3, 31%);
+    border-radius: 8px;
+    padding: 8px;
+    gap: 8px 12px;
+  }
+
+  .fieldSpanAll {
+    grid-row: 1/-1;
+    grid-column: 1/-1;
+  }
+}
+/* Mobile  Small*/
+@media screen and (max-width: 320px) {
+  /**/
 }

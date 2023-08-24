@@ -1,10 +1,12 @@
 import React from "react";
 
-const HeadersColumns = ({ classEsp, columnTitles }) => {
+const HeadersColumns = ({ classEsp, columnTitles, columnActivate }) => {
+  console.log(columnTitles);
+
   return (
     <div className={`generalTitle ${classEsp.toString().replace(",", " ")}`}>
-      {columnTitles.map((column, index) => {
-        if (column.show) return <span key={column.name}>{column.name}</span>;
+      {columnTitles.map((column) => {
+        if (column.show) return <span key={column.id}>{column.name}</span>;
       })}
     </div>
   );

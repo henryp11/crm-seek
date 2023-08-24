@@ -48,7 +48,7 @@ const ProductDetails = (props) => {
             <p>{itemDetail.subCategoria}</p>
           </span>
           <span className={styles.itemWrapFields}>
-            <h3 className={styles.itemWrapTittles}>Unidad de Medida</h3>
+            <h3 className={styles.itemWrapTittles}>Unidad Medida</h3>
             <p>{itemDetail.unidMed}</p>
           </span>
           <span className={styles.itemWrapFields}>

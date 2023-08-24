@@ -1,90 +1,29 @@
-import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
 import ProductDetails from "../containers/ProductDetail";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
-//Pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
+//pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
 const HeadersColumns = dynamic(
   () => import("../components/HeadersColumns.js"),
   { ssr: false }
 );
-//import useScreenSize from "../hooks/useScreenSize";
+import useScreenSize from "../hooks/useScreenSize";
 //import MenuLateral from "../components/MenuLateral";
 import SectionSearch from "../containers/SectionSearch";
 import Appcontext from "../context/AppContext";
+import useSearchSimple from "../hooks/useSearchSimple";
 //import styles from "../styles/products.module.css";
-
-function useSearchItem(itemData) {
-  const [query, setQuery] = useState("");
-  const [filteredItems, setFilteredItems] = useState(itemData);
-  // Filtro el listado con la función JS filter, la cual recibe una función
-  // Para optimizar los resultados de los filtros, con la función useMemo de react cuando se busca algo quedará almacenado
-  //y al volver a buscar no debe buscar desde cero si no mostrará lo almacenado
-  // UseMemo recibe como primer argumento otra función y el segundo es una lista en array, donde se iran almacenando los valores ya buscados.
-  React.useMemo(() => {
-    const result = itemData.filter((item) => {
-      return `${item.idItem} ${item.nombreItem}`
-        .toLowerCase()
-        .includes(query.toLowerCase()); //Si encuentra lo que busco mostrará ese resultado, transformo todo a minusculas
-    });
-    //Esta sección de transformar en estado la busqueda es por si cambia la lista de items a querys a mostar
-    setFilteredItems(result);
-  }, [itemData, query]);
-
-  return { query, setQuery, filteredItems };
-}
 
 const moduleHeaders = {
   classEspec: ["item_grid"],
   columnTitles: [
-    { name: "Id.Producto", show: true },
-    { name: "Nombre", show: true },
-    { name: "Clase", show: true },
-    { name: "Precio", show: true },
+    { id: "col1", name: "Id.Prod", show: true },
+    { id: "col2", name: "Nombre", show: true },
+    { id: "col3", name: "Clase", show: true },
+    { id: "col4", name: "Precio", show: true },
   ],
-};
-const moduleHeadersMobile = {
-  classEspec: ["item_grid"],
-  columnTitles: [
-    { name: "Id.Producto", show: true },
-    { name: "Nombre", show: true },
-    { name: "Clase", show: true },
-    { name: "Precio", show: false },
-  ],
-};
-
-//Verico la carga en el lado del cliente
-const useSafeLayoutEffect =
-  typeof window !== "undefined" &&
-  window.document &&
-  window.document.createElement
-    ? useLayoutEffect
-    : useEffect;
-
-//Custom Hook para determinar el tamaño de pantalla para mobil
-const useScreenSize = () => {
-  //El atributo .matches retorna un boolean si coincide con la medida a buscar
-  // Y con eso inicializo el estado para la carga inicial del dispositivo
-  const [matches, setMatches] = useState(
-    typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 480px)").matches
-  );
-  const mql =
-    typeof window !== "undefined" && window.matchMedia("(max-width: 480px)");
-
-  const handler = (e) => {
-    setMatches(mql.matches);
-  };
-
-  //Detecto el cambio en pantalla con el handler para setear la variable matches de acuerdo a si coincide con el mediaQuery a buscar
-  useSafeLayoutEffect(() => {
-    mql.addEventListener("change", handler);
-    //Una vez cambiado el estado se debe remover el Listener para que no cosuma recursos
-    return () => mql.removeEventListener("change", handler);
-  }, []);
-
-  return matches;
 };
 
 const Products = () => {
@@ -95,8 +34,7 @@ const Products = () => {
   const [openItem, setOpenItem] = useState(false);
   const [itemCapture, setItemCapture] = useState("");
   const [dataItemCap, setDataItemCap] = useState({});
-  // const [productos, setProductos] = useState([]);
-  const { query, setQuery, filteredItems } = useSearchItem(itemsList); //USANDO CUSTOM HOOK
+  const { query, setQuery, filteredItems } = useSearchSimple(itemsList);
 
   useEffect(() => {
     getProducts();
@@ -111,17 +49,17 @@ const Products = () => {
           setQuery={setQuery}
           placeholder={"Buscar Item por su código / nombre"}
         />
-        {isMobile ? (
-          <HeadersColumns
-            classEsp={moduleHeadersMobile.classEspec}
-            columnTitles={moduleHeadersMobile.columnTitles}
-          />
-        ) : (
-          <HeadersColumns
-            classEsp={moduleHeaders.classEspec}
-            columnTitles={moduleHeaders.columnTitles}
-          />
-        )}
+        <HeadersColumns
+          classEsp={moduleHeaders.classEspec}
+          columnTitles={
+            isMobile
+              ? moduleHeaders.columnTitles.map((column) => {
+                  if (column.id !== "col4") return column;
+                  return { ...column, show: false };
+                })
+              : moduleHeaders.columnTitles
+          }
+        />
         {loadData.loading ? (
           <h1>loading...</h1>
         ) : (
