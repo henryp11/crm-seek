@@ -1,0 +1,61 @@
+.itemWrapContainer {
+  background-color: white !important;
+  width: 98%;
+  margin: 0 auto;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+  border: 1px solid var(--dark-transparent);
+  border-radius: 12px;
+  padding: 16px;
+  gap: 8px 28px;
+}
+
+.itemWrapContainerImage {
+  background-color: white !important;
+  width: 98%;
+  margin: 0 auto;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: 15% 15% auto auto auto;
+  grid-template-rows: repeat(2, 1fr);
+  align-items: center;
+  border: 1px solid var(--dark-transparent);
+  border-radius: 12px;
+  padding: 16px;
+  gap: 8px 28px;
+}
+
+/* .itemWrapContainer span:nth-of-type(2) {
+  grid-column: 3 span;
+} */
+
+.fieldSpanAll {
+  grid-row: 1/-1;
+  grid-column: 2 span;
+}
+
+.itemWrapFields {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-direction: column;
+  text-align: left;
+}
+
+.itemWrapTittles {
+  width: 100%;
+  font-weight: bold;
+  border-bottom: 1.5px solid var(--dark-transparent);
+}
+
+/* .itemWrapFields p {
+  font-size: var(--sm);
+} */
+
+.itemImage {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}

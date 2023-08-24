@@ -12,7 +12,7 @@
   --dark-transparent: rgba(25, 33, 43, 0.5);
   --save-button: #1a73e8;
   --delete-alert: rgb(155, 32, 32);
-  --background-rows: rgb(236, 236, 236);
+  --background-rows: rgb(247, 247, 247);
   /* BOTONES */
   --button-color-hk: #555fc2;
   --button-color-hk-hover: #444a8d;
@@ -23,7 +23,8 @@
   --font-xl: 20px;
   --font-xxl: 28px;
   /* GRIDS */
-  --grid-column-8: 12% 20% 6% repeat(2, 15%) repeat(2, 9%) 10%;
+  --grid-column-items: 10% repeat(2, 30%) 10% 10%;
+  --grid-column-items-mobile: 10% repeat(2, 30%) 20%;
 }
 
 * {
@@ -170,12 +171,13 @@ svg {
 
 .item_grid {
   display: grid;
-  grid-template-columns: var(--grid-column-8);
+  grid-template-columns: var(--grid-column-items);
   width: 100%;
   padding: 4px 0;
   gap: 4px;
   justify-content: center;
   align-items: center;
+  word-break: break-all;
 }
 
 .item_detail {
@@ -226,19 +228,58 @@ svg:active {
 
 #iconAdd {
   color: var(--button-color-hk-hover);
-  width: 40px;
-  height: 40px;
+  width: 55px;
+  height: 55px;
   background: var(--tittles-hk);
   transition: all 0.2s ease;
   position: fixed;
-  left: 0.5%;
-  top: 9%;
+  left: 3%;
+  bottom: 5px;
   border-radius: 50%;
   cursor: pointer;
+  z-index: 2;
+  opacity: 0.8;
 }
 
 #iconAdd:hover {
   transform: scale(1.1);
   color: var(--tittles-hk);
   background: var(--white);
+}
+
+.showElement {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  /* Tablet  */
+}
+
+@media screen and (max-width: 480px) {
+  /* Mobile  */
+  .search_bar {
+    width: 95%;
+    border-radius: 6px;
+    padding: 2px;
+    font-size: 0.8em;
+    transition: 0.2s ease;
+    color: var(--background-hk);
+  }
+
+  .generalTitle {
+    font-size: var(--font-nm);
+  }
+
+  .item_grid {
+    grid-template-columns: var(--grid-column-items-mobile);
+    padding: 2px 0;
+    gap: 2px;
+  }
+
+  .hideElement {
+    display: none;
+  }
+}
+@media screen and (min-width: 320px) {
+  /* Mobile small */
 }

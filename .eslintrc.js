@@ -15,6 +15,14 @@ module.exports = {
   ],
   rules: {
     semi: "off",
-    "prettier/prettier": ["error", { endOfLine: "auto" }],
+    "prettier/prettier": [
+      "error",
+      { endOfLine: "auto" },
+      "error",
+      {},
+      {
+        usePrettierrc: false,
+      },
+    ],
   },
 };

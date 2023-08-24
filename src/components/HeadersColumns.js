@@ -4,7 +4,7 @@ const HeadersColumns = ({ classEsp, columnTitles }) => {
   return (
     <div className={`generalTitle ${classEsp.toString().replace(",", " ")}`}>
       {columnTitles.map((column, index) => {
-        return <span key={index}>{column}</span>;
+        if (column.show) return <span key={column.name}>{column.name}</span>;
       })}
     </div>
   );

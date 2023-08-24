@@ -1,7 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link.js";
-//import ProductDetails from "../containers/ProductDetail";
-import HeadersColumns from "../components/HeadersColumns.js";
+import ProductDetails from "../containers/ProductDetail";
+//Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
+//En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
+//Pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
+const HeadersColumns = dynamic(
+  () => import("../components/HeadersColumns.js"),
+  { ssr: false }
+);
+//import useScreenSize from "../hooks/useScreenSize";
 //import MenuLateral from "../components/MenuLateral";
 import SectionSearch from "../containers/SectionSearch";
 import Appcontext from "../context/AppContext";
@@ -30,25 +38,63 @@ function useSearchItem(itemData) {
 const moduleHeaders = {
   classEspec: ["item_grid"],
   columnTitles: [
-    "Id.Producto",
-    "Nombre",
-    "Unid. Med",
-    "Categoría",
-    "SubCategoría",
-    "Costo",
-    "Precio",
+    { name: "Id.Producto", show: true },
+    { name: "Nombre", show: true },
+    { name: "Clase", show: true },
+    { name: "Precio", show: true },
   ],
+};
+const moduleHeadersMobile = {
+  classEspec: ["item_grid"],
+  columnTitles: [
+    { name: "Id.Producto", show: true },
+    { name: "Nombre", show: true },
+    { name: "Clase", show: true },
+    { name: "Precio", show: false },
+  ],
+};
+
+//Verico la carga en el lado del cliente
+const useSafeLayoutEffect =
+  typeof window !== "undefined" &&
+  window.document &&
+  window.document.createElement
+    ? useLayoutEffect
+    : useEffect;
+
+//Custom Hook para determinar el tamaño de pantalla para mobil
+const useScreenSize = () => {
+  //El atributo .matches retorna un boolean si coincide con la medida a buscar
+  // Y con eso inicializo el estado para la carga inicial del dispositivo
+  const [matches, setMatches] = useState(
+    typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 480px)").matches
+  );
+  const mql =
+    typeof window !== "undefined" && window.matchMedia("(max-width: 480px)");
+
+  const handler = (e) => {
+    setMatches(mql.matches);
+  };
+
+  //Detecto el cambio en pantalla con el handler para setear la variable matches de acuerdo a si coincide con el mediaQuery a buscar
+  useSafeLayoutEffect(() => {
+    mql.addEventListener("change", handler);
+    //Una vez cambiado el estado se debe remover el Listener para que no cosuma recursos
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  return matches;
 };
 
 const Products = () => {
   // Funciones y objetos desde contexto inicial
   const { getProducts, itemsList, loadData } = useContext(Appcontext);
+  const isMobile = useScreenSize();
 
   const [openItem, setOpenItem] = useState(false);
-  // const [itemCapture, setItemCapture] = useState("");
-  // const [dataItemCap, setDataItemCap] = useState({});
-  const [setItemCapture] = useState("");
-  const [setDataItemCap] = useState({});
+  const [itemCapture, setItemCapture] = useState("");
+  const [dataItemCap, setDataItemCap] = useState({});
   // const [productos, setProductos] = useState([]);
   const { query, setQuery, filteredItems } = useSearchItem(itemsList); //USANDO CUSTOM HOOK
 
@@ -65,10 +111,17 @@ const Products = () => {
           setQuery={setQuery}
           placeholder={"Buscar Item por su código / nombre"}
         />
-        <HeadersColumns
-          classEsp={moduleHeaders.classEspec}
-          columnTitles={moduleHeaders.columnTitles}
-        />
+        {isMobile ? (
+          <HeadersColumns
+            classEsp={moduleHeadersMobile.classEspec}
+            columnTitles={moduleHeadersMobile.columnTitles}
+          />
+        ) : (
+          <HeadersColumns
+            classEsp={moduleHeaders.classEspec}
+            columnTitles={moduleHeaders.columnTitles}
+          />
+        )}
         {loadData.loading ? (
           <h1>loading...</h1>
         ) : (
@@ -96,23 +149,20 @@ const Products = () => {
                 <div key={item.id} className="item_grid item_detail">
                   <span>{item.idItem}</span>
                   <span>{item.nombreItem}</span>
-                  <span>{item.unidMed}</span>
-                  <span>{item.categoria}</span>
                   <span>{item.subCategoria}</span>
-                  <span>{item.costo}</span>
-                  <span>{item.precio}</span>
+                  <span className="hideElement">{item.precio}</span>
                   <span className="icons-container">
                     <button
                       title="Ver Detalles"
                       onClick={() => {
                         if (openItem) {
                           setOpenItem(false);
-                          setItemCapture(item.idItem);
+                          setItemCapture(item.id);
                           setDataItemCap({ ...item });
                           setOpenItem(true);
                         } else {
                           setOpenItem(!openItem);
-                          setItemCapture(item.idItem);
+                          setItemCapture(item.id);
                           setDataItemCap({ ...item });
                         }
                       }}
@@ -136,13 +186,13 @@ const Products = () => {
                         onClick={() => {
                           if (openItem) {
                             setOpenItem(false);
-                            setItemCapture(item.id);
-                            setDataItemCap({ ...item });
-                            setOpenItem(true);
+                            // setItemCapture(item.id);
+                            // setDataItemCap({ ...item });
+                            // setOpenItem(true);
                           } else {
                             setOpenItem(!openItem);
-                            setItemCapture(item.id);
-                            setDataItemCap({ ...item });
+                            // setItemCapture(item.id);
+                            // setDataItemCap({ ...item });
                           }
                         }}
                       >
@@ -162,12 +212,12 @@ const Products = () => {
                       </button>
                     </Link>
                   </span>
-                  {/* {itemCapture === item.idItem && (
+                  {itemCapture === item.id && (
                     <ProductDetails
                       openItem={openItem}
                       itemDetail={dataItemCap}
                     />
-                  )} */}
+                  )}
                 </div>
               );
             })}
