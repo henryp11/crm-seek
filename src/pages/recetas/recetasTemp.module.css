@@ -1,0 +1,253 @@
+.wrapContainer {
+  background-color: white !important;
+  width: 98%;
+  margin: 0 auto;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  border: 1px solid var(--dark-transparent);
+  border-radius: 12px;
+  padding: 16px;
+  gap: 8px 28px;
+}
+
+.wrapContainerImage {
+  background-color: white !important;
+  width: 98%;
+  margin: 0 auto;
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: 15% 15% auto auto auto;
+  grid-template-rows: repeat(2, 1fr);
+  border: 1px solid var(--dark-transparent);
+  border-radius: 12px;
+  padding: 16px;
+  gap: 8px 28px;
+}
+
+.fieldSpanAll {
+  grid-row: 1/-1;
+  grid-column: 2 span;
+}
+
+.wrapFields {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-direction: column;
+  text-align: left;
+}
+
+.wrapTittles {
+  width: 100%;
+  font-weight: bold;
+  border-bottom: 1.5px solid var(--dark-transparent);
+}
+
+/* Pantalla de creación y edición de recetas */
+.crudRecContainer {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.crudRecContainer form {
+  display: grid;
+  grid-template-columns: 25% auto;
+  grid-template-rows: auto auto auto;
+  gap: 8px;
+}
+
+.crudRecContainer figure {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  grid-row: 1/-1;
+}
+
+.crudRecContainer figure img {
+  object-fit: contain;
+}
+
+.addButton {
+  width: auto;
+}
+
+.detalleRecContainer {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+  grid-template-columns: 1fr;
+}
+
+.setFabricacion h4 {
+  background: var(--button-color-hk);
+  color: var(--tittles-hk);
+  padding: 4px;
+}
+
+.setFabricacion h5 {
+  margin: 4px;
+}
+
+.componentes {
+  color: var(--dark);
+  display: grid;
+  grid-template-columns: 30% 10% 30% 10% 20%;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-nm);
+  margin: 4px;
+}
+.componDimensiones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 4px;
+  font-size: var(--font-nm);
+}
+
+.componDimensiones i::after {
+  content: " - ";
+}
+
+.componDimensiones i:last-child::after {
+  content: "";
+}
+
+.componentesHeader {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.componenteIcons {
+  display: flex;
+  gap: 0 4px;
+}
+
+.componenteEdit,
+.componenteDelete {
+  cursor: pointer;
+  margin: 0 12px;
+}
+
+.componenteDelete svg:hover {
+  color: var(--delete-alert);
+}
+
+.updateButton {
+  transform: scale(1) !important;
+}
+
+.formulaButton {
+  border: 1px solid var(--button-color-hk);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px;
+  margin: 4px 8px;
+}
+
+.formulaButton:hover {
+  background: var(--background-hk2);
+}
+
+.formulaContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: var(--font-nm);
+}
+
+.formulaContainer b {
+  font-weight: 700;
+  font-size: 0.9em;
+}
+
+/* RESPONSIVE DESIGN */
+/* Tablet  */
+@media screen and (max-width: 768px) {
+  .wrapContainer {
+    grid-template-columns: auto auto auto;
+    padding: 8px;
+    gap: 8px 16px;
+  }
+
+  .wrapContainerImage {
+    grid-template-columns: repeat(2, 25%) auto auto;
+    grid-template-rows: repeat(3, 1fr);
+    padding: 8px;
+    gap: 8px 16px;
+  }
+
+  .fieldSpanAll {
+    grid-column: 2 span;
+  }
+
+  .crudRecContainer {
+    width: 95%;
+  }
+
+  .componentes {
+    grid-template-columns: 41% 17% 39%;
+    padding: 2px;
+    gap: 8px;
+    border-bottom: 1px solid var(--dark-transparent);
+  }
+
+  .componentes b {
+    text-align: center;
+  }
+
+  .formulaContainer {
+    grid-column: 2 span;
+  }
+
+  .formulaButton {
+    height: 70%;
+  }
+}
+
+/* Mobile  Normal*/
+@media screen and (max-width: 480px) {
+  .wrapContainer {
+    grid-template-columns: auto auto auto;
+    border-radius: 8px;
+    padding: 8px;
+    gap: 8px 12px;
+  }
+
+  .wrapContainerImage {
+    grid-template-columns: repeat(3, 31%);
+    border-radius: 8px;
+    padding: 8px;
+    gap: 8px 12px;
+  }
+
+  .fieldSpanAll {
+    grid-row: 1/-1;
+    grid-column: 1/-1;
+  }
+
+  .crudRecContainer {
+    width: 98%;
+    gap: 4px;
+    flex-direction: column;
+  }
+
+  .crudRecContainer form {
+    display: grid;
+    grid-template-columns: auto;
+  }
+}
+/* Mobile  Small*/
+@media screen and (max-width: 320px) {
+  /**/
+}

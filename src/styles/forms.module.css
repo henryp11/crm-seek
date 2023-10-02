@@ -1,0 +1,477 @@
+.form-default {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.input-container {
+  margin: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  position: relative;
+}
+
+.containerSelect {
+  display: grid;
+  grid-template-columns: 85% 15%;
+  gap: 4px;
+}
+
+.input-container label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  padding: 0 4px;
+  transition: all 0.2s ease;
+  color: var(--button-color-hk-hover);
+  font-weight: bolder;
+}
+
+.input-container input {
+  padding: 4px 4px 1px 4px;
+  height: 28px;
+  font-size: 16px;
+  z-index: 1;
+  background: transparent;
+  border-radius: 5px;
+  outline-color: var(--tittles-hk);
+  border: 1px solid var(--subtittles-hk);
+  color: var(--background-hk);
+}
+.input-container input:focus ~ label {
+  top: -13px;
+  background-color: white;
+  z-index: 2;
+  font-size: var(--font-nm);
+}
+
+.input-container b {
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 2px;
+}
+
+.activate-label-position {
+  top: -13px !important;
+  background-color: white !important;
+  z-index: 2;
+  color: var(--button-color-hk) !important;
+  font-size: var(--font-nm) !important;
+}
+
+.inputSelect {
+  padding: 2px;
+  height: 28px;
+  font-size: 16px;
+  background: transparent;
+  border-radius: 5px;
+  outline-color: var(--tittles-hk);
+  border: 1px solid var(--subtittles-hk);
+  color: var(--background-hk);
+}
+
+.loginContainer {
+  width: 50%;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.recovery {
+  margin: 8px auto;
+  padding: 4px;
+  font-size: small;
+  transition: all 0.1s ease;
+}
+
+.recovery:hover {
+  text-decoration: underline;
+  font-weight: bold;
+  color: var();
+}
+
+.formButton {
+  background: var(--button-color-hk-hover);
+  color: white;
+  font-size: var(--font-md);
+  font-weight: 600;
+  padding: 8px;
+  width: 60%;
+  margin: 0 auto;
+  border-color: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.formButton:hover {
+  background: var(--button-color-hk-hover);
+  color: var(--white-resalt-hk);
+}
+
+.formButton:active {
+  transform: scale(0.9);
+}
+
+/* manejo de contenedor de botones */
+.buttonContainer {
+  width: 30%;
+  margin: 12px auto 0 auto;
+  grid-column: 1 / -1;
+  display: flex;
+  /* flex-wrap: wrap; */
+}
+
+.buttonContainer button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.buttonContainer button:hover {
+  background: white;
+}
+
+.buttonContainer button:hover svg {
+  color: var(--button-color-hk);
+}
+
+.buttonContainer svg {
+  color: var(--tittles-hk);
+  transform: scale(1.5);
+  height: 100%;
+}
+
+.cancelButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.buttonContainerBig {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--button-color-hk);
+}
+
+.buttonContainerBig .formButton {
+  width: 44%;
+  text-align: center;
+}
+
+/* .buttonInteractive {
+
+} */
+
+/* clases especiales para casos de inputs específicos */
+/* 1) Para Unificar el id con el campo siguiente */
+.idField {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 25% 75%;
+}
+
+.idField span input {
+  width: 100%;
+}
+
+/* 2) Para inputs CheckBox   */
+
+.input-containerCheckbox {
+  margin: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+}
+
+.input-containerCheckbox label {
+  transition: all 0.2s ease;
+  color: var(--button-color-hk-hover);
+  font-weight: bolder;
+}
+
+.input-containerCheckbox input {
+  transform: scale(1.7);
+}
+
+/* imágenes dentro del formulario */
+
+.itemImage {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+/*filas de componentes al momento de añadir a receta*/
+
+.componSelect {
+  cursor: pointer;
+  background: var(--white);
+  color: var(--background-hk);
+}
+
+.componSelect:hover {
+  background: var(--button-color-hk-hover) !important;
+  color: white;
+}
+
+/* Tabla de componentes elegidos */
+
+.sectionComponSelect {
+  width: 35%;
+}
+
+.sectionComponSelect h2 {
+  text-align: center;
+  backdrop-filter: invert(100%);
+  border-radius: 8px 8px 0 0;
+  padding: 2px;
+  font-size: 1.3em;
+}
+
+.componSelectContainer {
+  display: grid;
+  grid-template-columns: auto auto 10%;
+  gap: 2px;
+  padding: 8px;
+  backdrop-filter: brightness(80%);
+  /* backdrop-filter: contrast(17%); */
+  /* backdrop-filter: invert(100%); */
+  border-bottom: 2px solid white;
+}
+
+.componSelectContainer:hover {
+  backdrop-filter: invert(100%);
+}
+
+.componSelectName {
+  width: 100%;
+  grid-column: 1 /-1;
+  text-align: center;
+  color: var(--tittles-hk);
+}
+
+.componDimensiones {
+  display: flex;
+  width: 100%;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+}
+
+.componDimensiones h5 {
+  color: var(--tittles-hk);
+  margin-bottom: 2px;
+}
+
+.componDimensiones input {
+  accent-color: var(--button-color-hk);
+  scale: 1.5;
+}
+
+.componDimensiones label {
+  margin: 1px 8px;
+  color: white;
+  font-weight: bold;
+}
+
+.removeButton {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: inset 2px 0px 0px 0px var(--delete-alert);
+}
+
+.removeButton svg {
+  color: var(--delete-alert);
+}
+
+/* RESPONSIVE DESIGN */
+@media screen and (max-width: 768px) {
+  /* Tablet  */
+  .loginContainer {
+    width: 70%;
+  }
+
+  .sectionComponSelect {
+    width: 49%;
+  }
+
+  .sectionComponSelect h2 {
+    border-radius: 4px 4px 0 0;
+    font-size: 1.1em;
+  }
+
+  .componSelectContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    gap: 8px 0;
+  }
+
+  .componSelectName {
+    font-size: 0.8em;
+  }
+
+  .componDimensiones {
+    justify-content: flex-start;
+  }
+
+  .componDimensiones h5 {
+    font-size: 0.7em;
+  }
+
+  .componDimensiones span {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 0;
+  }
+
+  .componDimensiones label {
+    font-size: 0.8em;
+  }
+  .componDimensiones input {
+    scale: 1;
+  }
+
+  .removeButton {
+    grid-column: 1 / -1;
+    box-shadow: inset 0px 1px 0px 0px var(--delete-alert);
+    margin-top: 2px;
+    padding-top: 2px;
+  }
+  .removeButton svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .buttonContainerBig {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .buttonContainerBig .formButton {
+    width: 98%;
+    text-align: center;
+    font-size: 0.8em;
+  }
+
+  .containerSelect {
+    grid-template-columns: 70% 30%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Movil  */
+
+  .form-default {
+    padding: 8px;
+  }
+  .loginContainer {
+    width: 90%;
+  }
+
+  .input-container {
+    margin: 10px 4px;
+  }
+
+  .input-container label,
+  .input-containerCheckbox label {
+    font-size: var(--font-nm);
+  }
+
+  .input-container input {
+    font-size: var(--font-nm);
+  }
+
+  .input-container input:focus ~ label {
+    font-size: var(--font-sm);
+  }
+
+  .activate-label-position {
+    font-size: var(--font-sm) !important;
+  }
+
+  .idField {
+    grid-template-columns: 35% 65%;
+  }
+
+  /* manejo de contenedor de botones */
+  .buttonContainer {
+    width: 60%;
+    margin: 8px auto 0 auto;
+  }
+
+  .buttonContainer button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .buttonContainer svg {
+    transform: scale(1.5);
+  }
+
+  .cancelButton {
+    width: 100%;
+  }
+
+  .componSelectContainer {
+    grid-template-columns: auto;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .idField {
+    grid-template-columns: auto;
+  }
+}
+
+/* .icon-container--create {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.icon-container--create .icons {
+  font-size: 40px;
+  padding: 2px;
+}
+
+.icon-container--create .icons:hover {
+  box-shadow: inset 0 -5px var(--very-light-pink);
+  transform: scale(1.2);
+}
+
+.icon-container--create .icons:first-child {
+  color: rgb(51, 136, 70);
+}
+
+.icon-container--create .icons:last-child {
+  color: rgb(117, 22, 22);
+} */

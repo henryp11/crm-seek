@@ -1,11 +1,21 @@
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { db } from "../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 // Empiezo creando un estado inicial general de los atributos requeridos en otras pantallas
 const initialState = {
   showItemsList: false,
   showAlert: false,
   showFormClient: false,
+  showModal: false,
   cliente: null,
   idVendedor: "",
   itemsCotiza: [],
@@ -20,34 +30,34 @@ const initialState = {
 const useInitialState = () => {
   // Con el hook de useState se cambiará el estado inicial
   const [state, setState] = useState(initialState); //Modifica el estado principal
-  const [itemsList, setItemsList] = useState([]); //Trae todos los items
-  const [clientList, setClientList] = useState([]); //Trae todos los clientes
-  const [vendList, setVendList] = useState([]); //Trae todos los vendedores
+  const [dataList, setDataList] = useState([]); //Trae todos los registros de cualquier tabla
+  const [itemPtList, setItemPtList] = useState([]); //Trae Productos terminados
+  const [isDelete, setIsDelete] = useState(false);
   const [loadData, setLoadData] = useState({
     loading: false,
     error: null,
   });
 
-  //Funciones para obtener los datos de los items a mostrar
-  const getProducts = async () => {
+  //Función para obtener datos de cualquier colección de datos
+  const getSimpleDataDb = async (table) => {
     setLoadData({ loading: true, error: null });
     try {
-      onSnapshot(collection(db, "Productos"), (querySnapshot) => {
+      onSnapshot(collection(db, table), (querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
           docs.push({ ...doc.data(), id: doc.id });
         });
         // Ordeno los datos por id_producto
         docs.sort((a, b) => {
-          if (a.idItem < b.idItem) {
+          if (a.idReg < b.idReg) {
             return -1;
           }
-          if (a.idItem > b.idItem) {
+          if (a.idReg > b.idReg) {
             return 1;
           }
           return 0;
         });
-        setItemsList(docs);
+        setDataList(docs);
         setLoadData({ loading: false, error: null });
       });
     } catch (error) {
@@ -55,52 +65,95 @@ const useInitialState = () => {
     }
   };
 
-  const getClients = async () => {
-    setLoadData({ loading: true, error: null });
+  //Eliminar documento de cualquier tabla
+
+  const deleteToast = async (table, payload) => {
+    await deleteDoc(doc(db, table, payload));
+  };
+
+  const deleteDocument = async (payload, table, message) => {
     try {
-      //querySnapshot es como firebase llama a la obtención de una respuesta, y obtengo los datos con getDocs
-      const querySnapshot = await getDocs(collection(db, "Clientes")); //Obtengo los datos de una colección
-      //Cada colección almacena los datos como documentos, en donde
-      // itero sobre ellos y extraigo la información de cada uno con .data()
-      const docs = [];
-      querySnapshot.forEach((doc) => {
-        // console.log(doc.data());
-        docs.push({ ...doc.data(), id: doc.id });
-      });
-      docs.sort((a, b) => {
-        if (a.idCliente < b.idCliente) {
-          return -1;
-        }
-        if (a.idCliente > b.idCliente) {
-          return 1;
-        }
-        return 0;
-      });
-      setClientList(docs);
-      setLoadData({ loading: false, error: null });
+      // let isDelete = confirm(
+      //   "¿Desea eliminar toda la RECETA de fabricación para este item?"
+      // );
+      // if (isDelete) {
+      //   await deleteDoc(doc(db, table, payload));
+      // }
+      toast(
+        (t) => (
+          <span className="toasterDelete">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+              />
+            </svg>
+            <b>{message}</b>
+            <span className="toasterButtons">
+              <button
+                onClick={() => {
+                  deleteToast(table, payload);
+                  toast.dismiss(t.id);
+                  toast.success("Registro Eliminado!", {
+                    style: {
+                      border: "1px solid rgb(155, 32, 32)",
+                      padding: "16px",
+                    },
+                    iconTheme: {
+                      primary: "rgb(155, 32, 32)",
+                      secondary: "#FFFAEE",
+                    },
+                    duration: 1000,
+                  });
+                  setTimeout(() => {
+                    toast.dismiss();
+                  }, 2000);
+                }}
+              >
+                SI
+              </button>
+              <button onClick={() => toast.dismiss(t.id)}>NO</button>
+            </span>
+          </span>
+        ),
+        { duration: 60000 }
+      );
     } catch (error) {
       setLoadData({ loading: false, error: error });
     }
   };
 
-  const getVendedores = async () => {
+  // Llamar solo los productos que sean producto terminado para añadir receta
+  const getProdTerminado = async (isCompon) => {
     setLoadData({ loading: true, error: null });
     try {
-      const querySnapshot = await getDocs(collection(db, "Vendedores"));
       const docs = [];
+      const queryDb = query(
+        collection(db, "Productos"),
+        where("isCompon", "==", isCompon)
+      );
+      const querySnapshot = await getDocs(queryDb);
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data(), id: doc.id });
       });
+      // Ordeno los datos por id_producto
       docs.sort((a, b) => {
-        if (a.idVend < b.idVend) {
+        if (a.idReg < b.idReg) {
           return -1;
         }
-        if (a.idVend > b.idVend) {
+        if (a.idReg > b.idReg) {
           return 1;
         }
         return 0;
       });
-      setVendList(docs);
+      setItemPtList(docs);
       setLoadData({ loading: false, error: null });
     } catch (error) {
       setLoadData({ loading: false, error: error });
@@ -119,6 +172,11 @@ const useInitialState = () => {
   //Función para mostrar el componente que contendrá el listado de items al facturar
   const showFormClient = () => {
     setState({ ...state, showFormClient: !state.showFormClient });
+  };
+
+  //Función para mostrar el modal en general
+  const showModal = () => {
+    setState({ ...state, showModal: !state.showModal });
   };
 
   const closeAllModal = () => {
@@ -321,13 +379,12 @@ const useInitialState = () => {
   return {
     state,
     setState,
-    itemsList,
-    clientList,
-    vendList,
+    dataList,
+    itemPtList,
+    getProdTerminado,
     loadData,
-    getProducts,
-    getClients,
-    getVendedores,
+    getSimpleDataDb,
+    deleteDocument,
     addItemFact,
     reduceCantItemFact,
     removeItemFact,
@@ -336,6 +393,7 @@ const useInitialState = () => {
     showListItems,
     showAlert,
     showFormClient,
+    showModal,
     closeAllModal,
     // calculaTotales,
   }; //retorno el estado y funciones a usar

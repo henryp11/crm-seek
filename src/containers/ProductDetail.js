@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import styles from "../styles/products.module.css";
+import styles from "../styles/registerDetails.module.css";
 
-const ProductDetails = (props) => {
+const ProductDetail = (props) => {
   const { openItem, itemDetail } = props;
 
   // const calcularIva = (precio, iva) => {
@@ -65,4 +65,4 @@ const ProductDetails = (props) => {
   );
 };
 
-export default ProductDetails;
+export default ProductDetail;

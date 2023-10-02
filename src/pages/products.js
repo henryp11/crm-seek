@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
-import ProductDetails from "../containers/ProductDetail";
+import ProductDetail from "../containers/ProductDetail";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
@@ -28,16 +28,16 @@ const moduleHeaders = {
 
 const Products = () => {
   // Funciones y objetos desde contexto inicial
-  const { getProducts, itemsList, loadData } = useContext(Appcontext);
+  const { getSimpleDataDb, dataList, loadData } = useContext(Appcontext);
   const isMobile = useScreenSize();
 
   const [openItem, setOpenItem] = useState(false);
   const [itemCapture, setItemCapture] = useState("");
   const [dataItemCap, setDataItemCap] = useState({});
-  const { query, setQuery, filteredItems } = useSearchSimple(itemsList);
+  const { query, setQuery, filteredItems } = useSearchSimple(dataList);
 
   useEffect(() => {
-    getProducts();
+    getSimpleDataDb("Productos");
   }, []);
 
   return (
@@ -85,7 +85,7 @@ const Products = () => {
             {filteredItems.map((item) => {
               return (
                 <div key={item.id} className="item_grid item_detail">
-                  <span>{item.idItem}</span>
+                  <span>{item.idReg}</span>
                   <span>{item.nombreItem}</span>
                   <span>{item.subCategoria}</span>
                   <span className="hideElement">{item.precio}</span>
@@ -94,10 +94,14 @@ const Products = () => {
                       title="Ver Detalles"
                       onClick={() => {
                         if (openItem) {
-                          setOpenItem(false);
-                          setItemCapture(item.id);
-                          setDataItemCap({ ...item });
-                          setOpenItem(true);
+                          if (itemCapture !== item.id) {
+                            setOpenItem(false);
+                            setItemCapture(item.id);
+                            setDataItemCap({ ...item });
+                            setOpenItem(true);
+                          } else {
+                            setOpenItem(false);
+                          }
                         } else {
                           setOpenItem(!openItem);
                           setItemCapture(item.id);
@@ -151,7 +155,7 @@ const Products = () => {
                     </Link>
                   </span>
                   {itemCapture === item.id && (
-                    <ProductDetails
+                    <ProductDetail
                       openItem={openItem}
                       itemDetail={dataItemCap}
                     />

@@ -9,7 +9,7 @@ function useSearchSimple(itemData) {
   // UseMemo recibe como primer argumento otra función y el segundo es una lista en array, donde se iran almacenando los valores ya buscados.
   React.useMemo(() => {
     const result = itemData.filter((item) => {
-      return `${item.idItem} ${item.nombreItem}`
+      return `${item.idItem} ${item.nombreItem} ${item.categoria} ${item.subCategoria}`
         .toLowerCase()
         .includes(query.toLowerCase()); //Si encuentra lo que busco mostrará ese resultado, transformo todo a minusculas
     });

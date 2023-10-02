@@ -1,5 +1,10 @@
+/* Estilos principales para wrap de detalle 
+de cada registro para  pantallas principales para cada módulo */
+
+/* Estilos pantalla de productos */
+
 .itemWrapContainer {
-  background-color: white !important;
+  background-color: white;
   width: 98%;
   margin: 0 auto;
   grid-column: 1/-1;
@@ -7,12 +12,12 @@
   grid-template-columns: auto auto auto auto;
   border: 1px solid var(--dark-transparent);
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
   gap: 8px 28px;
 }
 
 .itemWrapContainerImage {
-  background-color: white !important;
+  background-color: white;
   width: 98%;
   margin: 0 auto;
   grid-column: 1/-1;
@@ -58,9 +63,70 @@
   height: 200px;
 }
 
+/* FINAL Estilos pantalla de productos */
+/* ---------------------------- */
+/* Estilos pantalla de recetas */
+
+.recetaWrapContainer {
+  width: 98%;
+  margin: 0 auto;
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.recetaWrapContainer h2 {
+  width: 100%;
+  border-bottom: 1px solid var(--dark-transparent);
+}
+
+.recetaWrapContainer h3 {
+  background: var(--button-color-hk);
+  color: var(--tittles-hk);
+  padding: 4px;
+}
+
+.recetaWrapContainer h4 {
+  font-size: 1.1em;
+  font-style: italic;
+  padding: 4px;
+}
+
+.recetaWrapContainer span {
+  width: 100%;
+  border: 0.5px solid var(--dark-transparent);
+}
+
+.recetaWrapFields {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.recetaWrapFields h3 {
+  grid-column: 1 / -1;
+}
+
+.recetaWrapTable {
+  display: grid;
+  grid-template-columns: 100%;
+  height: 45px;
+  align-items: center;
+}
+
+.recetaWrapTable b {
+  color: var(--subtittles-hk);
+}
+
 /* RESPONSIVE DESIGN */
 /* Tablet  */
 @media screen and (max-width: 768px) {
+  /* Estilos pantalla de productos */
+
   .itemWrapContainer {
     grid-template-columns: auto auto auto;
     padding: 8px;
@@ -77,10 +143,14 @@
   .fieldSpanAll {
     grid-column: 2 span;
   }
+
+  /* FINAL Estilos pantalla de productos */
 }
 
 /* Mobile  Normal*/
 @media screen and (max-width: 480px) {
+  /*Estilos pantalla de productos */
+
   .itemWrapContainer {
     grid-template-columns: auto auto auto;
     border-radius: 8px;
@@ -99,6 +169,7 @@
     grid-row: 1/-1;
     grid-column: 1/-1;
   }
+  /* FINAL Estilos pantalla de productos */
 }
 /* Mobile  Small*/
 @media screen and (max-width: 320px) {

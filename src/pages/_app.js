@@ -4,6 +4,7 @@
 import Head from "next/head";
 import Header from "../containers/Header";
 import Appcontext from "../context/AppContext";
+import { Toaster } from "./_Toaster";
 //import Header from "components/Header";
 import useInitialState from "../hooks/useInitialState";
 import "../styles/globals.css";
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }) {
       </Head>
       <Header />
       <Component {...pageProps} />
+      <Toaster position="top-center" reverseOrder={true} />
     </Appcontext.Provider>
   );
 }

@@ -34,5 +34,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+#Migración de datos
+/dbMigra
 key.json
 backup.json
