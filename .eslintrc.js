@@ -19,5 +19,7 @@ module.exports = {
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/label-has-for": "off",
     "jsx-a11y/no-noninteractive-element-to-interactive-role": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "@next/next/no-img-element": "off",
   },
 };
