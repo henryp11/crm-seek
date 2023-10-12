@@ -133,6 +133,8 @@
 .componenteDelete {
   cursor: pointer;
   margin: 0 12px;
+  background: transparent;
+  border: none;
 }
 
 .componenteDelete svg:hover {
@@ -153,6 +155,16 @@
   cursor: pointer;
   padding: 2px;
   margin: 4px 8px;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: var(--subtittles-hk);
+  /* word-break: break-word; */
+  background: transparent;
+  /*Las siguientes lineas sirven para ocultar el texto a una solo línea si no cabe*/
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 
 .formulaButton:hover {

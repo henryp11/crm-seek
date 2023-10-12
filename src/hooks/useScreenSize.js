@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 
 //Custom Hook para determinar el tamaño de pantalla para mobil
 const useScreenSize = () => {
@@ -19,7 +19,7 @@ const useScreenSize = () => {
   const mql =
     typeof window !== "undefined" && window.matchMedia("(max-width: 480px)");
 
-  const handler = (e) => {
+  const handler = () => {
     setMatches(mql.matches);
   };
 

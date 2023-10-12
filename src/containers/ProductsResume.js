@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
-import ProductDetail from "./ProductDetail";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
@@ -40,6 +39,8 @@ const ProductsResume = () => {
     // En la función envio si quiero ver componentes(true) o no (false)
     getProdTerminado(false);
   }, []);
+
+  console.log(itemPtList);
 
   return (
     <div className="mainContainer modal">
@@ -96,7 +97,7 @@ const ProductsResume = () => {
                   {/* <span className="hideElement">{item.precio}</span> */}
                   <span className="icons-container" tittle="Añadir Receta">
                     <Link
-                      href={`/recetas/gestion/${item.id}?item=${item.idReg}&name=${item.nombreItem}&img=${item.url}`}
+                      href={`/recetas/gestion/${item.id}?item=${item.idReg}&name=${item.nombreItem}&img=${item.image.name}`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

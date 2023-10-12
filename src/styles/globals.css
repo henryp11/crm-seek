@@ -9,7 +9,7 @@
   --tittles-hk: #ffc870;
   --subtittles-hk: #dbc291;
   --dark: #232830;
-  --dark-transparent: rgba(25, 33, 43, 0.5);
+  --dark-transparent: rgba(25, 33, 43, 0.7);
   --save-button: #1a73e8;
   /* --delete-alert: rgb(155, 32, 32); */
   --delete-alert: rgb(228, 59, 59);
@@ -25,6 +25,7 @@
   --font-xxl: 28px;
   /* GRIDS */
   --grid-column-items: 13% repeat(2, 30%) 10% 10%;
+  --grid-column-clients: 10% 30% repeat(2, 10%) 25% 10%;
   --grid-column-items-modal: 15% repeat(2, 30%) 20%;
   --grid-column-items-col2-modal: 60% 35%;
   --grid-column-items-tablet: 13% repeat(2, 30%) 10% 15%;
@@ -231,6 +232,21 @@ input:-webkit-autofill:active {
   box-shadow: inset 3px -2px 4px 0px var(--dark-transparent);
 }
 
+.client_grid {
+  display: grid;
+  grid-template-columns: var(--grid-column-clients);
+  width: 100%;
+  padding: 4px 0;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+}
+
+.registerNulled {
+  background: var(--letters-hk2) !important;
+}
+
 /* iconos en general */
 .icons-container {
   /* font-size: 28px; */
@@ -359,6 +375,10 @@ svg:active {
 
 .modalSelectCompon .generalContainer {
   width: 40%;
+}
+
+.modalFormulas {
+  backdrop-filter: none;
 }
 
 .modalFormulas .generalContainer {

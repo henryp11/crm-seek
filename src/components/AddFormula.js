@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import useScreenSize from "../hooks/useScreenSize";
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState } from "react";
 import styles from "../styles/forms.module.css";
 
 const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
-  const isMobile = useScreenSize();
   const [dataComponente, setDataComponente] = useState(componente);
 
   const handleChange = (e) => {

@@ -1,6 +1,6 @@
 import React from "react";
 
-const HeadersColumns = ({ classEsp, columnTitles, columnActivate }) => {
+const HeadersColumns = ({ classEsp, columnTitles }) => {
   console.log(columnTitles);
 
   return (

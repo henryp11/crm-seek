@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { useState, useContext, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -9,7 +10,9 @@ import AddSetFab from "../../../components/AddSetFab";
 import AddFormula from "../../../components/AddFormula";
 import Appcontext from "../../../context/AppContext";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
+import { storage } from "../../../server/firebase";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; //Conectarse a colecciones y traer los datos
+import { ref, getDownloadURL } from "firebase/storage";
 import styles from "../../../styles/forms.module.css";
 import stylesRec from "../recetasTemp.module.css";
 
@@ -32,6 +35,7 @@ const Page = () => {
 
   const initialState = {
     idReg: "",
+    idDocItem: "",
     nombreProducto: "",
     url: "",
     setFabricacion: [],
@@ -41,6 +45,7 @@ const Page = () => {
     loading: false,
     error: null,
   });
+  console.log(loadCreate);
 
   const [secuencial, setSecuencial] = useState(0);
   //Se usara para editar set's ya añadidos en la creación
@@ -58,15 +63,47 @@ const Page = () => {
     }
     if (isEdit) {
       getRecetaItem();
+    }
+
+    if (!isEdit) {
+      getImgRef();
+    }
+  }, [ruta]);
+
+  //Obtengo referencia para llamar imagen desde firestore/sotrage ya que al pasar la url como param envía encriptado
+  const getImgRef = async () => {
+    if (imgUrl) {
+      try {
+        const refArchivo = ref(storage, `documentos/${imgUrl}`);
+        //Obtengo URL de la imagen en Storage para colocarla en el producto a crear
+        let urlArchivo = await getDownloadURL(refArchivo);
+        setValueState({
+          ...valueState,
+          idReg: idItem,
+          idDocItem: idFirebase, //Al añadir receta, el idFirebase es el idDoc del item al cual se añade la receta
+          nombreProducto: nameItem,
+          url: urlArchivo,
+        });
+      } catch (error) {
+        console.log(`Referencia no encontrada error: ${error}`);
+        setValueState({
+          ...valueState,
+          idReg: idItem,
+          idDocItem: idFirebase, //Al añadir receta, el idFirebase es el idDoc del item al cual se añade la receta
+          nombreProducto: nameItem,
+          url: "",
+        });
+      }
     } else {
       setValueState({
         ...valueState,
         idReg: idItem,
+        idDocItem: idFirebase, //Al añadir receta, el idFirebase es el idDoc del item al cual se añade la receta
         nombreProducto: nameItem,
-        url: imgUrl,
+        url: "",
       });
     }
-  }, [ruta]);
+  };
 
   // Obtengo datos de la receta a modificar Funciones Firebase
   const getRecetaItem = async () => {
@@ -91,8 +128,15 @@ const Page = () => {
     setLoadCreate({ loading: true, error: null });
     try {
       await setDoc(doc(conectTbRecetas), recetaObject);
+      //Se actualiza el campo de productos haveRecipe para indicar que ya posee receta el item
+      const docRef = doc(db, "Productos", idFirebase);
+      await updateDoc(docRef, { haveRecipe: true });
+
       setLoadCreate({ loading: false, error: null });
       toast.success("Registro creado con éxito");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 2000);
       navigate.push("/recetas");
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
@@ -105,6 +149,9 @@ const Page = () => {
       const docRef = doc(db, "Recetas", idFirebase); //Me conecto a la BD firebase y busco el registro por su Id
       await updateDoc(docRef, recetaObject);
       toast.success("Registro actualizado con éxito");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 2000);
       getRecetaItem();
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
@@ -198,9 +245,7 @@ const Page = () => {
               d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
             />
           </svg>
-          <b>
-            "¿Desea eliminar totalmente el Set de Fabricación seleccionado?"
-          </b>
+          <b>¿Desea eliminar totalmente el Set de Fabricación seleccionado?</b>
           <span className="toasterButtons">
             <button
               onClick={() => {
@@ -287,6 +332,7 @@ const Page = () => {
   console.log({ setEdit: setToEdit });
   console.log({ idComponFormula: idComponSelect });
   console.log({ objectoComponente: componFormula });
+  console.log(imgUrl);
 
   return (
     <>
@@ -305,22 +351,26 @@ const Page = () => {
           {imgUrl && (
             <figure className={styles.itemImage}>
               <Image
-                src={imgUrl}
-                alt={valueState.nombreProducto}
+                src={valueState.url}
+                // alt={valueState.nombreProducto}
+                alt={nameItem}
                 layout="fill"
+                objectFit="contain"
               />
+              {/* <img src={imgUrl} alt="imagen normal" /> */}
             </figure>
           )}
 
-          <span
+          <button
             className={`${styles.formButton} ${stylesRec.addButton}`}
             title="Crear Set"
             onClick={() => {
               showModalNewSet();
             }}
+            type="button"
           >
             Agregar Set de Fabricación
-          </span>
+          </button>
           <div className={stylesRec.detalleRecContainer}>
             {valueState.setFabricacion.map((setFab, pos) => {
               return (
@@ -337,12 +387,13 @@ const Page = () => {
                   <div className={stylesRec.componentesHeader}>
                     <h5>Componentes:</h5>
                     <span className={stylesRec.componenteIcons}>
-                      <span
+                      <button
                         title="Editar Set"
                         className={stylesRec.componenteEdit}
                         onClick={() => {
                           editSetFabricacion(setFab);
                         }}
+                        type="button"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -357,13 +408,14 @@ const Page = () => {
                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                           />
                         </svg>
-                      </span>
-                      <span
+                      </button>
+                      <button
                         title="Eliminar Set"
                         className={stylesRec.componenteDelete}
                         onClick={() => {
                           removeSetFab(setFab.idSet);
                         }}
+                        type="button"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -378,7 +430,7 @@ const Page = () => {
                             d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
                           />
                         </svg>
-                      </span>
+                      </button>
                     </span>
                   </div>
                   {setFab.componentes.map((componente) => {
@@ -402,7 +454,7 @@ const Page = () => {
                               })}
                           </span>
                         )}
-                        <h6
+                        <button
                           tittle="Agregar fórmula"
                           className={stylesRec.formulaButton}
                           onClick={() => {
@@ -412,9 +464,10 @@ const Page = () => {
                               setFab.idSet
                             );
                           }}
+                          type="button"
                         >
                           Fórmula:
-                        </h6>
+                        </button>
                         <span className={stylesRec.formulaContainer}>
                           <p>
                             <b>F1: </b>

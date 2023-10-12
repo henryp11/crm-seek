@@ -15,14 +15,9 @@ module.exports = {
   ],
   rules: {
     semi: "off",
-    "prettier/prettier": [
-      "error",
-      { endOfLine: "auto" },
-      "error",
-      {},
-      {
-        usePrettierrc: false,
-      },
-    ],
+    "prettier/prettier": ["error", { endOfLine: "auto", usePrettierrc: false }],
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "off",
   },
 };

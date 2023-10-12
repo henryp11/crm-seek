@@ -14,18 +14,19 @@ const ProductDetail = (props) => {
       {openItem && (
         <div
           className={
-            itemDetail.url
+            itemDetail.image.url
               ? styles.itemWrapContainerImage
               : styles.itemWrapContainer
           }
         >
-          {itemDetail.url && (
+          {itemDetail.image.url && (
             <span className={`${styles.itemWrapFields} ${styles.fieldSpanAll}`}>
               <figure className={styles.itemImage}>
                 <Image
-                  src={itemDetail.url}
+                  src={itemDetail.image.url}
                   alt={itemDetail.idItem}
                   layout="fill"
+                  objectFit="contain"
                 />
               </figure>
             </span>

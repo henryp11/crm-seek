@@ -30,8 +30,7 @@ const AddSetFab = ({
   toEdit,
   secuencial,
 }) => {
-  const { itemPtList, getProdTerminado, loadData, showModal } =
-    useContext(Appcontext);
+  const { itemPtList, getProdTerminado, showModal } = useContext(Appcontext);
   const { query, setQuery, filteredItems } = useSearchSimple(itemPtList);
   const isMobile = useScreenSize();
 
@@ -87,6 +86,9 @@ const AddSetFab = ({
   const addComponente = (payload, idItemSearch) => {
     if (!dataFabricacion.nombreSet) {
       toast.error("Colocar nombre del set de fabricación");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 2000);
     } else {
       if (dataFabricacion.componentes.length === 0) {
         setDataFabricacion({
@@ -176,6 +178,7 @@ const AddSetFab = ({
           onClick={() => {
             showModal();
           }}
+          type="button"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -202,33 +205,36 @@ const AddSetFab = ({
             // readonly={true}
           />
           <div className={styles.buttonContainerBig}>
-            <span
+            <button
               onClick={() => {
                 setOpenCompon(!openCompon);
               }}
               className={styles.formButton}
+              type="button"
             >
               Agregar Componentes
-            </span>
+            </button>
 
             {!idSetEdit ? (
-              <span
+              <button
                 onClick={() => {
                   addSetButton(dataFabricacion);
                 }}
                 className={styles.formButton}
+                type="button"
               >
                 Crear Set
-              </span>
+              </button>
             ) : (
-              <span
+              <button
                 onClick={() => {
                   addSetButton(dataFabricacion, true, idSetEdit);
                 }}
                 className={styles.formButton}
+                type="button"
               >
                 Actualizar
-              </span>
+              </button>
             )}
           </div>
 
@@ -264,6 +270,9 @@ const AddSetFab = ({
                       onClick={() => {
                         addComponente(item, item.idReg);
                       }}
+                      onKeyUp=""
+                      tabIndex="0"
+                      role="button"
                     >
                       <span>
                         <i>{item.idReg}</i> - {item.nombreItem}
@@ -344,12 +353,13 @@ const AddSetFab = ({
                   />
                 </span>
               </div>
-              <span
+              <button
                 className={styles.removeButton}
                 tittle="Quitar componente"
                 onClick={() => {
                   removeComponente(componente.idCompon);
                 }}
+                type="button"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -364,7 +374,7 @@ const AddSetFab = ({
                     d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-              </span>
+              </button>
             </div>
           );
         })}

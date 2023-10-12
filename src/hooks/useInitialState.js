@@ -8,6 +8,7 @@ import {
   getDocs,
   onSnapshot,
   doc,
+  updateDoc,
   deleteDoc,
 } from "firebase/firestore";
 // Empiezo creando un estado inicial general de los atributos requeridos en otras pantallas
@@ -32,7 +33,6 @@ const useInitialState = () => {
   const [state, setState] = useState(initialState); //Modifica el estado principal
   const [dataList, setDataList] = useState([]); //Trae todos los registros de cualquier tabla
   const [itemPtList, setItemPtList] = useState([]); //Trae Productos terminados
-  const [isDelete, setIsDelete] = useState(false);
   const [loadData, setLoadData] = useState({
     loading: false,
     error: null,
@@ -67,18 +67,20 @@ const useInitialState = () => {
 
   //Eliminar documento de cualquier tabla
 
-  const deleteToast = async (table, payload) => {
+  const deleteToast = async (table, payload, idDocItem) => {
+    if (idDocItem) {
+      //Si se envía el idDocumento de firebase como parámetro al eliminar
+      //Se actualiza el campo del producto que se elimino de Recetas para indicar que ya no posee receta
+      //Solo se utilizará en esos casos
+      const docRef = doc(db, "Productos", idDocItem);
+      await updateDoc(docRef, { haveRecipe: false });
+    }
+
     await deleteDoc(doc(db, table, payload));
   };
 
-  const deleteDocument = async (payload, table, message) => {
+  const deleteDocument = async (payload, table, message, idDocItem) => {
     try {
-      // let isDelete = confirm(
-      //   "¿Desea eliminar toda la RECETA de fabricación para este item?"
-      // );
-      // if (isDelete) {
-      //   await deleteDoc(doc(db, table, payload));
-      // }
       toast(
         (t) => (
           <span className="toasterDelete">
@@ -99,7 +101,7 @@ const useInitialState = () => {
             <span className="toasterButtons">
               <button
                 onClick={() => {
-                  deleteToast(table, payload);
+                  deleteToast(table, payload, idDocItem);
                   toast.dismiss(t.id);
                   toast.success("Registro Eliminado!", {
                     style: {
@@ -137,7 +139,9 @@ const useInitialState = () => {
       const docs = [];
       const queryDb = query(
         collection(db, "Productos"),
-        where("isCompon", "==", isCompon)
+        where("isCompon", "==", isCompon),
+        where("haveRecipe", "==", false),
+        where("estatus", "==", true)
       );
       const querySnapshot = await getDocs(queryDb);
       querySnapshot.forEach((doc) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
-import ProductDetail from "../containers/ProductDetail";
+import ClientDetail from "../containers/ClientDetail";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
@@ -17,16 +17,17 @@ import useSearchSimple from "../hooks/useSearchSimple";
 //import styles from "../styles/products.module.css";
 
 const moduleHeaders = {
-  classEspec: ["item_grid"],
+  classEspec: ["client_grid"],
   columnTitles: [
-    { id: "col1", name: "Id.Prod", show: true },
+    { id: "col1", name: "Id.Cliente", show: true },
     { id: "col2", name: "Nombre", show: true },
-    { id: "col3", name: "Clase", show: true },
-    { id: "col4", name: "Precio", show: true },
+    { id: "col3", name: "RUC / Cédula", show: true },
+    { id: "col4", name: "Teléfono", show: true },
+    { id: "col5", name: "Correo", show: true },
   ],
 };
 
-const Products = () => {
+const Clients = () => {
   // Funciones y objetos desde contexto inicial
   const { getSimpleDataDb, dataList, loadData } = useContext(Appcontext);
   const isMobile = useScreenSize();
@@ -37,7 +38,7 @@ const Products = () => {
   const { query, setQuery, filteredItems } = useSearchSimple(dataList);
 
   useEffect(() => {
-    getSimpleDataDb("Productos");
+    getSimpleDataDb("Clientes");
   }, []);
 
   return (
@@ -47,7 +48,7 @@ const Products = () => {
         <SectionSearch
           query={query}
           setQuery={setQuery}
-          placeholder={"Buscar Item por su código / nombre"}
+          placeholder={"Buscar CLiente por su Nombre / Doc. Identificación"}
         />
         <HeadersColumns
           classEsp={moduleHeaders.classEspec}
@@ -64,7 +65,7 @@ const Products = () => {
           <h1>loading...</h1>
         ) : (
           <div className="generalContainerDetails">
-            <Link href="/products/gestion/new">
+            <Link href="/clients/gestion/new">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -88,14 +89,15 @@ const Products = () => {
                   key={item.id}
                   className={
                     item.estatus
-                      ? "item_grid item_detail"
-                      : "item_grid item_detail registerNulled"
+                      ? "client_grid item_detail"
+                      : "client_grid item_detail registerNulled"
                   }
                 >
                   <span>{item.idReg}</span>
-                  <span>{item.nombreItem}</span>
-                  <span>{item.subCategoria}</span>
-                  <span className="hideElement">{item.precio}</span>
+                  <span>{item.nombreCliente}</span>
+                  <span>{item.codTribut}</span>
+                  <span className="hideElement">{item.telf1}</span>
+                  <span>{item.email}</span>
                   <span className="icons-container">
                     <button
                       title="Ver Detalles"
@@ -129,7 +131,7 @@ const Products = () => {
                         />
                       </svg>
                     </button>
-                    <Link href={`/products/gestion/${item.id}`}>
+                    <Link href={`/clients/gestion/${item.id}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -146,7 +148,7 @@ const Products = () => {
                     </Link>
                   </span>
                   {itemCapture === item.id && (
-                    <ProductDetail
+                    <ClientDetail
                       openItem={openItem}
                       itemDetail={dataItemCap}
                     />
@@ -161,4 +163,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Clients;

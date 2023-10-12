@@ -28,6 +28,7 @@ de cada registro para  pantallas principales para cada módulo */
   border-radius: 12px;
   padding: 16px;
   gap: 8px 28px;
+  align-items: center;
 }
 
 /* .itemWrapContainer span:nth-of-type(2) {

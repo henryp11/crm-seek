@@ -104,35 +104,45 @@ const Recetas = () => {
                 >
                   <span>{item.idReg}</span>
                   <span>{item.nombreProducto}</span>
-                  <figure
-                    className="imageSmall"
-                    onClick={() => {
-                      if (zoom) {
-                        if (imageCapture !== item.id) {
-                          setZoom(false);
-                          setImageCapture(item.id);
-                          setZoom(true);
+                  {item.url ? (
+                    <figure
+                      className="imageSmall"
+                      onClick={() => {
+                        if (zoom) {
+                          if (imageCapture !== item.id) {
+                            setZoom(false);
+                            setImageCapture(item.id);
+                            setZoom(true);
+                          } else {
+                            setZoom(false);
+                          }
                         } else {
-                          setZoom(false);
-                        }
-                      } else {
-                        setZoom(!zoom);
-                        setImageCapture(item.id);
-                      }
-                    }}
-                  >
-                    <Image src={item.url} alt={item.id} layout="fill" />
-                    {zoom && imageCapture === item.id && (
-                      <img
-                        src={item.url}
-                        alt={item.id}
-                        className="imageBig"
-                        onClick={() => {
                           setZoom(!zoom);
-                        }}
-                      />
-                    )}
-                  </figure>
+                          setImageCapture(item.id);
+                        }
+                      }}
+                      onKeyUp=""
+                      tabIndex="0"
+                      role="button"
+                    >
+                      <Image src={item.url} alt="imageSmall" layout="fill" />
+                      {zoom && imageCapture === item.id && (
+                        <img
+                          src={item.url}
+                          alt={item.id}
+                          className="imageBig"
+                          onClick={() => {
+                            setZoom(!zoom);
+                          }}
+                          onKeyUp=""
+                          tabIndex="0"
+                          role="button"
+                        />
+                      )}
+                    </figure>
+                  ) : (
+                    <figure></figure>
+                  )}
                   <span className="icons-container">
                     <button
                       title="Ver Detalles"
@@ -191,7 +201,8 @@ const Recetas = () => {
                         deleteDocument(
                           item.id,
                           "Recetas",
-                          "¿Desea eliminar toda la RECETA de fabricación para este item?"
+                          "¿Desea eliminar toda la RECETA de fabricación para este item?",
+                          item.idDocItem
                         );
                       }}
                     >
