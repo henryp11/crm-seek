@@ -18,9 +18,9 @@ const Page = () => {
   // const { showModal, state } = useContext(Appcontext);
   const conectTbClientes = collection(db, "Clientes");
   const initialState = {
-    idReg: "",
+    // codTribut: "",
+    idReg: "", //Cédula / RUC
     nombreCliente: "",
-    codTribut: "",
     direccion: "",
     telf1: "",
     telf2: "",

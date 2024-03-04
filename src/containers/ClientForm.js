@@ -45,10 +45,9 @@ const ClientForm = ({ funCreate, funUpdate, idDoc, data }) => {
             nameInput="idReg"
             valueInput={valueState.idReg}
             onChange={handleChange}
-            nameLabel="Id.Cliente"
+            nameLabel="RUC / Cédula"
             required={true}
           />
-
           <CustomInput
             typeInput="text"
             nameInput="nombreCliente"
@@ -59,14 +58,6 @@ const ClientForm = ({ funCreate, funUpdate, idDoc, data }) => {
           />
         </span>
         <span className={styles.containerAgrupFields}>
-          <CustomInput
-            typeInput="text"
-            nameInput="codTribut"
-            valueInput={valueState.codTribut}
-            onChange={handleChange}
-            nameLabel="RUC / Cédula"
-            required={true}
-          />
           <CustomInput
             typeInput="text"
             nameInput="direccion"

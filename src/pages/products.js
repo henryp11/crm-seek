@@ -81,7 +81,7 @@ const Products = () => {
                 />
               </svg>
             </Link>
-            {filteredItems.length <= 0 && <p>No Existe</p>}
+            {filteredItems.length <= 0 && <p>No Existen registros</p>}
             {filteredItems.map((item) => {
               return (
                 <div

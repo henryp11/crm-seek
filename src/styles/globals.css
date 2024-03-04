@@ -25,7 +25,7 @@
   --font-xxl: 28px;
   /* GRIDS */
   --grid-column-items: 13% repeat(2, 30%) 10% 10%;
-  --grid-column-clients: 10% 30% repeat(2, 10%) 25% 10%;
+  --grid-column-clients: 10% 35% 15% 25% 10%;
   --grid-column-items-modal: 15% repeat(2, 30%) 20%;
   --grid-column-items-col2-modal: 60% 35%;
   --grid-column-items-tablet: 13% repeat(2, 30%) 10% 15%;

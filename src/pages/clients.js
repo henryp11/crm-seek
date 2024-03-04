@@ -19,11 +19,11 @@ import useSearchSimple from "../hooks/useSearchSimple";
 const moduleHeaders = {
   classEspec: ["client_grid"],
   columnTitles: [
-    { id: "col1", name: "Id.Cliente", show: true },
+    // { id: "col1", name: "Id.Cliente", show: true },
+    { id: "col1", name: "RUC / Cédula", show: true },
     { id: "col2", name: "Nombre", show: true },
-    { id: "col3", name: "RUC / Cédula", show: true },
-    { id: "col4", name: "Teléfono", show: true },
-    { id: "col5", name: "Correo", show: true },
+    { id: "col3", name: "Teléfono", show: true },
+    { id: "col4", name: "Correo", show: true },
   ],
 };
 
@@ -55,7 +55,7 @@ const Clients = () => {
           columnTitles={
             isMobile
               ? moduleHeaders.columnTitles.map((column) => {
-                  if (column.id !== "col4") return column;
+                  if (column.id !== "col5") return column;
                   return { ...column, show: false };
                 })
               : moduleHeaders.columnTitles
@@ -93,9 +93,9 @@ const Clients = () => {
                       : "client_grid item_detail registerNulled"
                   }
                 >
+                  {/* <span>{item.codTribut}</span> */}
                   <span>{item.idReg}</span>
                   <span>{item.nombreCliente}</span>
-                  <span>{item.codTribut}</span>
                   <span className="hideElement">{item.telf1}</span>
                   <span>{item.email}</span>
                   <span className="icons-container">

@@ -68,10 +68,10 @@ const useInitialState = () => {
   //Eliminar documento de cualquier tabla
 
   const deleteToast = async (table, payload, idDocItem) => {
+    //Si se envía el idDocumento de firebase como parámetro al eliminar
+    //Se actualiza el campo del producto que se elimino de Recetas para indicar que ya no posee receta
+    //Solo se utilizará en esos casos
     if (idDocItem) {
-      //Si se envía el idDocumento de firebase como parámetro al eliminar
-      //Se actualiza el campo del producto que se elimino de Recetas para indicar que ya no posee receta
-      //Solo se utilizará en esos casos
       const docRef = doc(db, "Productos", idDocItem);
       await updateDoc(docRef, { haveRecipe: false });
     }
