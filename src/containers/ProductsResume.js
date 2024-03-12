@@ -37,7 +37,8 @@ const ProductsResume = () => {
 
   useEffect(() => {
     // En la función envio si quiero ver componentes(true) o no (false)
-    getProdTerminado(false);
+    // Segundo param es para ver los items con o si receta
+    getProdTerminado(false, false);
   }, []);
 
   console.log(itemPtList);

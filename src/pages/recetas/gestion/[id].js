@@ -41,12 +41,10 @@ const Page = () => {
     setFabricacion: [],
   };
   const [valueState, setValueState] = useState(initialState);
-  const [loadCreate, setLoadCreate] = useState({
+  const [setLoadCreate] = useState({
     loading: false,
     error: null,
   });
-  console.log(loadCreate);
-
   const [secuencial, setSecuencial] = useState(0);
   //Se usara para editar set's ya añadidos en la creación
   const [setToEdit, setSetToEdit] = useState({});
@@ -200,7 +198,7 @@ const Page = () => {
     if (isEdit) {
       // Cuando se está editando traigo el "query param" "isEdit" de la ruta
       // y aplico un estado solo para la edición y guardar el set ya existente
-      // En ese caso se usa la funicón con los 3 parámentros (setFab, isEdit, idSetEdit)
+      // En ese caso se usa la función con los 3 parámentros (setFab, isEdit, idSetEdit)
       setValueState({
         ...valueState,
         setFabricacion: [

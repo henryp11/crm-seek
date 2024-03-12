@@ -48,7 +48,8 @@ const AddSetFab = ({
 
   useEffect(() => {
     // En la función envio si quiero ver componentes(true) o no (false)
-    getProdTerminado(true);
+    //segundo para es para traer items con o sin receta
+    getProdTerminado(true, false);
     handleId();
     // Si se envía un idSet ya existente se colocará como estado inicial el set a editar
     if (idSetEdit) {
@@ -59,7 +60,6 @@ const AddSetFab = ({
   const handleChange = (e) => {
     setDataFabricacion({
       ...dataFabricacion,
-      // idSet: toEdit.idSet === undefined ? handleId : toEdit.idSet,
       idSet: toEdit.idSet === undefined ? secuencial : toEdit.idSet,
       [e.target.name]: e.target.value,
     });
@@ -98,6 +98,7 @@ const AddSetFab = ({
             {
               idCompon: payload.idReg,
               nombreCompon: payload.nombreItem,
+              precio: payload.precio,
               formula1: "",
               formula2: "",
               dimensiones: {
@@ -124,6 +125,7 @@ const AddSetFab = ({
               {
                 idCompon: payload.idReg,
                 nombreCompon: payload.nombreItem,
+                precio: payload.precio,
                 formula1: "",
                 formula2: "",
                 dimensiones: {
@@ -137,20 +139,6 @@ const AddSetFab = ({
             ],
           });
         }
-        // else {
-        //   setState({
-        //     ...state,
-        //     itemsFactura: [
-        //       ...state.itemsFactura.map((item) => {
-        //         if (item.idItem !== idItemSearch) return item;
-        //         return {
-        //           ...item,
-        //           cantFact: item.cantFact + 1,
-        //         };
-        //       }),
-        //     ],
-        //   });
-        // }
       }
     }
   };

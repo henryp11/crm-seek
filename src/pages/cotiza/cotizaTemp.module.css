@@ -46,7 +46,7 @@
 
 /* Pantalla de creación y edición de recetas */
 .crudRecContainer {
-  width: 80%;
+  width: 98%;
   margin: 0 auto;
   display: flex;
   gap: 8px;
@@ -64,9 +64,8 @@
 
 .crudRecContainer figure {
   position: relative;
-  width: 100%;
-  height: 300px;
-  grid-row: 1/-1;
+  width: 99%;
+  height: 100%;
 }
 
 .crudRecContainer figure img {
@@ -75,6 +74,147 @@
 
 .addButton {
   width: auto;
+}
+
+.returnButton {
+  position: fixed;
+  top: 30px;
+  right: 50px;
+  z-index: 3;
+  background: var(--tittles-hk);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  scale: 1.2;
+  transition: all ease 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.returnButton:hover {
+  background: white;
+}
+
+.buttonAddItems {
+  border: 1px solid var(--dark-transparent);
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all ease 0.2s;
+  background: var(--save-button);
+  color: white;
+}
+
+.buttonAddItems:hover {
+  border-radius: 0;
+  background: var(--save-button-hover);
+  color: var(--dark);
+}
+
+.buttonAddItems:active {
+  scale: 0.9;
+}
+
+.modalDimensiones {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 5;
+  background: var(--dark);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: calc(100vh - 54px);
+  overflow: auto;
+  padding-top: 16px;
+}
+
+.modalDimenImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.modalDimenForm {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modalDimenForm span {
+  border: 1px solid white;
+  width: 40%;
+  padding: 4px;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  margin: 1px;
+}
+
+.modalDimenForm span label {
+  color: var(--tittles-hk);
+  font-weight: bold;
+}
+
+.modalDimenForm span input {
+  padding: 2px;
+  border-radius: 5px;
+  outline-color: var(--tittles-hk);
+  border: 1px solid var(--subtittles-hk);
+  color: var(--background-hk);
+  text-align: right;
+}
+
+.modalDimenForm span input:hover {
+  border-radius: 0;
+}
+
+.modalDimenForm span input:focus {
+  border-radius: 0;
+  background: #dbe2e8;
+}
+
+.containerCalculos {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  grid-column: 1/-1;
+  padding: 2px;
+  margin: 8px;
+  margin-bottom: 16px;
+}
+
+.containerCalculos h3 {
+  background: var(--tittles-hk);
+  color: var(--dark);
+  width: 100%;
+  text-align: center;
+}
+
+.tableValuesTitle,
+.tableValuesCalc {
+  display: grid;
+  grid-template-columns: 30% 15% repeat(4, 13%);
+  width: 100%;
+  align-items: center;
+  border-bottom: 1px solid white;
+  text-align: center;
+  padding: 2px;
+}
+
+.tableValuesTitle {
+  border: 1px solid var(--subtittles-hk);
+  color: var(--subtittles-hk);
+  font-weight: bold;
+}
+
+.tableValuesCalc {
 }
 
 .detalleRecContainer {
@@ -96,7 +236,7 @@
 .componentes {
   color: var(--dark);
   display: grid;
-  grid-template-columns: 30% 10% 20% 10% 30%;
+  grid-template-columns: 30% 10% 30% 10% 20%;
   justify-content: center;
   align-items: center;
   font-size: var(--font-nm);

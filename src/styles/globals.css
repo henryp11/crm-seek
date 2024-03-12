@@ -9,8 +9,10 @@
   --tittles-hk: #ffc870;
   --subtittles-hk: #dbc291;
   --dark: #232830;
-  --dark-transparent: rgba(25, 33, 43, 0.7);
+  --dark-transparent: rgba(25, 33, 43, 0.8);
+  --background-card: #f2f2f2;
   --save-button: #1a73e8;
+  --save-button-hover: #00cde8db;
   /* --delete-alert: rgb(155, 32, 32); */
   --delete-alert: rgb(228, 59, 59);
   --background-rows: rgb(247, 247, 247);
@@ -475,6 +477,62 @@ svg:active {
 .toasterButtons button:hover {
   background-color: var(--button-color-hk-hover);
   color: white;
+}
+
+/*Estilo pantalla de selección de Items en cotización*/
+.containerItemsCotiza {
+  background: var(--dark-transparent);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 8px;
+  height: 100%;
+}
+
+.itemsCotizaModal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  height: calc(100vh - 50px);
+  overflow: auto;
+}
+
+.recetaCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--background-card);
+  border-radius: 8px;
+  height: 50%;
+  transition: all ease 0.2s;
+}
+
+.recetaCard:hover {
+  border-radius: 0;
+}
+
+.recetaCard:hover .recetaCardDescripButton {
+  background: var(--save-button-hover);
+  color: black;
+}
+
+.recetaCardDescripButton {
+  margin-top: 4px;
+  border-top: 1px solid var(--button-color-hk);
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background: var(--save-button);
+  color: white;
+  transition: all ease 0.2s;
 }
 
 /* RESPONSIVE DESIGN */
