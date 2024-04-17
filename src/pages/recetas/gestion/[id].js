@@ -41,10 +41,10 @@ const Page = () => {
     setFabricacion: [],
   };
   const [valueState, setValueState] = useState(initialState);
-  const [setLoadCreate] = useState({
-    loading: false,
-    error: null,
-  });
+  // const [loadCreate, setLoadCreate] = useState({
+  //   loading: false,
+  //   error: null,
+  // });
   const [secuencial, setSecuencial] = useState(0);
   //Se usara para editar set's ya añadidos en la creación
   const [setToEdit, setSetToEdit] = useState({});
@@ -105,7 +105,7 @@ const Page = () => {
 
   // Obtengo datos de la receta a modificar Funciones Firebase
   const getRecetaItem = async () => {
-    setLoadCreate({ loading: true, error: null });
+    // setLoadCreate({ loading: true, error: null });
     try {
       const docRef = doc(db, "Recetas", idFirebase);
       const docSnap = await getDoc(docRef); //Obtengo el dato por el id de Firebase
@@ -113,36 +113,38 @@ const Page = () => {
       if (docSnap.exists()) {
         const receta = docSnap.data();
         setValueState({ ...receta, id: idFirebase });
-        setLoadCreate({ loading: false, error: null });
+        // setLoadCreate({ loading: false, error: null });
       } else {
         window.alert("Item no encontrado!!");
       }
     } catch (error) {
-      setLoadCreate({ loading: false, error: error });
+      console.log(error);
+      // setLoadCreate({ loading: false, error: error });
     }
   };
 
   const createReceta = async (recetaObject) => {
-    setLoadCreate({ loading: true, error: null });
+    // setLoadCreate({ loading: true, error: null });
     try {
       await setDoc(doc(conectTbRecetas), recetaObject);
       //Se actualiza el campo de productos haveRecipe para indicar que ya posee receta el item
       const docRef = doc(db, "Productos", idFirebase);
       await updateDoc(docRef, { haveRecipe: true });
 
-      setLoadCreate({ loading: false, error: null });
+      // setLoadCreate({ loading: false, error: null });
       toast.success("Registro creado con éxito");
       setTimeout(() => {
         toast.dismiss();
       }, 2000);
       navigate.push("/recetas");
     } catch (error) {
-      setLoadCreate({ loading: false, error: error });
+      console.log(error);
+      // setLoadCreate({ loading: false, error: error });
     }
   };
 
   const updateReceta = async (recetaObject) => {
-    setLoadCreate({ loading: true, error: null });
+    // setLoadCreate({ loading: true, error: null });
     try {
       const docRef = doc(db, "Recetas", idFirebase); //Me conecto a la BD firebase y busco el registro por su Id
       await updateDoc(docRef, recetaObject);
@@ -152,7 +154,8 @@ const Page = () => {
       }, 2000);
       getRecetaItem();
     } catch (error) {
-      setLoadCreate({ loading: false, error: error });
+      console.log(error);
+      // setLoadCreate({ loading: false, error: error });
     }
   };
 
