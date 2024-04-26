@@ -199,7 +199,15 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             nameInput="precio"
             valueInput={valueState.precio}
             onChange={handleChange}
-            nameLabel="Precio Venta"
+            nameLabel="Precio Aluminio Claro"
+            required={true}
+          />
+          <CustomInput
+            typeInput="number"
+            nameInput="precio2"
+            valueInput={valueState.precio2}
+            onChange={handleChange}
+            nameLabel="Precio Aluminio Oscuro"
             required={true}
           />
           <CustomInput
@@ -208,7 +216,6 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             valueInput={valueState.costo}
             onChange={handleChange}
             nameLabel="Costo"
-            required={true}
           />
           <span className={styles.containerAgrupFields}>
             <CustomInput

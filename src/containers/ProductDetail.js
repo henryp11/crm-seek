@@ -53,8 +53,12 @@ const ProductDetail = (props) => {
             <p>{itemDetail.unidMed}</p>
           </span>
           <span className={styles.itemWrapFields}>
-            <h3 className={styles.itemWrapTittles}>Precios</h3>
+            <h3 className={styles.itemWrapTittles}>Precio Aluminio Claro</h3>
             <p>{itemDetail.precio}</p>
+          </span>
+          <span className={styles.itemWrapFields}>
+            <h3 className={styles.itemWrapTittles}>Precio Aluminio Oscuro</h3>
+            <p>{itemDetail.precio2}</p>
           </span>
           <span className={styles.itemWrapFields}>
             <h3 className={styles.itemWrapTittles}>Costo</h3>

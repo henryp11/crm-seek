@@ -14,7 +14,7 @@ const DimensionsItem = ({ itemReceta }) => {
     sets: itemReceta.setFabricacion,
   });
 
-  //Extraigo los Sets de facbricación del item elegido y obtengo los componentes
+  //Extraigo los Sets de fabricación del item elegido y obtengo los componentes
   const setsItem =
     itemReceta.setFabricacion.length > 0 &&
     itemReceta.setFabricacion.map((set) => {

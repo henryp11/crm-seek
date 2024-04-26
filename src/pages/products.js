@@ -21,8 +21,8 @@ const moduleHeaders = {
   columnTitles: [
     { id: "col1", name: "Id.Prod", show: true },
     { id: "col2", name: "Nombre", show: true },
-    { id: "col3", name: "Clase", show: true },
-    { id: "col4", name: "Precio", show: true },
+    { id: "col3", name: "Categoría", show: true },
+    { id: "col4", name: "Sub-Categoría", show: true },
   ],
 };
 
@@ -94,8 +94,8 @@ const Products = () => {
                 >
                   <span>{item.idReg}</span>
                   <span>{item.nombreItem}</span>
-                  <span>{item.subCategoria}</span>
-                  <span className="hideElement">{item.precio}</span>
+                  <span>{item.categoria}</span>
+                  <span className="hideElement">{item.subCategoria}</span>
                   <span className="icons-container">
                     <button
                       title="Ver Detalles"

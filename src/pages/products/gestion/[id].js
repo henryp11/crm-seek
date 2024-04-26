@@ -34,9 +34,9 @@ const Page = () => {
     subCategoria: "",
     unidMed: "",
     precio: "",
+    precio2: "",
     costo: "",
     image: { name: "", url: "" },
-    // url: "",
     isCompon: false,
     haveRecipe: false,
     estatus: true,
@@ -57,7 +57,7 @@ const Page = () => {
       console.log(idFirebase);
       setLoadCreate({ loading: true, error: null });
       try {
-        const docRef = doc(db, "Productos", idFirebase); //Me conecto a la BD firebase y busco el cliente por su Id
+        const docRef = doc(db, "Productos", idFirebase); //Me conecto a la BD firebase y busco el registro por su Id
         const docSnap = await getDoc(docRef); //Obtengo el dato por su id único de Firebase
         if (docSnap.exists()) {
           const producto = docSnap.data();
@@ -90,15 +90,14 @@ const Page = () => {
     }
   };
 
-  //Función para actualizar la porción de datos de los productos que
-  //Debe estar en la colección "Recetas" y hacer la actualziación en cascada de todos los documentos
-  //Que requieran esa información desde el origen.
+  /**Función para actualizar la porción de datos de los productos que están
+  en la colección "Recetas" y hacer la actualziación en cascada de todos los documentos
+  que requieran esa información desde el origen**/
 
   const UpdateDataReceta = async (productObject, idReg) => {
     const ref = [];
     //Busco la referencia del Producto como un query,
-    //Dentro de la colección Recetas, ya que al crear una receta almaceno el id del documento de producto
-    //En el parámetro idDocItem
+    //Dentro de la colección Recetas, ya que al crear una receta almaceno el id del documento de producto En el parámetro idDocItem
     const queryDb = query(
       collection(db, "Recetas"),
       where("idDocItem", "==", idReg)
@@ -106,14 +105,12 @@ const Page = () => {
     const querySnapshot = await getDocs(queryDb);
     //Si lo encuentra guardo dentro del array solamente el id de la receta que contiene ese producto
     querySnapshot.forEach((doc) => {
-      // ref.push({ ...doc.data(), id: doc.id });
       ref.push(doc.id);
     });
     const refUpdateReceta = ref[0]; //Solo debería existir un id único por eso tomo la primera posición
     console.log({ itemRefReceta: refUpdateReceta });
 
-    //Con el id de la receta obtenido, se procede a actualizar solo los campos que se requiere en la receta
-    // en este caso el nombre del item y la URL de la imagen
+    //Con el id de la receta obtenido, se procede a actualizar solo los campos que se requiere en la receta (nombre del item y URL de la imagen)
     try {
       const docUpdate = doc(db, "Recetas", refUpdateReceta);
       await updateDoc(docUpdate, {
@@ -128,9 +125,9 @@ const Page = () => {
   const updateProduct = async (productObject, idReg) => {
     setLoadCreate({ loading: true, error: null });
     try {
-      const docRef = doc(db, "Productos", idFirebase); //Me conecto a la BD firebase y busco el cliente por su Id
+      const docRef = doc(db, "Productos", idFirebase); //Me conecto a la BD firebase y busco el registro por su Id
       await updateDoc(docRef, productObject);
-      //Solo realiza la actualización en recetas para productos terminados, que son los
+      //SOLO se realiza la actualización en recetas para productos terminados, que son los
       //Que deberían existir en la colección Recetas, así evito realizar lecturas innecesarias
       if (!productObject.isCompon) {
         UpdateDataReceta(productObject, idReg);
