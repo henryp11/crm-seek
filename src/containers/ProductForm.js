@@ -12,7 +12,7 @@ import {
 } from "firebase/storage"; //Storage de firebase para almacenar archivos
 import styles from "../styles/forms.module.css";
 
-const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
+const ProductForm = ({ funCreate, funUpdate, funUpdate2, idDoc, data }) => {
   const [valueState, setValueState] = useState(data);
   const [archivo, setArchivo] = useState(null); //captura archivo a subir a storage
   const [previewImg, setPreviewImg] = useState(""); //Para mostrar un preview de la imagen a subir
@@ -21,7 +21,11 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
   console.log(data);
 
   const handleChange = (e) => {
-    setValueState({ ...valueState, [e.target.name]: e.target.value });
+    setValueState({
+      ...valueState,
+      [e.target.name]:
+        e.target.type === "number" ? +e.target.value : e.target.value,
+    });
   };
 
   const handleCheck = (field) => {
@@ -94,7 +98,7 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
         setPreviewImg("");
       })
       .catch((error) => {
-        console.log(`Error al eliminar: ${error}`);
+        console.log(`Error al eliminar imagén: ${error}`);
       });
   };
 
@@ -173,7 +177,7 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             nameInput="categoria"
             valueInput={valueState.categoria}
             onChange={handleChange}
-            nameLabel="Categoria"
+            nameLabel="Categoría"
             required={true}
           />
           <CustomInput
@@ -181,7 +185,7 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             nameInput="subCategoria"
             valueInput={valueState.subCategoria}
             onChange={handleChange}
-            nameLabel="Sub-Categoria / Clase"
+            nameLabel="Sub-Categoría"
             required={true}
           />
           <CustomInput
@@ -200,7 +204,6 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             valueInput={valueState.precio}
             onChange={handleChange}
             nameLabel="Precio Aluminio Claro"
-            required={true}
           />
           <CustomInput
             typeInput="number"
@@ -208,7 +211,6 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             valueInput={valueState.precio2}
             onChange={handleChange}
             nameLabel="Precio Aluminio Oscuro"
-            required={true}
           />
           <CustomInput
             typeInput="number"
@@ -297,6 +299,15 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
                 />
               </svg>
             </Link>
+          </button>
+          <button
+            title="test"
+            type="button"
+            onClick={() => {
+              funUpdate2(valueState.idReg);
+            }}
+          >
+            test update
           </button>
         </span>
       </div>

@@ -36,6 +36,7 @@ const useInitialState = () => {
   const [state, setState] = useState(initialState); //Modifica el estado principal
   const [dataList, setDataList] = useState([]); //Trae todos los registros de cualquier tabla
   const [itemPtList, setItemPtList] = useState([]); //Trae Productos terminados
+  const [itemComponList, setItemComponList] = useState([]); //Trae componentes
   const [loadData, setLoadData] = useState({
     loading: false,
     error: null,
@@ -161,6 +162,68 @@ const useInitialState = () => {
         return 0;
       });
       setItemPtList(docs);
+      setLoadData({ loading: false, error: null });
+    } catch (error) {
+      setLoadData({ loading: false, error: error });
+    }
+  };
+  // Llamar componentes y filtrar por su precio
+  const getComponPrecio = async (listaPrecio) => {
+    setLoadData({ loading: true, error: null });
+    const precioAluminio = listaPrecio === "claro" ? "precio" : "precio2";
+    console.log(`lista: ${precioAluminio}`);
+    try {
+      const docs = [];
+      const queryDb = query(
+        collection(db, "Productos"),
+        where("isCompon", "==", true),
+        where("estatus", "==", true)
+      );
+      const querySnapshot = await getDocs(queryDb);
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...doc.data(), id: doc.id });
+      });
+
+      if (listaPrecio === "claro") {
+        console.log("DOCS para aluminio Claro");
+        const docsPrecio = docs
+          .filter((compon) => {
+            return compon.precio > 0;
+          })
+          .map((componente) => {
+            return {
+              categoria: componente.categoria,
+              costo: componente.costo,
+              id: componente.id,
+              idReg: componente.idReg,
+              nombreItem: componente.nombreItem,
+              precio: componente.precio,
+              unidMed: componente.unidMed,
+            };
+          });
+        console.log(docsPrecio);
+        setItemComponList(docsPrecio);
+      } else {
+        const docsPrecio = docs
+          .filter((compon) => {
+            return compon.precio2 > 0;
+          })
+          .map((componente) => {
+            return {
+              categoria: componente.categoria,
+              costo: componente.costo,
+              id: componente.id,
+              idReg: componente.idReg,
+              nombreItem: componente.nombreItem,
+              precio: componente.precio2,
+              unidMed: componente.unidMed,
+            };
+          });
+        console.log(docsPrecio);
+        setItemComponList(docsPrecio);
+      }
+
+      // console.log({ docsApi: docs });
       setLoadData({ loading: false, error: null });
     } catch (error) {
       setLoadData({ loading: false, error: error });
@@ -420,7 +483,9 @@ const useInitialState = () => {
     setState,
     dataList,
     itemPtList,
+    itemComponList,
     getProdTerminado,
+    getComponPrecio,
     loadData,
     getSimpleDataDb,
     deleteDocument,

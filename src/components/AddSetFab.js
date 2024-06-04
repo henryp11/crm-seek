@@ -48,7 +48,7 @@ const AddSetFab = ({
 
   useEffect(() => {
     // En la función envio si quiero ver componentes(true) o no (false)
-    //segundo para es para traer items con o sin receta
+    //segundo parametro es para traer items con o sin receta
     getProdTerminado(true, false);
     handleId();
     // Si se envía un idSet ya existente se colocará como estado inicial el set a editar
@@ -98,7 +98,6 @@ const AddSetFab = ({
             {
               idCompon: payload.idReg,
               nombreCompon: payload.nombreItem,
-              precio: payload.precio,
               formula1: "",
               formula2: "",
               dimensiones: {
@@ -125,7 +124,6 @@ const AddSetFab = ({
               {
                 idCompon: payload.idReg,
                 nombreCompon: payload.nombreItem,
-                precio: payload.precio,
                 formula1: "",
                 formula2: "",
                 dimensiones: {

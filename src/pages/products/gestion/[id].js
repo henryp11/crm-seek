@@ -13,6 +13,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
+  onSnapshot,
   query,
   where,
 } from "firebase/firestore"; //Conectarse a colecciones y traer los datos
@@ -33,9 +34,9 @@ const Page = () => {
     categoria: "",
     subCategoria: "",
     unidMed: "",
-    precio: "",
-    precio2: "",
-    costo: "",
+    precio: 0,
+    precio2: 0,
+    costo: 0,
     image: { name: "", url: "" },
     isCompon: false,
     haveRecipe: false,
@@ -92,7 +93,7 @@ const Page = () => {
 
   /**Función para actualizar la porción de datos de los productos que están
   en la colección "Recetas" y hacer la actualziación en cascada de todos los documentos
-  que requieran esa información desde el origen**/
+  que requieran esa información desde el origen (productos)**/
 
   const UpdateDataReceta = async (productObject, idReg) => {
     const ref = [];
@@ -110,7 +111,8 @@ const Page = () => {
     const refUpdateReceta = ref[0]; //Solo debería existir un id único por eso tomo la primera posición
     console.log({ itemRefReceta: refUpdateReceta });
 
-    //Con el id de la receta obtenido, se procede a actualizar solo los campos que se requiere en la receta (nombre del item y URL de la imagen)
+    //Con el id de la receta obtenido, se procede a actualizar
+    // los campos que se requiere en la receta (nombre del item, URL de la imagen)
     try {
       const docUpdate = doc(db, "Recetas", refUpdateReceta);
       await updateDoc(docUpdate, {
@@ -120,6 +122,62 @@ const Page = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //Update de datos de componentes en la receta como: Nombre componente, precios
+  const UpdateDataRecetaComponent = async (idReg, productObject) => {
+    const ref = [];
+    //Busco la referencia del Producto como un query,
+    //Dentro de la colección Recetas, ya que al crear una receta almaceno el id del documento de producto En el parámetro idDocItem
+    // const queryDb = query(
+    //   collection(db, "Recetas"),
+    //   where("setFabricacion", "array-contains-any", [
+    //     { componentes: { "array-contains": { idCompon: idReg } } },
+    //   ])
+    // );
+    // const querySnapshot = await getDocs(queryDb);
+    // //Si lo encuentra guardo dentro del array solamente el id de la receta que contiene ese producto
+    // querySnapshot.forEach((doc) => {
+    //   ref.push(doc.id);
+    // });
+
+    try {
+      onSnapshot(collection(db, "Recetas"), (querySnapshot) => {
+        const docs = [];
+        querySnapshot.forEach((doc) => {
+          const setFabricacion = doc.data().setFabricacion;
+          setFabricacion.forEach((set) => {
+            const componentes = set.componentes;
+            componentes.forEach((componente) => {
+              if (componente.idCompon === idReg) {
+                // console.log(doc.id, " => ", doc.data());
+                docs.push({ ...doc.data(), id: doc.id });
+              }
+            });
+          });
+        });
+        console.log(docs);
+      });
+    } catch (error) {
+      setLoadData({ loading: false, error: error });
+    }
+
+    // const refUpdateReceta = ref[0]; //Solo debería existir un id único por eso tomo la primera posición
+    // console.log({ itemRefReceta: refUpdateReceta });
+
+    // //Con el id de la receta obtenido, se procede a actualizar
+    // // los campos que se requiere en la receta (nombre del item, URL de la imagen)
+    // try {
+    //   const docUpdate = doc(db, "Recetas", refUpdateReceta);
+    //   await updateDoc(docUpdate, {
+    //     nombreProducto: productObject.nombreItem,
+    //     url: productObject.image.url,
+    //     // precio: productObject.precio,
+    //     // precio2: productObject.precio2,
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const updateProduct = async (productObject, idReg) => {
@@ -154,6 +212,7 @@ const Page = () => {
           <ProductForm
             funCreate={createProduct}
             funUpdate={updateProduct}
+            funUpdate2={UpdateDataRecetaComponent}
             idDoc={idFirebase}
             data={dataProduct}
           />

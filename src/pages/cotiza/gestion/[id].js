@@ -10,10 +10,15 @@ import Appcontext from "../../../context/AppContext";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import {
   collection,
+  getDocs,
   //doc,
   //setDoc,
   onSnapshot,
   //updateDoc,
+  query,
+  orderBy,
+  startAt,
+  endAt,
 } from "firebase/firestore"; //Conectarse a colecciones y traer los datos
 import CustomInput from "../../../components/CustomInput";
 import SelectItems from "../../../containers/SelectItems";
@@ -62,6 +67,7 @@ const Page = () => {
 
   const [valueState, setValueState] = useState(initialState);
   const [recetas, setRecetas] = useState([]);
+  const [itemVidrioList, setVidrioList] = useState([]); //Trae items que comiencen con Vidrio
   const [loadCreate, setLoadCreate] = useState({
     loading: false,
     error: null,
@@ -72,6 +78,7 @@ const Page = () => {
       showModal();
     }
     getSimpleDataDb("Clientes");
+    getVidrio();
     getRecetas();
   }, [ruta]);
 
@@ -98,6 +105,28 @@ const Page = () => {
       });
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
+      console.log(error);
+    }
+  };
+
+  // Llamar los vidrios para elegir en cotización
+  const getVidrio = async () => {
+    try {
+      const docs = [];
+      const queryDb = query(
+        collection(db, "Productos"),
+        orderBy("nombreItem"),
+        startAt("Vidrio"),
+        endAt("Vidrio\uf8ff")
+      );
+      console.log(queryDb);
+      const querySnapshot = await getDocs(queryDb);
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...doc.data(), id: doc.id });
+      });
+
+      setVidrioList(docs);
+    } catch (error) {
       console.log(error);
     }
   };
@@ -170,6 +199,7 @@ const Page = () => {
 
   console.log(valueState);
   console.log(state);
+  console.log(itemVidrioList);
 
   return (
     <>
@@ -225,6 +255,79 @@ const Page = () => {
               </span>
             </span>
             <span className={styles.containerAgrupFields}>
+              <span className={styles.selectContainer}>
+                <b>* Tipo de Aluminio:</b>
+                <select name="tipoAluminio" onChange={handleChange} required>
+                  <option value="" label="Elegir tipo de Aluminio"></option>
+                  <option value="claro" label="Aluminio Claro">
+                    Aluminio Claro
+                  </option>
+                  <option value="oscuro" label="Aluminio Oscuro">
+                    Aluminio Oscuro
+                  </option>
+                </select>
+              </span>
+              <span className={styles.selectContainer}>
+                <b>* Tipo de Vidrio:</b>
+                <select name="tipoVidrio" onChange={handleChange} required>
+                  <option value="" label="Elegir tipo de Vidrio"></option>
+                  <option value="templado" label="Procesado Templado">
+                    Procesado Templado
+                  </option>
+                  <option value="camara" label="Procesado Cámara">
+                    Procesado Cámara
+                  </option>
+                  <option value="laminado" label="Crudo Laminado">
+                    Crudo Laminado
+                  </option>
+                  <option value="flotado" label="Crudo Flotado">
+                    Crudo Flotado
+                  </option>
+                </select>
+              </span>
+              <span className={styles.selectContainer}>
+                <b>* Tipo de Vidrio:</b>
+                <select name="tipoVidrio" onChange={handleChange} required>
+                  {valueState.tipoVidrio ? (
+                    <option
+                      key={valueState.tipoVidrio}
+                      value={valueState.tipoVidrio}
+                    >
+                      {valueState.tipoVidrio}
+                    </option>
+                  ) : (
+                    <option value="" label="Tipo de Vidrio">
+                      Tipo de Vidrio
+                    </option>
+                  )}
+                  {itemVidrioList.map((tipoVidrio) => {
+                    return (
+                      <option
+                        key={tipoVidrio.idReg}
+                        value={tipoVidrio.nombreItem}
+                      >{`${tipoVidrio.nombreItem}`}</option>
+                    );
+                  })}
+                </select>
+              </span>
+              <CustomInput
+                typeInput="text"
+                nameInput="areaVidrio"
+                valueInput={valueState.areaVidrio}
+                onChange={handleChange}
+                nameLabel="Área Vidrio"
+                required={true}
+              />
+            </span>
+            <span className={styles.containerAgrupFields}>
+              <CustomInput
+                typeInput="text"
+                nameInput="responsable"
+                valueInput={valueState.responsable}
+                onChange={handleChange}
+                nameLabel="Elaborado por:"
+                required={true}
+              />
               <CustomInput
                 typeInput="text"
                 nameInput="fechaElab"
@@ -246,41 +349,7 @@ const Page = () => {
                 nameInput="descripGeneral"
                 valueInput={valueState.descripGeneral}
                 onChange={handleChange}
-                nameLabel="Contiene"
-                required={true}
-              />
-            </span>
-            <span className={styles.containerAgrupFields}>
-              <CustomInput
-                typeInput="text"
-                nameInput="tipoAluminio"
-                valueInput={valueState.tipoAluminio}
-                onChange={handleChange}
-                nameLabel="Tipo de Aluminio"
-                required={true}
-              />
-              <CustomInput
-                typeInput="text"
-                nameInput="tipoVidrio"
-                valueInput={valueState.tipoVidrio}
-                onChange={handleChange}
-                nameLabel="Tipo de Vidrio"
-                required={true}
-              />
-              <CustomInput
-                typeInput="text"
-                nameInput="areaVidrio"
-                valueInput={valueState.areaVidrio}
-                onChange={handleChange}
-                nameLabel="Área Vidrio"
-                required={true}
-              />
-              <CustomInput
-                typeInput="text"
-                nameInput="responsable"
-                valueInput={valueState.responsable}
-                onChange={handleChange}
-                nameLabel="Elaborado por:"
+                nameLabel="Descripción General"
                 required={true}
               />
             </span>
@@ -533,7 +602,13 @@ const Page = () => {
                 </tfoot>
               </table> */}
             </div>
-            {state.showModal && <SelectItems recetas={recetas} />}
+            {state.showModal && (
+              <SelectItems
+                recetas={recetas}
+                tipoAluminio={valueState.tipoAluminio}
+                tipoVidrio={valueState.tipoVidrio}
+              />
+            )}
             {state.itemsCotiza.length > 0 && (
               <DetalleCotiza detalle={state.itemsCotiza} />
             )}

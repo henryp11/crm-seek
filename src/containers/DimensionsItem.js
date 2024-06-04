@@ -1,11 +1,17 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { redondear } from "../helpers/FunctionsHelps";
 import Appcontext from "../context/AppContext";
 import stylesCot from "../pages/cotiza/cotizaTemp.module.css";
 import styles from "../styles/forms.module.css";
-const DimensionsItem = ({ itemReceta }) => {
-  const { addItemFact, showModalDimen, state } = useContext(Appcontext);
+const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
+  const {
+    getComponPrecio,
+    itemComponList,
+    addItemFact,
+    showModalDimen,
+    state,
+  } = useContext(Appcontext);
   const [stateItemCotiza, setStateItemCotiza] = useState({
     itemReceta,
     cantidad: 0,
@@ -13,6 +19,15 @@ const DimensionsItem = ({ itemReceta }) => {
     dimensiones: { anchoA: 0, anchoB: 0, alturaH: 0, alturaI: 0, alturaJ: 0 },
     sets: itemReceta.setFabricacion,
   });
+
+  useEffect(() => {
+    // if (state.showModal) {
+    //   showModal();
+    // }
+    getComponPrecio(tipoAluminio);
+  }, []);
+
+  console.log(itemComponList);
 
   //Extraigo los Sets de fabricación del item elegido y obtengo los componentes
   const setsItem =
@@ -35,7 +50,7 @@ const DimensionsItem = ({ itemReceta }) => {
   const dimensionsActive = dimensiones.map((dimension) =>
     Object.fromEntries(
       Object.entries(dimension).filter(([key, value]) => {
-        console.log(key);
+        // console.log(key); solo se lo coloca para la validación de Prettier en Next, "key" es necesario para la extracción final
         return value;
       })
     )
@@ -67,87 +82,124 @@ const DimensionsItem = ({ itemReceta }) => {
 
   const aplicaFormulas = () => {
     //colocar valores de dimensiones en las formulas de cada set
-
+    //Se Itera dentro de cada set, luego al llegar a los Arrays de componentes se evalua s existen las formulas
+    //Y si se encuentra fórmula se evalua la misma mediante expresiones regulares para reemplazar la palabra de la
+    //Fórmula por el valor de la variable que le corresponde y por último realizar el cálculo por la cantidad.
+    //Por último una vez obtenido estos cálculos se añade el resultado a cada objeto, y se vuelve a mapear el array
+    //resultante para cotejar los componentes con el listado de items obtenidos de "itemComponList" y si encuentra el precio
+    //A su vez añade el precio encontrado al objeto final.
     const setsFormula = stateItemCotiza.sets.map((set) => {
       return {
         ...set,
-        componentes: set.componentes.map((compon) => {
-          return {
-            ...compon,
-            calculoF1:
-              compon.formula1 &&
-              redondear(
-                eval(
-                  `${stateItemCotiza.cantidad} * (${compon.formula1
-                    .replace(/anchoA/g, stateItemCotiza.dimensiones.anchoA)
-                    .replace(/anchoB/g, stateItemCotiza.dimensiones.anchoB)
-                    .replace(/alturaI/g, stateItemCotiza.dimensiones.alturaI)
-                    .replace(/alturaJ/g, stateItemCotiza.dimensiones.alturaJ)
-                    .replace(/alturaH/g, stateItemCotiza.dimensiones.alturaH)
-                    .replace("ENTERO", "Math.round")
-                    .replace("ENSUPERIOR", "Math.ceil")
-                    // .replace(/  /g, "")
-                    .trim()})`
-                ),
-                2
-              ),
-            calculoF2:
-              compon.formula2 && compon.formula2.includes("F1")
-                ? redondear(
-                    eval(
-                      `${compon.formula2
-                        .replace(
-                          "F1",
-                          `(${stateItemCotiza.cantidad} * (${compon.formula1}))`
-                        )
-                        .replace(/anchoA/g, stateItemCotiza.dimensiones.anchoA)
-                        .replace(/anchoB/g, stateItemCotiza.dimensiones.anchoB)
-                        .replace(
-                          /alturaI/g,
-                          stateItemCotiza.dimensiones.alturaI
-                        )
-                        .replace(
-                          /alturaJ/g,
-                          stateItemCotiza.dimensiones.alturaJ
-                        )
-                        .replace(
-                          /alturaH/g,
-                          stateItemCotiza.dimensiones.alturaH
-                        )
-                        .replace("ENTERO", "Math.round")
-                        .replace("ENSUPERIOR", "Math.ceil")
-                        // .replace(/  /g, "")
-                        .trim()}`
-                    ),
-                    2
-                  )
-                : compon.formula2 &&
-                  redondear(
-                    eval(
-                      `${stateItemCotiza.cantidad} * (${compon.formula2
-                        .replace(/anchoA/g, stateItemCotiza.dimensiones.anchoA)
-                        .replace(/anchoB/g, stateItemCotiza.dimensiones.anchoB)
-                        .replace(
-                          /alturaI/g,
-                          stateItemCotiza.dimensiones.alturaI
-                        )
-                        .replace(
-                          /alturaJ/g,
-                          stateItemCotiza.dimensiones.alturaJ
-                        )
-                        .replace(
-                          /alturaH/g,
-                          stateItemCotiza.dimensiones.alturaH
-                        )
-                        .replace("ENTERO", "Math.round")
-                        .replace("ENSUPERIOR", "Math.ceil")
-                        // .replace(/  /g, "")
-                        .trim()})`
-                    ),
-                    2
+        componentes: set.componentes
+          .map((compon) => {
+            return {
+              ...compon,
+              calculoF1:
+                compon.formula1 &&
+                redondear(
+                  eval(
+                    `${stateItemCotiza.cantidad} * (${compon.formula1
+                      .replace(/anchoA/g, stateItemCotiza.dimensiones.anchoA)
+                      .replace(/anchoB/g, stateItemCotiza.dimensiones.anchoB)
+                      .replace(/alturaI/g, stateItemCotiza.dimensiones.alturaI)
+                      .replace(/alturaJ/g, stateItemCotiza.dimensiones.alturaJ)
+                      .replace(/alturaH/g, stateItemCotiza.dimensiones.alturaH)
+                      .replace("ENTERO", "Math.round")
+                      .replace("ENSUPERIOR", "Math.ceil")
+                      .replace(
+                        "AREA",
+                        (stateItemCotiza.dimensiones.anchoA +
+                          stateItemCotiza.dimensiones.anchoB) *
+                          (stateItemCotiza.dimensiones.alturaI +
+                            stateItemCotiza.dimensiones.alturaJ +
+                            stateItemCotiza.dimensiones.alturaH)
+                      )
+                      // .replace(/  /g, "")
+                      .trim()})`
                   ),
-          };
-        }),
+                  2
+                ),
+              calculoF2:
+                compon.formula2 && compon.formula2.includes("F1")
+                  ? redondear(
+                      eval(
+                        `${compon.formula2
+                          .replace(
+                            "F1",
+                            `(${stateItemCotiza.cantidad} * (${compon.formula1}))`
+                          )
+                          .replace(
+                            /anchoA/g,
+                            stateItemCotiza.dimensiones.anchoA
+                          )
+                          .replace(
+                            /anchoB/g,
+                            stateItemCotiza.dimensiones.anchoB
+                          )
+                          .replace(
+                            /alturaI/g,
+                            stateItemCotiza.dimensiones.alturaI
+                          )
+                          .replace(
+                            /alturaJ/g,
+                            stateItemCotiza.dimensiones.alturaJ
+                          )
+                          .replace(
+                            /alturaH/g,
+                            stateItemCotiza.dimensiones.alturaH
+                          )
+                          .replace("ENTERO", "Math.round")
+                          .replace("ENSUPERIOR", "Math.ceil")
+                          // .replace(/  /g, "")
+                          .trim()}`
+                      ),
+                      2
+                    )
+                  : compon.formula2 &&
+                    redondear(
+                      eval(
+                        `${stateItemCotiza.cantidad} * (${compon.formula2
+                          .replace(
+                            /anchoA/g,
+                            stateItemCotiza.dimensiones.anchoA
+                          )
+                          .replace(
+                            /anchoB/g,
+                            stateItemCotiza.dimensiones.anchoB
+                          )
+                          .replace(
+                            /alturaI/g,
+                            stateItemCotiza.dimensiones.alturaI
+                          )
+                          .replace(
+                            /alturaJ/g,
+                            stateItemCotiza.dimensiones.alturaJ
+                          )
+                          .replace(
+                            /alturaH/g,
+                            stateItemCotiza.dimensiones.alturaH
+                          )
+                          .replace("ENTERO", "Math.round")
+                          .replace("ENSUPERIOR", "Math.ceil")
+                          // .replace(/  /g, "")
+                          .trim()})`
+                      ),
+                      2
+                    ),
+            };
+          })
+          .map((componSinPrecio) => {
+            const componConPrecio = itemComponList.find(
+              (item) => item.idReg === componSinPrecio.idCompon
+            );
+
+            if (componConPrecio) {
+              return { ...componSinPrecio, precio: +componConPrecio.precio };
+            } else {
+              return { ...componSinPrecio, precio: 0 };
+            }
+          }),
       };
     });
 
@@ -157,15 +209,16 @@ const DimensionsItem = ({ itemReceta }) => {
     });
   };
 
-  console.log(setsItem);
-  console.log(componentes);
-  console.log(dimensiones);
-  console.log(dimensionsActive);
-  console.log(finalDimensions);
-  console.log({ state });
+  console.log(setsItem); //Solo SETS extraidos de la receta
+  console.log(componentes); //Solo COMPONENTES extraidos de la receta sin importar su Set
+  console.log(dimensiones); //Dimensiones extraidas de todos los componentes
+  console.log(dimensionsActive); //Dimensiones colocadas con TRUE en la receta de cada componente
+  console.log(finalDimensions); //Solo las dimensiones únicas que han sido seleccionadas para las recetas
+  console.log({ state }); //State global
+  console.log({ tipoAluminio });
 
   console.log(
-    "Estado temporal en Componente Dimensiones, para finalmente enviar al state global"
+    "Estado temporal en Componente Dimensiones, para finalmente enviar al state global 🔽"
   );
   console.log(stateItemCotiza);
 

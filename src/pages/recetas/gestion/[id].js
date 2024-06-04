@@ -181,7 +181,6 @@ const Page = () => {
       setSecuencial(1);
     } else {
       let lastId = valueState.setFabricacion.map(({ idSet }) => idSet);
-      console.log(lastId);
       setSecuencial(lastId[lastId.length - 1] + 1);
     }
   };
@@ -283,20 +282,6 @@ const Page = () => {
       ),
       { duration: 60000 }
     );
-    // let isDelete = confirm(
-    //   "¿Desea eliminar totalmente el Set de Fabricación seleccionado?"
-    // );
-
-    // if (isDelete) {
-    //   setValueState({
-    //     ...valueState,
-    //     setFabricacion: [
-    //       ...valueState.setFabricacion.filter(
-    //         (setFab) => setFab.idSet !== payload
-    //       ),
-    //     ],
-    //   });
-    // }
   };
 
   // Mostrar modal para añadir fórmula
@@ -490,7 +475,6 @@ const Page = () => {
           </div>
           {state.showModal && (
             <AddSetFab
-              // handleId={valueState.setFabricacion.length + 1}
               handleId={handleIdSec}
               addSetButton={addSetFabricacion}
               idSetEdit={setToEdit.idSet !== undefined && setToEdit.idSet}

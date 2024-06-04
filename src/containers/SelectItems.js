@@ -4,10 +4,11 @@ import Appcontext from "../context/AppContext";
 import DimensionsItem from "./DimensionsItem";
 import stylesCot from "../pages/cotiza/cotizaTemp.module.css";
 
-const SelectItems = ({ recetas }) => {
+const SelectItems = ({ recetas, tipoAluminio, tipoVidrio }) => {
   const { showModal, showModalDimen, state } = useContext(Appcontext);
   const [itemCapture, setItemCapture] = useState({});
   console.log({ itemSelect: itemCapture });
+  console.log({ recetasFirst: recetas });
 
   return (
     <div className="containerItemsCotiza">
@@ -70,7 +71,13 @@ const SelectItems = ({ recetas }) => {
           );
         })}
       </div>
-      {state.showModalDimen && <DimensionsItem itemReceta={itemCapture} />}
+      {state.showModalDimen && (
+        <DimensionsItem
+          itemReceta={itemCapture}
+          tipoAluminio={tipoAluminio}
+          tipoVidrio={tipoVidrio}
+        />
+      )}
     </div>
   );
 };
