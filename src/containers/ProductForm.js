@@ -12,7 +12,7 @@ import {
 } from "firebase/storage"; //Storage de firebase para almacenar archivos
 import styles from "../styles/forms.module.css";
 
-const ProductForm = ({ funCreate, funUpdate, funUpdate2, idDoc, data }) => {
+const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
   const [valueState, setValueState] = useState(data);
   const [archivo, setArchivo] = useState(null); //captura archivo a subir a storage
   const [previewImg, setPreviewImg] = useState(""); //Para mostrar un preview de la imagen a subir
@@ -300,7 +300,7 @@ const ProductForm = ({ funCreate, funUpdate, funUpdate2, idDoc, data }) => {
               </svg>
             </Link>
           </button>
-          <button
+          {/* <button
             title="test"
             type="button"
             onClick={() => {
@@ -308,7 +308,7 @@ const ProductForm = ({ funCreate, funUpdate, funUpdate2, idDoc, data }) => {
             }}
           >
             test update
-          </button>
+          </button> */}
         </span>
       </div>
       <div className={styles.inputImage}>

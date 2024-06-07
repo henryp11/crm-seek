@@ -28,6 +28,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
   }, []);
 
   console.log(itemComponList);
+  console.log(tipoVidrio);
 
   //Extraigo los Sets de fabricación del item elegido y obtengo los componentes
   const setsItem =
@@ -50,7 +51,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
   const dimensionsActive = dimensiones.map((dimension) =>
     Object.fromEntries(
       Object.entries(dimension).filter(([key, value]) => {
-        // console.log(key); solo se lo coloca para la validación de Prettier en Next, "key" es necesario para la extracción final
+        console.log(key); // solo se lo coloca para la validación de Prettier en Next, "key" es necesario para la extracción final
         return value;
       })
     )
