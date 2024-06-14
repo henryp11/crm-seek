@@ -203,14 +203,14 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             nameInput="precio"
             valueInput={valueState.precio}
             onChange={handleChange}
-            nameLabel="Precio Aluminio Claro"
+            nameLabel="Precio Aluminio Natural"
           />
           <CustomInput
             typeInput="number"
             nameInput="precio2"
             valueInput={valueState.precio2}
             onChange={handleChange}
-            nameLabel="Precio Aluminio Oscuro"
+            nameLabel="Precio Aluminio Negro"
           />
           <CustomInput
             typeInput="number"

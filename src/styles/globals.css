@@ -13,7 +13,9 @@
   --background-card: #f2f2f2;
   --save-button: #1a73e8;
   --save-button-hover: #00cde8db;
-  /* --delete-alert: rgb(155, 32, 32); */
+  /* --acept-button: #bcffcf; */
+  --acept-button: #313131f0;
+  --cancel-alert: rgb(155, 32, 32);
   --delete-alert: rgb(228, 59, 59);
   --background-rows: rgb(247, 247, 247);
   /* BOTONES */
@@ -509,7 +511,8 @@ svg:active {
   align-items: center;
   background: var(--background-card);
   border-radius: 8px;
-  height: 50%;
+  /* height: 90%; */
+  height: 250px;
   transition: all ease 0.2s;
 }
 

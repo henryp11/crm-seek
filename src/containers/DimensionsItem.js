@@ -15,6 +15,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
   const [stateItemCotiza, setStateItemCotiza] = useState({
     itemReceta,
     cantidad: 0,
+    planchas: 0,
     idItem: itemReceta.idReg,
     dimensiones: { anchoA: 0, anchoB: 0, alturaH: 0, alturaI: 0, alturaJ: 0 },
     sets: itemReceta.setFabricacion,
@@ -51,7 +52,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
   const dimensionsActive = dimensiones.map((dimension) =>
     Object.fromEntries(
       Object.entries(dimension).filter(([key, value]) => {
-        console.log(key); // solo se lo coloca para la validación de Prettier en Next, "key" es necesario para la extracción final
+        //console.log(key); // solo se lo coloca para la validación de Prettier en Next, "key" es necesario para la extracción final
         return value;
       })
     )
@@ -83,17 +84,27 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
 
   const aplicaFormulas = () => {
     //colocar valores de dimensiones en las formulas de cada set
-    //Se Itera dentro de cada set, luego al llegar a los Arrays de componentes se evalua s existen las formulas
+    //Se Itera dentro de cada set, luego al llegar a los Arrays de componentes se evalua si existen las fórmulas
     //Y si se encuentra fórmula se evalua la misma mediante expresiones regulares para reemplazar la palabra de la
-    //Fórmula por el valor de la variable que le corresponde y por último realizar el cálculo por la cantidad.
+    //Fórmula por el valor de la variable que le corresponde y realizar el cálculo por la cantidad.
     //Por último una vez obtenido estos cálculos se añade el resultado a cada objeto, y se vuelve a mapear el array
     //resultante para cotejar los componentes con el listado de items obtenidos de "itemComponList" y si encuentra el precio
-    //A su vez añade el precio encontrado al objeto final.
+    //A su vez añade el precio encontrado en el objeto final.
     const setsFormula = stateItemCotiza.sets.map((set) => {
       return {
         ...set,
         componentes: set.componentes
+          .map((componVidrio) => {
+            //Este Map sirve para encontrar al componente VIDRIO y reemplazarlo por el vidrio elegido previamente
+            if (componVidrio.idCompon !== "VIDMAIN") return componVidrio;
+            return {
+              ...componVidrio,
+              idCompon: tipoVidrio.split("|")[0],
+              nombreCompon: tipoVidrio.split("|")[1],
+            };
+          })
           .map((compon) => {
+            //Una vez reemplazado el vidrio se procede a realizar los calculos de las fórmulas
             return {
               ...compon,
               calculoF1:
@@ -116,7 +127,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
                             stateItemCotiza.dimensiones.alturaJ +
                             stateItemCotiza.dimensiones.alturaH)
                       )
-                      // .replace(/  /g, "")
+                      .replace("PLANCHA", stateItemCotiza.planchas)
                       .trim()})`
                   ),
                   2
@@ -183,6 +194,15 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
                           )
                           .replace("ENTERO", "Math.round")
                           .replace("ENSUPERIOR", "Math.ceil")
+                          .replace(
+                            "AREA",
+                            (stateItemCotiza.dimensiones.anchoA +
+                              stateItemCotiza.dimensiones.anchoB) *
+                              (stateItemCotiza.dimensiones.alturaI +
+                                stateItemCotiza.dimensiones.alturaJ +
+                                stateItemCotiza.dimensiones.alturaH)
+                          )
+                          .replace("PLANCHA", stateItemCotiza.planchas)
                           // .replace(/  /g, "")
                           .trim()})`
                       ),
@@ -207,6 +227,13 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
     setStateItemCotiza({
       ...stateItemCotiza,
       sets: setsFormula,
+      area:
+        stateItemCotiza.cantidad *
+        ((stateItemCotiza.dimensiones.anchoA +
+          stateItemCotiza.dimensiones.anchoB) *
+          (stateItemCotiza.dimensiones.alturaI +
+            stateItemCotiza.dimensiones.alturaJ +
+            stateItemCotiza.dimensiones.alturaH)),
     });
   };
 
@@ -295,6 +322,15 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
             </span>
           );
         })}
+        <span>
+          <label>#Planchas: </label>
+          <input
+            type="number"
+            name="planchas"
+            value={stateItemCotiza.planchas}
+            onChange={handleChange}
+          />
+        </span>
         <button
           onClick={aplicaFormulas}
           type="button"

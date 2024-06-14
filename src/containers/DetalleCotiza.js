@@ -11,7 +11,29 @@ const DetalleCotiza = ({ detalle }) => {
       {detalle.map((item) => {
         return (
           <div key={item.idItem} className={stylesCot.containerCalculos}>
-            <h2>{`${item.idItem} - ${item.itemReceta.nombreProducto}`}</h2>
+            <span
+              style={{
+                border: "1px solid #fdb924",
+                borderRadius: "8px 8px 0 0",
+                padding: "8px",
+                width: "100%",
+                background: "#2a89d6",
+                color: "white",
+                display: "flex",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <h4>{`${item.idItem} - ${item.itemReceta.nombreProducto}`}</h4>
+              <p>
+                <i>Cantidad:</i> {item.cantidad}
+              </p>
+              <p>
+                <i>Área:</i> {item.area} m2
+              </p>
+            </span>
+
             {item.sets.map((set) => {
               return (
                 <div key={set.idSet} style={{ width: "100%" }}>
@@ -62,7 +84,7 @@ const DetalleCotiza = ({ detalle }) => {
                         width: "100%",
                         display: "flex",
                         justifyContent: "space-between",
-                        background: "#dbc291",
+                        background: "#b9995b",
                         color: "white",
                         margin: "4px 0",
                         fontSize: "20px",

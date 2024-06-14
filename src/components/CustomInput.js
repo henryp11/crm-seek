@@ -41,6 +41,8 @@ const CustomInput = ({
                 : valueInput !== undefined &&
                   (valueInput.length > 0 || typeof valueInput === "number")
                 ? styles["activate-label-position"]
+                : typeInput === "date"
+                ? styles["activate-label-position"]
                 : ""
             }
           >

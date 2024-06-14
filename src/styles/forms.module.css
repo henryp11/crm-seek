@@ -124,7 +124,7 @@
   margin: 12px auto 0 auto;
   grid-column: 1 / -1;
   display: flex;
-  /* flex-wrap: wrap; */
+  justify-content: space-around;
 }
 
 .buttonContainer button {
@@ -186,7 +186,7 @@
   width: 100%;
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 25% 75%;
+  grid-template-columns: 15% 55% 15% 15%;
 }
 
 .idField span input {
@@ -420,7 +420,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
-  gap: 0 12px;
+  gap: 0 10px;
   margin: 10px;
   align-self: flex-start;
 }
@@ -430,7 +430,7 @@
   padding: 4px;
   border-color: var(--tittles-hk);
   outline: none;
-  min-width: 80%;
+  min-width: 85%;
 }
 
 .selectContainer option:checked {

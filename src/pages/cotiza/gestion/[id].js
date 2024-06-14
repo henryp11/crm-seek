@@ -1,18 +1,16 @@
 "use client";
 import React, { useState, useContext, useEffect } from "react";
-// import { useRouter, usePathname, useSearchParams } from "next/navigation";
-// import { usePathname, useSearchParams } from "next/navigation";
-import { usePathname } from "next/navigation";
-import { useRouter as useNextRouter } from "next/router";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter as useNextRouter } from "next/router"; //para extraer el query params de la ruta (el id de cada registro de firebase)
 import Link from "next/link";
-//import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Appcontext from "../../../context/AppContext";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import {
   collection,
   getDocs,
-  //doc,
-  //setDoc,
+  doc,
+  setDoc,
   onSnapshot,
   //updateDoc,
   query,
@@ -32,7 +30,7 @@ const Page = () => {
   // Funciones y objetos desde contexto inicial
   const { getSimpleDataDb, dataList, showModal, calculaTotales, state } =
     useContext(Appcontext);
-  //const navigate = useRouter(); //Usado de next/navigation para realizar push a otras rutas
+  const navigate = useRouter(); //Usado de next/navigation para realizar push a otras rutas
   const nextRouter = useNextRouter(); //usado de next/router para extraer el query params de la ruta (el id de cada registro de firebase)
   const idDoc = nextRouter.query.id;
   const ruta = usePathname();
@@ -40,7 +38,7 @@ const Page = () => {
   //const isEdit = queryParams.get("edit");
 
   const conectTbRecetas = collection(db, "Recetas");
-  //const conectTbCotiza = collection(db, "Cotizaciones");
+  const conectTbCotiza = collection(db, "Cotizaciones");
 
   const initialState = {
     idReg: "", //IdCotiza
@@ -60,9 +58,9 @@ const Page = () => {
     descripGeneral: "",
     tipoAluminio: "",
     tipoVidrio: "",
-    areaVidrio: "",
     responsable: "",
     productos: [],
+    totalesCotiza: { ivaTotal: 0, subTotIva: 0, subTotIva0: 0, totalDcto: 0 },
   };
 
   const [valueState, setValueState] = useState(initialState);
@@ -71,6 +69,7 @@ const Page = () => {
   const [loadCreate, setLoadCreate] = useState({
     loading: false,
     error: null,
+    confirmSave: false, //Para mostrar el botón de confirmación para guardar la cotización
   });
 
   useEffect(() => {
@@ -133,20 +132,22 @@ const Page = () => {
 
   //Crear Función getCotiza cuando se deba editar
 
-  // const createCotiza = async (cotizaObject) => {
-  //   setLoadCreate({ loading: true, error: null });
-  //   try {
-  //     await setDoc(doc(conectTbCotiza), cotizaObject);
-  //     setLoadCreate({ loading: false, error: null });
-  //     toast.success("Registro creado con éxito");
-  //     setTimeout(() => {
-  //       toast.dismiss();
-  //     }, 2000);
-  //     navigate.push("/cotiza");
-  //   } catch (error) {
-  //     setLoadCreate({ loading: false, error: error });
-  //   }
-  // };
+  const createCotiza = async (cotizaObject) => {
+    console.log("creando cotización...");
+    setLoadCreate({ loading: true, error: null });
+    try {
+      await setDoc(doc(conectTbCotiza), cotizaObject);
+      setLoadCreate({ loading: false, error: null });
+      toast.success("Registro creado con éxito");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 2000);
+      navigate.push("/cotizaciones");
+    } catch (error) {
+      console.log(error);
+      setLoadCreate({ loading: false, error: error });
+    }
+  };
 
   // const updateCotiza = async (cotizaObject) => {
   //   setLoadCreate({ loading: true, error: null });
@@ -183,8 +184,9 @@ const Page = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    blockButton();
+    createCotiza(valueState);
     // if (!isEdit) {
-    //   blockButton();
     //   createCotiza(valueState);
     // } else {
     //   updateCotiza(valueState);
@@ -193,9 +195,18 @@ const Page = () => {
 
   // Esta función evita que al dar varios clics sobre el botón de crear añada otro registro
   // Problema encontrado al guardar un nuevo registro y pulsar doble clic sobre el botón
-  // const blockButton = () => {
-  //   document.getElementById("create").disabled = true;
-  // };
+  const blockButton = () => {
+    document.getElementById("create").disabled = true;
+  };
+
+  const updateStatefinal = () => {
+    setValueState({
+      ...valueState,
+      productos: state.itemsCotiza,
+      totalesCotiza: state.totalesCotiza,
+    });
+    setLoadCreate({ ...loadCreate, confirmSave: true });
+  };
 
   console.log(valueState);
   console.log(state);
@@ -253,69 +264,20 @@ const Page = () => {
                   })}
                 </select>
               </span>
-            </span>
-            <span className={styles.containerAgrupFields}>
-              <span className={styles.selectContainer}>
-                <b>* Tipo de Aluminio:</b>
-                <select name="tipoAluminio" onChange={handleChange} required>
-                  <option value="" label="Elegir tipo de Aluminio"></option>
-                  <option value="claro" label="Aluminio Claro">
-                    Aluminio Claro
-                  </option>
-                  <option value="oscuro" label="Aluminio Oscuro">
-                    Aluminio Oscuro
-                  </option>
-                </select>
-              </span>
-              <span className={styles.selectContainer}>
-                <b>* Tipo de Vidrio:</b>
-                <select name="tipoVidrio" onChange={handleChange} required>
-                  <option value="" label="Elegir tipo de Vidrio"></option>
-                  <option value="templado" label="Procesado Templado">
-                    Procesado Templado
-                  </option>
-                  <option value="camara" label="Procesado Cámara">
-                    Procesado Cámara
-                  </option>
-                  <option value="laminado" label="Crudo Laminado">
-                    Crudo Laminado
-                  </option>
-                  <option value="flotado" label="Crudo Flotado">
-                    Crudo Flotado
-                  </option>
-                </select>
-              </span>
-              <span className={styles.selectContainer}>
-                <b>* Tipo de Vidrio:</b>
-                <select name="tipoVidrio" onChange={handleChange} required>
-                  {valueState.tipoVidrio ? (
-                    <option
-                      key={valueState.tipoVidrio}
-                      value={valueState.tipoVidrio}
-                    >
-                      {valueState.tipoVidrio}
-                    </option>
-                  ) : (
-                    <option value="" label="Tipo de Vidrio">
-                      Tipo de Vidrio
-                    </option>
-                  )}
-                  {itemVidrioList.map((tipoVidrio) => {
-                    return (
-                      <option
-                        key={tipoVidrio.idReg}
-                        value={tipoVidrio.nombreItem}
-                      >{`${tipoVidrio.nombreItem}`}</option>
-                    );
-                  })}
-                </select>
-              </span>
               <CustomInput
-                typeInput="text"
-                nameInput="areaVidrio"
-                valueInput={valueState.areaVidrio}
+                typeInput="date"
+                nameInput="fechaElab"
+                valueInput={valueState.fechaElab}
                 onChange={handleChange}
-                nameLabel="Área Vidrio"
+                nameLabel="Fecha Elaboración"
+                required={true}
+              />
+              <CustomInput
+                typeInput="date"
+                nameInput="fechaValid"
+                valueInput={valueState.fechaValid}
+                onChange={handleChange}
+                nameLabel="Fecha Validación"
                 required={true}
               />
             </span>
@@ -330,22 +292,6 @@ const Page = () => {
               />
               <CustomInput
                 typeInput="text"
-                nameInput="fechaElab"
-                valueInput={valueState.fechaElab}
-                onChange={handleChange}
-                nameLabel="Fecha Elaboración"
-                required={true}
-              />
-              <CustomInput
-                typeInput="text"
-                nameInput="fechaValid"
-                valueInput={valueState.fechaValid}
-                onChange={handleChange}
-                nameLabel="Fecha Validación"
-                required={true}
-              />
-              <CustomInput
-                typeInput="text"
                 nameInput="descripGeneral"
                 valueInput={valueState.descripGeneral}
                 onChange={handleChange}
@@ -353,255 +299,107 @@ const Page = () => {
                 required={true}
               />
             </span>
+            <span className={styles.containerAgrupFields}>
+              <span className={styles.selectContainer}>
+                <b>* Tipo de Aluminio:</b>
+                <select name="tipoAluminio" onChange={handleChange} required>
+                  {valueState.tipoAluminio ? (
+                    <option
+                      key={valueState.tipoAluminio}
+                      value={valueState.tipoAluminio}
+                    >
+                      {valueState.tipoAluminio}
+                    </option>
+                  ) : (
+                    <option value="" label="Elegir tipo de Aluminio"></option>
+                  )}
+                  <option value="claro" label="Aluminio Natural"></option>
+                  <option value="oscuro" label="Aluminio Negro"></option>
+                </select>
+              </span>
+              <span className={styles.selectContainer}>
+                <b>* Tipo de Vidrio:</b>
+                <select name="tipoVidrio" onChange={handleChange} required>
+                  {valueState.tipoVidrio && (
+                    <option
+                      key={valueState.tipoVidrio}
+                      value={valueState.tipoVidrio}
+                    >
+                      {valueState.tipoVidrio}
+                    </option>
+                  )}
+                  {itemVidrioList.map((tipoVidrio) => {
+                    return (
+                      <option
+                        key={tipoVidrio.idReg}
+                        value={`${tipoVidrio.idReg}|${tipoVidrio.nombreItem}`}
+                      >{`${tipoVidrio.nombreItem}`}</option>
+                    );
+                  })}
+                </select>
+              </span>
+            </span>
+
             <span
-              style={{ display: "flex", alignItems: "center", gap: "16px" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                gap: "16px",
+              }}
             >
-              <h3>Detalle Cotización:</h3>
-              <button
-                onClick={() => {
-                  showModal();
-                }}
-                type="button"
-                className={stylesCot.buttonAddItems}
-              >
-                Agregar Producto
-              </button>
+              <h3 style={{ color: "#1a73e8" }}>Detalle Cotización:</h3>
+              {valueState.tipoAluminio && valueState.tipoVidrio && (
+                <button
+                  onClick={() => {
+                    showModal();
+                  }}
+                  type="button"
+                  className={stylesCot.buttonAddItems}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                  Agregar Producto
+                </button>
+              )}
               <span>
                 <button
                   onClick={() => {
                     calculaTotales();
                   }}
                   type="button"
-                  className={stylesCot.buttonAddItems}
+                  className={`${stylesCot.buttonAddItems} ${stylesCot.buttonTotaliza}`}
                 >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z"
+                    />
+                  </svg>
                   Totalizar
                 </button>
               </span>
             </span>
-            <div>
-              {/* <table className="table_factDetails table_factDetails--create">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Producto</th>
-                    <th>Cant.</th>
-                    <th>Unid. Med.</th>
-                    <th>Precio Unitario</th>
-                    <th>SubTotal</th>
-                    <th>% Dcto</th>
-                    <th>Valor Dcto</th>
-                    <th>Total</th>
-                    <th>IVA</th>
-                    <th>Total Final</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {state.itemsFactura.map((item, pos) => {
-                    return (
-                      <tr key={item.idItem}>
-                        <td>{pos + 1}</td>
-                        <td>
-                          <input
-                            type="number"
-                            name="cantFact"
-                            value={item.cantFact}
-                            onChange={handleChangeItems(
-                              item.idItem,
-                              "number",
-                              1
-                            )}
-                            onBlur={calculaTotales}
-                          />
-                        </td>
-                        <td>{item.unidMed}</td>
-                        <td>
-                          <input
-                            type="number"
-                            placeholder="precioUni"
-                            name="precio"
-                            value={item.precios[0].precio}
-                            onChange={handleChangeItems(
-                              item.idItem,
-                              "number",
-                              2
-                            )}
-                            onBlur={calculaTotales}
-                          />
-                        </td>
-                        <td>
-                          <p>
-                            {(item.cantFact * item.precios[0].precio).toFixed(
-                              2
-                            )}
-                            $
-                          </p>
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            placeholder="DCTO"
-                            name="dcto"
-                            value={item.precios[0].dcto}
-                            onChange={handleChangeItems(
-                              item.idItem,
-                              "number",
-                              2
-                            )}
-                            onBlur={calculaTotales}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            placeholder="ValDcto"
-                            value={calcDcto(
-                              item.cantFact * item.precios[0].precio,
-                              item.precios[0].dcto
-                            ).toFixed(2)}
-                            onBlur={calculaTotales}
-                            min="0"
-                            disabled
-                          />
-                        </td>
-                        <td>
-                          <p>
-                            {calcSubTotal(
-                              item.cantFact * item.precios[0].precio,
-                              item.precios[0].dcto
-                            ).toFixed(2)}
-                            $
-                          </p>
-                        </td>
-                        <td>
-                          <p>
-                            {calcIVA(
-                              item.cantFact * item.precios[0].precio,
-                              item.precios[0].dcto,
-                              item.precios[0].iva
-                            ).toFixed(2)}
-                            $
-                          </p>
-                        </td>
-                        <td>
-                          <p>
-                            {calcTotFinal(
-                              item.cantFact * item.precios[0].precio,
-                              item.precios[0].dcto,
-                              item.precios[0].iva
-                            ).toFixed(2)}
-                            $
-                          </p>
-                        </td>
-                        <td
-                          className="icons-item--add-remove"
-                          style={{ "justify-content": "flex-end" }}
-                        >
-                          <span
-                            className="icons"
-                            onClick={() => {
-                              removeItemFact(item);
-                            }}
-                          >
-                            <ion-icon name="trash-outline"></ion-icon>
-                            <ToolTip
-                              msg="Quitar Item"
-                              position="tooltip-left"
-                            />
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-                <tfoot>
-                  <tr className="iconsContainerFact">
-                    <span
-                      className="icons"
-                      onClick={() => {
-                        calculaTotales();
-                        creaObjetoFinal();
-                      }}
-                    ></span>
-                    <span
-                      className="icons"
-                      onClick={() => {
-                        calculaTotales();
-                        creaObjetoFinal();
-                        setShowSaveFact(!showSaveFact);
-                        setShowHeader({
-                          ...showHeader,
-                          activate: false,
-                        });
-                      }}
-                    ></span>
-                  </tr>
-                  {showSaveFact && (
-                    <tr id="alertSaveFact">
-                      <div>
-                        <p>
-                          <b>
-                            <ion-icon name="alert-circle-outline"></ion-icon>
-                          </b>
-                          ¿Desea guardar la factura actual?
-                        </p>
-                        <span>
-                          <button className="icons" title="SI">
-                            <ion-icon src="/icons/checkmark-circle.svg"></ion-icon>
-                          </button>
-                          <i
-                            onClick={() => {
-                              setShowSaveFact(!showSaveFact);
-                            }}
-                            className="icons"
-                            title="NO"
-                          >
-                            <ion-icon src="/icons/close-circle.svg"></ion-icon>
-                          </i>
-                        </span>
-                      </div>
-                    </tr>
-                  )}
-                  <tr>
-                    <td>Subtotal 0%:</td>
-                    <td>$ {state.totalesFactura.subTotIva0.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>Subtotal con IVA:</td>
-                    <td>$ {state.totalesFactura.subTotIva.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>Subtotal sin Impuestos:</td>
-                    <td>
-                      ${" "}
-                      {(
-                        state.totalesFactura.subTotIva0 +
-                        state.totalesFactura.subTotIva
-                      ).toFixed(2)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Descuento Total:</td>
-                    <td>$ {state.totalesFactura.totalDcto.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>Total IVA:</td>
-                    <td>$ {state.totalesFactura.ivaTotal.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>Valor Total:</td>
-                    <td>
-                      ${" "}
-                      {(
-                        state.totalesFactura.subTotIva0 +
-                        state.totalesFactura.subTotIva -
-                        state.totalesFactura.totalDcto +
-                        state.totalesFactura.ivaTotal
-                      ).toFixed(2)}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table> */}
-            </div>
             {state.showModal && (
               <SelectItems
                 recetas={recetas}
@@ -612,66 +410,161 @@ const Page = () => {
             {state.itemsCotiza.length > 0 && (
               <DetalleCotiza detalle={state.itemsCotiza} />
             )}
-
-            <span className={styles.buttonContainer}>
-              <button
-                id="create"
-                title="Guardar"
-                className={styles["formButton"]}
-              >
-                {idDoc === "new" ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className={styles.updateButton}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                    />
-                  </svg>
+            {state.itemsCotiza.length > 0 && (
+              <span className={stylesCot.modalSaveCotiza}>
+                {loadCreate.confirmSave && (
+                  <span className={stylesCot.confirmSaveCotiza}>
+                    <b>¿Desea guardar la cotización?</b>
+                    <span className={styles.buttonContainer}>
+                      <button
+                        id="create"
+                        className={stylesCot.saveButton}
+                        title="Guardar Cotización"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 0 1 9 9v.375M10.125 2.25A3.375 3.375 0 0 1 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 1 3.375 3.375M9 15l2.25 2.25L15 12"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        title="Regresar"
+                        type="button"
+                        id={stylesCot.returnButton}
+                        onClick={() => {
+                          setLoadCreate({ ...loadCreate, confirmSave: false });
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3"
+                          />
+                        </svg>
+                      </button>
+                    </span>
+                  </span>
                 )}
-              </button>
-              <button
-                tittle="Cancelar"
-                className={`${styles.formButton}`}
-                id="cancelButton"
-              >
-                <Link href="/cotiza" className={`${styles.cancelButton}`}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
+                <span
+                  style={{
+                    display: "flex",
+                    width: "50%",
+                    background: "#1a73e8",
+                    alignItems: "center",
+                    padding: "4px 20px",
+                    justifySelf: "flex-end",
+                    margin: "0 10px",
+                    borderRadius: "12px",
+                  }}
+                >
+                  <h2
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      textAlign: "end",
+                      width: "100%",
+                    }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </Link>
-              </button>
-            </span>
+                    Total Global cotización:
+                    <b
+                      style={{ color: "white", fontWeight: "500" }}
+                    >{`${state.totalesCotiza.subTotIva} $`}</b>
+                  </h2>
+                </span>
+              </span>
+            )}
+            {!loadCreate.confirmSave && (
+              <span className={styles.buttonContainer}>
+                {state.itemsCotiza.length > 0 && (
+                  <button
+                    title="Confirmar"
+                    type="button"
+                    className={styles["formButton"]}
+                    onFocus={() => {
+                      calculaTotales();
+                    }}
+                    onClick={() => {
+                      updateStatefinal();
+                    }}
+                  >
+                    {idDoc === "new" ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className={styles.updateButton}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                )}
+
+                <button
+                  tittle="Cancelar"
+                  className={`${styles.formButton}`}
+                  id="cancelButton"
+                >
+                  <Link
+                    href="/cotizaciones"
+                    className={`${styles.cancelButton}`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </Link>
+                </button>
+              </span>
+            )}
           </form>
         ) : (
           <h1>Loading...</h1>

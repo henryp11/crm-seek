@@ -59,7 +59,7 @@
   display: grid;
   grid-template-columns: 25% auto;
   grid-template-rows: auto auto auto;
-  gap: 8px;
+  gap: 4px;
 }
 
 .crudRecContainer figure {
@@ -97,14 +97,18 @@
 }
 
 .buttonAddItems {
-  border: 1px solid var(--dark-transparent);
-  padding: 8px;
+  border: 1px solid var(--background-hk2);
+  padding: 4px;
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
   transition: all ease 0.2s;
   background: var(--save-button);
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0 4px;
 }
 
 .buttonAddItems:hover {
@@ -115,6 +119,23 @@
 
 .buttonAddItems:active {
   scale: 0.9;
+}
+
+.buttonTotaliza {
+  position: absolute;
+  bottom: 2%;
+  right: 2%;
+  background: #21c063;
+  width: 200px;
+  font-size: var(--font-xl);
+}
+
+.buttonAddItems svg {
+  color: white;
+}
+
+.buttonAddItems:hover svg {
+  color: var(--save-button);
 }
 
 .modalDimensiones {
@@ -214,7 +235,63 @@
   font-weight: bold;
 }
 
-.tableValuesCalc {
+.modalSaveCotiza {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.confirmSaveCotiza {
+  background: var(--acept-button);
+  width: 45%;
+  padding: 8px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  box-shadow: inset 0 -3px 7px 2px var(--dark);
+}
+
+.confirmSaveCotiza button {
+  height: 44px;
+  width: 44px;
+  border: 2px solid #1a73e8;
+  cursor: pointer;
+  background: #e3f7dbf8;
+  transition: all 0.2s ease;
+}
+
+.confirmSaveCotiza b {
+  /* color: #1a73e8; */
+  color: white;
+  font-weight: 400;
+  font-size: var(--font-xl);
+}
+
+.confirmSaveCotiza button:hover {
+  background: var(--background-hk2);
+}
+
+.confirmSaveCotiza svg {
+  scale: 0.7;
+}
+.saveButton svg {
+  color: var(--save-button);
+}
+
+.saveButton:hover svg {
+  color: var(--save-button-hover);
+}
+
+#returnButton svg {
+  color: var(--cancel-alert);
+}
+
+#returnButton:hover svg {
+  color: var(--delete-alert);
 }
 
 .detalleRecContainer {

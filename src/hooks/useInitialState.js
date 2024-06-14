@@ -170,8 +170,6 @@ const useInitialState = () => {
   // Llamar componentes y filtrar por su precio
   const getComponPrecio = async (listaPrecio) => {
     setLoadData({ loading: true, error: null });
-    const precioAluminio = listaPrecio === "claro" ? "precio" : "precio2";
-    console.log(`lista: ${precioAluminio}`);
     try {
       const docs = [];
       const queryDb = query(
@@ -186,44 +184,46 @@ const useInitialState = () => {
 
       if (listaPrecio === "claro") {
         console.log("DOCS para aluminio Claro");
+        //Creo un nuevo array donde filtro los componentes con el primer precio
+        //Para luego extraer solo los datos que me interesan de cada item encontrado
         const docsPrecio = docs
           .filter((compon) => {
             return compon.precio > 0;
           })
           .map((componente) => {
             return {
-              categoria: componente.categoria,
-              costo: componente.costo,
               id: componente.id,
               idReg: componente.idReg,
               nombreItem: componente.nombreItem,
+              categoria: componente.categoria,
               precio: componente.precio,
               unidMed: componente.unidMed,
+              costo: componente.costo,
             };
           });
         console.log(docsPrecio);
         setItemComponList(docsPrecio);
       } else {
+        //Creo un nuevo array donde filtro los componentes con el segundo precio
+        //Para luego extraer solo los datos que me interesan de cada item encontrado
         const docsPrecio = docs
           .filter((compon) => {
             return compon.precio2 > 0;
           })
           .map((componente) => {
             return {
-              categoria: componente.categoria,
-              costo: componente.costo,
               id: componente.id,
               idReg: componente.idReg,
               nombreItem: componente.nombreItem,
+              categoria: componente.categoria,
               precio: componente.precio2,
               unidMed: componente.unidMed,
+              costo: componente.costo,
             };
           });
         console.log(docsPrecio);
         setItemComponList(docsPrecio);
       }
-
-      // console.log({ docsApi: docs });
       setLoadData({ loading: false, error: null });
     } catch (error) {
       setLoadData({ loading: false, error: error });
@@ -323,8 +323,9 @@ const useInitialState = () => {
 
   const calculaTotales = async () => {
     const listaDetItems = await state.itemsCotiza;
+    //Primero tomo cada componente dentro de cada set para añadir el precio total en base a las fórmulas
+    //Obteniendo un nuevo Array conc ada item en la cotización y con el precio total de los componentes en cada set
     if (listaDetItems.length > 0) {
-      //Las siguientes líneas son para obtener los valores totales de cada columna
       const addTotalesItems = state.itemsCotiza.map((item) => {
         return {
           ...item,
@@ -349,35 +350,12 @@ const useInitialState = () => {
       });
 
       console.log({ addTotalesItems });
-      //Con el nuevo Array con los totales de cada item se procede a calcular la
-      //Sumatoria total de la factura, almacenando en el objeto de totales del estado del contexto
 
-      // const tieneDescuento = (item) => item.valDcto > 0; //Predicado para verificar que items tienen descuento
-      // const obtenerSoloDcto = (item) => item.valDcto; //Obtengo solo el valor de Descuento de cada objeto
-      const acumulador = (acumulador, valores) => acumulador + valores; //predicado de acumulación a usar en cada caso
-      // const itemsConDcto = addTotalesItems
-      //   .filter(tieneDescuento)
-      //   .map(obtenerSoloDcto)
-      //   .reduce(acumulador, 0)
-      //   .toFixed(2);
+      //predicado de acumulación a usar en cada caso de sumatoria
+      const acumulador = (acumulador, valores) => acumulador + valores;
 
-      // // Declaro predicados para combinación de map, filter y reduce para IVA
-      // const tieneIva = (item) => item.valIva > 0; //Predicado para verificar que items tienen IVA
-      // const sinIva = (item) => !tieneIva(item); //Niego la función anterior para obtener items sin IVA
-      // const obtenerSoloIva = (item) => item.valIva; //Obtengo solo el valor de IVA de cada objeto
-      // const itemsConIva = addTotalesItems
-      //   .filter(tieneIva)
-      //   .map(obtenerSoloIva)
-      //   .reduce(acumulador, 0)
-      //   .toFixed(2);
-
-      // Con lo obtenido anteriormente puedo extraer el subtotal de los items con IVA
-      //const obtenerSubTotal = (item) => item.precioTot;
-      // const subtotConIva = addTotalesItems
-      //   .filter(tieneIva)
-      //   .map(obtenerSubTotal)
-      //   .reduce(acumulador, 0)
-      //   .toFixed(2);
+      //Se recorre el array anterior con el detalle del precio y ahora se realiza la sumatoria
+      //para el precio Total en cada set
       const itemSetTotales = addTotalesItems.map((item) => {
         return {
           ...item,
@@ -398,11 +376,44 @@ const useInitialState = () => {
 
       console.log({ itemSetTotales });
 
-      // const subtotSinIva = addTotalesItems
-      //   .filter(sinIva)
-      //   .map(obtenerSubTotal)
+      //Con el nuevo Array "itemSetTotales " obtengo el precio total de cada set en cada item de la cotiza
+      //Ahora se procede a calcular la Sumatoria total de la cotización, almacenando en el objeto de "totalesCotiza" del estado del contexto
+      // const tieneDescuento = (item) => item.valDcto > 0; //Predicado para verificar que items tienen descuento
+      // const obtenerSoloDcto = (item) => item.valDcto; //Obtengo solo el valor de Descuento de cada objeto
+      // const itemsConDcto = addTotalesItems
+      //   .filter(tieneDescuento)
+      //   .map(obtenerSoloDcto)
       //   .reduce(acumulador, 0)
       //   .toFixed(2);
+
+      // // Declaro predicados para combinación de map, filter y reduce para IVA
+      // const tieneIva = (item) => item.valIva > 0; //Predicado para verificar que items tienen IVA
+      // const sinIva = (item) => !tieneIva(item); //Niego la función anterior para obtener items sin IVA
+      // const obtenerSoloIva = (item) => item.valIva; //Obtengo solo el valor de IVA de cada objeto
+      // const itemsConIva = addTotalesItems
+      //   .filter(tieneIva)
+      //   .map(obtenerSoloIva)
+      //   .reduce(acumulador, 0)
+      //   .toFixed(2);
+
+      // Con lo obtenido anteriormente puedo extraer el subtotal de los items con IVA
+      const itemsCotizaTotales = itemSetTotales.map((item) => {
+        return {
+          ...item,
+          totalItem: [
+            ...item.sets.map((set) => {
+              return set.totalSet;
+            }),
+          ]
+            .reduce(acumulador, 0)
+            .toFixed(2),
+        };
+      });
+
+      const obtenerPrecioTotal = (item) => item.totalItem;
+      const precioTotalIva = itemsCotizaTotales
+        .map(obtenerPrecioTotal)
+        .reduce(acumulador, 0);
 
       // setState({
       //   ...state,
@@ -419,6 +430,12 @@ const useInitialState = () => {
         ...state,
         itemsCotiza: itemSetTotales,
         showTotalesSet: true,
+        totalesCotiza: {
+          ivaTotal: 0,
+          subTotIva: +precioTotalIva,
+          subTotIva0: 0,
+          totalDcto: 0,
+        },
       });
     }
   };
