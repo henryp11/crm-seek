@@ -304,12 +304,16 @@
   align-items: center;
   cursor: pointer;
   transition: all 0.1s ease;
-  box-shadow: inset 2px 0px 0px 0px var(--delete-alert);
+  box-shadow: -2px 0px 0px 0px var(--cancel-alert);
   background: transparent;
   border: none;
 }
 
 .removeButton svg {
+  color: var(--cancel-alert);
+}
+
+.removeButton:hover svg {
   color: var(--delete-alert);
 }
 

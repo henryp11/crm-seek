@@ -78,8 +78,8 @@
 
 .returnButton {
   position: fixed;
-  top: 30px;
-  right: 50px;
+  top: 45px;
+  right: 35px;
   z-index: 3;
   background: var(--tittles-hk);
   border: none;
@@ -123,8 +123,8 @@
 
 .buttonTotaliza {
   position: absolute;
-  bottom: 2%;
-  right: 2%;
+  bottom: 15px;
+  right: 20px;
   background: #21c063;
   width: 200px;
   font-size: var(--font-xl);

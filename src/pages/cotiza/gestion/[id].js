@@ -8,6 +8,7 @@ import Appcontext from "../../../context/AppContext";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import {
   collection,
+  getDoc,
   getDocs,
   doc,
   setDoc,
@@ -59,6 +60,7 @@ const Page = () => {
     tipoAluminio: "",
     tipoVidrio: "",
     responsable: "",
+    estatus: true,
     productos: [],
     totalesCotiza: { ivaTotal: 0, subTotIva: 0, subTotIva0: 0, totalDcto: 0 },
   };
@@ -76,10 +78,34 @@ const Page = () => {
     if (state.showModal) {
       showModal();
     }
+    getCotiza();
     getSimpleDataDb("Clientes");
     getVidrio();
     getRecetas();
   }, [ruta]);
+
+  // Obtengo datos de la Cotización a modificar (funciones Firebase)
+  const getCotiza = async () => {
+    if (idDoc !== "new") {
+      setLoadCreate({ loading: true, error: null });
+      try {
+        const docRef = doc(db, "Cotizaciones", idDoc); //Me conecto a la BD firebase y busco el registro por su Id
+        const docSnap = await getDoc(docRef); //Obtengo el dato por su id único de Firebase
+        if (docSnap.exists()) {
+          const cotiza = docSnap.data();
+          setValueState({ ...cotiza, id: idDoc });
+          setLoadCreate({ loading: false, error: null });
+        } else {
+          toast.error("Cotización no encontrado!!");
+          setTimeout(() => {
+            toast.dismiss();
+          }, 2000);
+        }
+      } catch (error) {
+        setLoadCreate({ loading: false, error: error });
+      }
+    }
+  };
 
   const getRecetas = async () => {
     setLoadCreate({ loading: true, error: null });
@@ -407,8 +433,12 @@ const Page = () => {
                 tipoVidrio={valueState.tipoVidrio}
               />
             )}
-            {state.itemsCotiza.length > 0 && (
+            {idDoc === "new" && state.itemsCotiza.length > 0 ? (
               <DetalleCotiza detalle={state.itemsCotiza} />
+            ) : (
+              idDoc !== "new" && (
+                <DetalleCotiza detalle={valueState.productos} />
+              )
             )}
             {state.itemsCotiza.length > 0 && (
               <span className={stylesCot.modalSaveCotiza}>
@@ -544,10 +574,7 @@ const Page = () => {
                   className={`${styles.formButton}`}
                   id="cancelButton"
                 >
-                  <Link
-                    href="/cotizaciones"
-                    className={`${styles.cancelButton}`}
-                  >
+                  <Link href="/cotiza" className={`${styles.cancelButton}`}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

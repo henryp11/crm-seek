@@ -51,7 +51,7 @@ const useInitialState = () => {
         querySnapshot.forEach((doc) => {
           docs.push({ ...doc.data(), id: doc.id });
         });
-        // Ordeno los datos por id_producto
+        // Ordeno los datos por id_reg
         docs.sort((a, b) => {
           if (a.idReg < b.idReg) {
             return -1;
@@ -65,6 +65,7 @@ const useInitialState = () => {
         setLoadData({ loading: false, error: null });
       });
     } catch (error) {
+      console.log(error);
       setLoadData({ loading: false, error: error });
     }
   };
@@ -264,6 +265,7 @@ const useInitialState = () => {
   //Payload se usa para el objeto que quiero pasar al estado en este caso un item
   const addItemFact = (payload, idItemSearch) => {
     if (state.itemsCotiza.length === 0) {
+      console.log("ingreso a añadir");
       setState({
         ...state,
         itemsCotiza: [...state.itemsCotiza, payload],
@@ -314,10 +316,12 @@ const useInitialState = () => {
     });
   };
 
-  const removeItemFact = (payload) => {
+  const removeItemCotiza = (payload) => {
     setState({
       ...state,
-      itemsCotiza: state.itemsCotiza.filter((items) => items.id !== payload.id),
+      itemsCotiza: [
+        ...state.itemsCotiza.filter((item) => item.idItem !== payload),
+      ],
     });
   };
 
@@ -508,7 +512,7 @@ const useInitialState = () => {
     deleteDocument,
     addItemFact,
     reduceCantItemFact,
-    removeItemFact,
+    removeItemCotiza,
     handleChangeItems,
     handleChangeHeader,
     showListItems,

@@ -33,6 +33,7 @@
   --grid-column-items-modal: 15% repeat(2, 30%) 20%;
   --grid-column-items-col2-modal: 60% 35%;
   --grid-column-items-tablet: 13% repeat(2, 30%) 10% 15%;
+  --grid-column-cotiza: 10% 30% repeat(2, 15%) 10% 15%;
   --grid-column-items-mobile: 13% repeat(2, 31%) 25%;
   --grid-column-mobile5: 13% 25% 20% 29% 10%;
 }
@@ -217,6 +218,17 @@ input:-webkit-autofill:active {
 .item_grid {
   display: grid;
   grid-template-columns: var(--grid-column-items);
+  width: 100%;
+  padding: 4px 0;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+}
+
+.cotiza_grid {
+  display: grid;
+  grid-template-columns: var(--grid-column-cotiza);
   width: 100%;
   padding: 4px 0;
   gap: 4px;
@@ -490,7 +502,7 @@ svg:active {
   right: 0;
   bottom: 0;
   z-index: 2;
-  padding: 8px;
+  padding: 24px 32px;
   height: 100%;
 }
 
