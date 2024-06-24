@@ -239,7 +239,6 @@ const Page = () => {
       setTimeout(() => {
         toast.dismiss();
       }, 2000);
-      getRecetaItem();
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
     }
