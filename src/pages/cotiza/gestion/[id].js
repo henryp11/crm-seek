@@ -13,7 +13,7 @@ import {
   doc,
   setDoc,
   onSnapshot,
-  //updateDoc,
+  updateDoc,
   query,
   orderBy,
   startAt,
@@ -22,6 +22,7 @@ import {
 import CustomInput from "../../../components/CustomInput";
 import SelectItems from "../../../containers/SelectItems";
 import DetalleCotiza from "../../../containers/DetalleCotiza";
+import { addZeroIdCotiza } from "../../../helpers/FunctionsHelps";
 import styles from "../../../styles/forms.module.css";
 import stylesCot from "../cotizaTemp.module.css";
 
@@ -29,20 +30,27 @@ import stylesCot from "../cotizaTemp.module.css";
 
 const Page = () => {
   // Funciones y objetos desde contexto inicial
-  const { getSimpleDataDb, dataList, showModal, calculaTotales, state } =
-    useContext(Appcontext);
+  const {
+    getSimpleDataDb,
+    dataList,
+    showModal,
+    calculaTotales,
+    state,
+    setState,
+    encerarState,
+  } = useContext(Appcontext);
   const navigate = useRouter(); //Usado de next/navigation para realizar push a otras rutas
   const nextRouter = useNextRouter(); //usado de next/router para extraer el query params de la ruta (el id de cada registro de firebase)
   const idDoc = nextRouter.query.id;
   const ruta = usePathname();
-  //const queryParams = useSearchParams(); //usado desde next/navigation para extraer los parametros como variables enviados (despues de ?)
-  //const isEdit = queryParams.get("edit");
+  const queryParams = useSearchParams(); //usado desde next/navigation para extraer los parametros como variables enviados (despues de ?)
+  const idRes = +queryParams.get("idRes"); //Obtengo el último número de cotización de la tabla enviado en el link anterior como parámetro
 
   const conectTbRecetas = collection(db, "Recetas");
   const conectTbCotiza = collection(db, "Cotizaciones");
 
   const initialState = {
-    idReg: "", //IdCotiza
+    idReg: 0, //IdCotiza numérico, se colocara con formato C000000X solo en la visualización
     cliente: {
       id: "",
       idReg: "",
@@ -94,6 +102,13 @@ const Page = () => {
         if (docSnap.exists()) {
           const cotiza = docSnap.data();
           setValueState({ ...cotiza, id: idDoc });
+          setState({
+            ...state,
+            cliente: cotiza.cliente,
+            itemsCotiza: cotiza.productos,
+            showTotalesSet: true,
+            totalesCotiza: cotiza.totalesCotiza,
+          });
           setLoadCreate({ loading: false, error: null });
         } else {
           toast.error("Cotización no encontrado!!");
@@ -102,6 +117,45 @@ const Page = () => {
           }, 2000);
         }
       } catch (error) {
+        setLoadCreate({ loading: false, error: error });
+      }
+    } else {
+      //Cuando es una cotización nueva averiguo el código de cotización que le toca
+      setLoadCreate({ loading: true, error: null });
+      try {
+        const docRef = doc(db, "Codificacion", "reserva"); //Me conecto a la BD firebase y traigo la codificacion del doc reserva
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const ultimoIdCotiza = docSnap.data();
+          console.log(
+            `Último Código Cotiza en BD: ` + ultimoIdCotiza.codigos.cotiza
+          );
+          //Si en la tabla de reserva está en cero, no se está creando una nueva cotización simultaneamente
+          if (ultimoIdCotiza.codigos.cotiza === 0) {
+            //En este caso actualizo el estado de la cotización para colocar como
+            //idReg el código enviado como parámetro + 1
+            setValueState({ ...valueState, idReg: idRes + 1 });
+            // Y actualizo en la tabla de cotizaciones el nuevo código reservado
+            updateLastCode(idRes + 1);
+          } else {
+            //Si existe una reserva significa que simultaneamente se está creando otra cotización, por lo que
+            //El código a la nueva cotización es el código de la reserva + 1
+            setValueState({
+              ...valueState,
+              idReg: ultimoIdCotiza.codigos.cotiza + 1,
+            });
+            // Y actualizo en la tabla de cotizaciones el nuevo código reservado
+            updateLastCode(ultimoIdCotiza.codigos.cotiza + 1);
+          }
+          setLoadCreate({ loading: false, error: null });
+        } else {
+          toast.error("Último Código no encontrado!!");
+          setTimeout(() => {
+            toast.dismiss();
+          }, 2000);
+        }
+      } catch (error) {
+        console.log(error);
         setLoadCreate({ loading: false, error: error });
       }
     }
@@ -168,30 +222,45 @@ const Page = () => {
       setTimeout(() => {
         toast.dismiss();
       }, 2000);
-      navigate.push("/cotizaciones");
+      updateLastCode(0); //Cuando guardo la cotización el código reservado queda en cero nuevamente
+      navigate.push("/cotiza");
     } catch (error) {
       console.log(error);
       setLoadCreate({ loading: false, error: error });
     }
   };
 
-  // const updateCotiza = async (cotizaObject) => {
-  //   setLoadCreate({ loading: true, error: null });
-  //   try {
-  //     const docRef = doc(db, "Cotizaciones", idDoc); //Me conecto a la BD firebase y busco el registro por su Id
-  //     await updateDoc(docRef, cotizaObject);
-  //     toast.success("Registro actualizado con éxito");
-  //     setTimeout(() => {
-  //       toast.dismiss();
-  //     }, 2000);
-  //     getRecetaItem();
-  //   } catch (error) {
-  //     setLoadCreate({ loading: false, error: error });
-  //   }
-  // };
+  const updateCotiza = async (cotizaObject) => {
+    setLoadCreate({ loading: true, error: null });
+    try {
+      const docRef = doc(db, "Cotizaciones", idDoc); //Me conecto a la BD firebase y busco el registro por su Id
+      await updateDoc(docRef, cotizaObject);
+      toast.success("Registro actualizado con éxito");
+      setTimeout(() => {
+        toast.dismiss();
+      }, 2000);
+      getRecetaItem();
+    } catch (error) {
+      setLoadCreate({ loading: false, error: error });
+    }
+  };
+
+  //Para actualizar el código de la cotización en la tabla de reserva, solo aplica para nuevas cotizaciones
+  const updateLastCode = async (codeReserva) => {
+    try {
+      const docRef = doc(db, "Codificacion", "reserva");
+      await updateDoc(docRef, { codigos: { cotiza: codeReserva } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleChange = (e) => {
-    setValueState({ ...valueState, [e.target.name]: e.target.value });
+    setValueState({
+      ...valueState,
+      [e.target.name]:
+        e.target.type === "number" ? +e.target.value : e.target.value,
+    });
   };
 
   const handleClient = (e) => {
@@ -210,13 +279,14 @@ const Page = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    blockButton();
-    createCotiza(valueState);
-    // if (!isEdit) {
-    //   createCotiza(valueState);
-    // } else {
-    //   updateCotiza(valueState);
-    // }
+    if (idDoc === "new") {
+      blockButton();
+      createCotiza(valueState);
+      encerarState();
+    } else {
+      updateCotiza(valueState);
+      encerarState();
+    }
   };
 
   // Esta función evita que al dar varios clics sobre el botón de crear añada otro registro
@@ -245,7 +315,13 @@ const Page = () => {
         style={{ position: "relative" }}
       >
         <h2>
-          {idDoc === "new" ? "Creando Cotización" : "Editando Cotización"}
+          {idDoc === "new"
+            ? `Creando Cotización # ${addZeroIdCotiza(
+                valueState.idReg.toString().length
+              )}${valueState.idReg}`
+            : `Editando Cotización # ${addZeroIdCotiza(
+                valueState.idReg.toString().length
+              )}${valueState.idReg}`}
         </h2>
         {loadCreate.loading === false ? (
           <form
@@ -253,30 +329,23 @@ const Page = () => {
             onSubmit={handleSubmit}
             className={`${styles["form-default"]} ${styles.formCotiza}`}
           >
-            <span className={styles.idField}>
-              <CustomInput
-                typeInput="text"
-                nameInput="idReg"
-                valueInput={valueState.idReg}
-                onChange={handleChange}
-                nameLabel="Cotización #"
-                required={true}
-                disabled={idDoc !== "new" ? true : false}
-              />
+            <span
+              className={styles.idField}
+              style={{ gridTemplateColumns: "50% 20% 20%" }}
+            >
               <span className={styles.selectContainer}>
                 <b>* Cliente:</b>
                 <select name="nombreCli" onChange={handleClient} required>
                   {valueState.cliente.idReg ? (
                     <option
-                      key={valueState.cliente.id}
+                      key={valueState.cliente.idReg}
                       value={valueState.cliente.idReg}
+                      selected
                     >
                       {valueState.cliente.nombreCliente}
                     </option>
                   ) : (
-                    <option value="" label="Elegir Cliente">
-                      Elegir Cliente
-                    </option>
+                    <option value="" label="Elegir Cliente"></option>
                   )}
                   {dataList.map((cliente) => {
                     if (cliente.estatus) {
@@ -333,6 +402,7 @@ const Page = () => {
                     <option
                       key={valueState.tipoAluminio}
                       value={valueState.tipoAluminio}
+                      selected
                     >
                       {valueState.tipoAluminio}
                     </option>
@@ -350,6 +420,7 @@ const Page = () => {
                     <option
                       key={valueState.tipoVidrio}
                       value={valueState.tipoVidrio}
+                      selected
                     >
                       {valueState.tipoVidrio}
                     </option>
@@ -433,12 +504,8 @@ const Page = () => {
                 tipoVidrio={valueState.tipoVidrio}
               />
             )}
-            {idDoc === "new" && state.itemsCotiza.length > 0 ? (
+            {state.itemsCotiza.length > 0 && (
               <DetalleCotiza detalle={state.itemsCotiza} />
-            ) : (
-              idDoc !== "new" && (
-                <DetalleCotiza detalle={valueState.productos} />
-              )
             )}
             {state.itemsCotiza.length > 0 && (
               <span className={stylesCot.modalSaveCotiza}>
@@ -471,7 +538,10 @@ const Page = () => {
                         type="button"
                         id={stylesCot.returnButton}
                         onClick={() => {
-                          setLoadCreate({ ...loadCreate, confirmSave: false });
+                          setLoadCreate({
+                            ...loadCreate,
+                            confirmSave: false,
+                          });
                         }}
                       >
                         <svg
@@ -573,6 +643,14 @@ const Page = () => {
                   tittle="Cancelar"
                   className={`${styles.formButton}`}
                   id="cancelButton"
+                  onClick={() => {
+                    if (idDoc === "new") {
+                      updateLastCode(0);
+                      encerarState();
+                    } else {
+                      encerarState();
+                    }
+                  }}
                 >
                   <Link href="/cotiza" className={`${styles.cancelButton}`}>
                     <svg

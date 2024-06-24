@@ -186,6 +186,7 @@
   width: 100%;
   grid-column: 1 / -1;
   display: grid;
+  /* grid-template-columns: 50% 20% 20%; */
   grid-template-columns: 15% 55% 15% 15%;
 }
 

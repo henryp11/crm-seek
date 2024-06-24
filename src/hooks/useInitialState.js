@@ -41,6 +41,7 @@ const useInitialState = () => {
     loading: false,
     error: null,
   });
+  const [lastCode, setLastCode] = useState(0); //Para obtener el último código y colocar el siguiente a la nueva cotización
 
   //Función para obtener datos de cualquier colección de datos
   const getSimpleDataDb = async (table) => {
@@ -62,6 +63,9 @@ const useInitialState = () => {
           return 0;
         });
         setDataList(docs);
+        //Extraigo el último código para control de secuencias de idReg
+        const lastCodeInTable = docs.map(({ idReg }) => idReg).reverse()[0];
+        setLastCode(lastCodeInTable);
         setLoadData({ loading: false, error: null });
       });
     } catch (error) {
@@ -499,12 +503,18 @@ const useInitialState = () => {
     });
   };
 
+  //Encerar estado global
+  const encerarState = () => {
+    setState(initialState);
+  };
+
   return {
     state,
     setState,
     dataList,
     itemPtList,
     itemComponList,
+    lastCode,
     getProdTerminado,
     getComponPrecio,
     loadData,
@@ -522,6 +532,7 @@ const useInitialState = () => {
     showModalDimen,
     closeAllModal,
     calculaTotales,
+    encerarState,
   }; //retorno el estado y funciones a usar
 };
 

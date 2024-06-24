@@ -72,3 +72,11 @@ export const formatoFechaDMA = () => {
   )}${fecha.getFullYear()}`;
   return fechaFormat;
 };
+
+export const addZeroIdCotiza = (numRep) => {
+  if (9 - numRep < 0) {
+    return `CT${"0".repeat(9)}`;
+  } else {
+    return `CT${"0".repeat(9 - numRep)}`;
+  }
+};

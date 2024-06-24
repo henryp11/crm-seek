@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
+import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
 import CotizaDetail from "../containers/CotizaDetail";
@@ -14,6 +15,7 @@ import useScreenSize from "../hooks/useScreenSize";
 import SectionSearch from "../containers/SectionSearch";
 import Appcontext from "../context/AppContext";
 import useSearchSimple from "../hooks/useSearchSimple";
+import { addZeroIdCotiza } from "../helpers/FunctionsHelps";
 //import styles from "../styles/products.module.css";
 
 const moduleHeaders = {
@@ -29,20 +31,21 @@ const moduleHeaders = {
 
 const Cotiza = () => {
   // Funciones y objetos desde contexto inicial
-  const { getSimpleDataDb, dataList, loadData } = useContext(Appcontext);
+  const { getSimpleDataDb, dataList, loadData, lastCode } =
+    useContext(Appcontext);
   const isMobile = useScreenSize();
 
   const [openItem, setOpenItem] = useState(false);
   const [itemCapture, setItemCapture] = useState("");
   const [dataItemCap, setDataItemCap] = useState({});
   const { query, setQuery, filteredItems } = useSearchSimple(dataList);
-
+  const ruta = usePathname();
   useEffect(() => {
     getSimpleDataDb("Cotizaciones");
-  }, []);
+  }, [ruta]);
 
   console.log(dataList);
-
+  console.log(lastCode);
   return (
     <div className="mainContainer">
       <section className="generalContainer">
@@ -66,7 +69,7 @@ const Cotiza = () => {
           <h1>loading...</h1>
         ) : (
           <div className="generalContainerDetails">
-            <Link href="/cotiza/gestion/new">
+            <Link href={`/cotiza/gestion/new?idRes=${lastCode}`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -94,7 +97,10 @@ const Cotiza = () => {
                       : "cotiza_grid item_detail registerNulled"
                   }
                 >
-                  <span>{item.idReg}</span>
+                  <span>
+                    {addZeroIdCotiza(item.idReg.toString().length)}
+                    {item.idReg}
+                  </span>
                   <span>{item.cliente?.nombreCliente}</span>
                   <span>{item.fechaElab}</span>
                   <span className="hideElement">{item.fechaValid}</span>

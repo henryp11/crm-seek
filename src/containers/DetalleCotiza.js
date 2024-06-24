@@ -104,7 +104,7 @@ const DetalleCotiza = ({ detalle }) => {
                       </div>
                     );
                   })}
-                  {state.showTotalesSet && (
+                  {(state.showTotalesSet || set.totalSet) && (
                     <div
                       style={{
                         width: "100%",
