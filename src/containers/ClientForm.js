@@ -56,6 +56,13 @@ const ClientForm = ({ funCreate, funUpdate, idDoc, data }) => {
             nameLabel="Nombre / Razón Social"
             required={true}
           />
+          <CustomInput
+            typeInput="text"
+            nameInput="proyecto"
+            valueInput={valueState.proyecto}
+            onChange={handleChange}
+            nameLabel="Proyecto"
+          />
         </span>
         <span className={styles.containerAgrupFields}>
           <CustomInput

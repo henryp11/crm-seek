@@ -21,6 +21,13 @@ const moduleHeaders = {
   ],
 };
 
+// const setsFabricación = [
+//   {
+//     idSet: 1,
+
+//   }
+// ]
+
 // Modal para añadir set´s de fabricación, sus componentes y medidas
 
 const AddSetFab = ({
@@ -181,15 +188,45 @@ const AddSetFab = ({
           </svg>
         </button>
         <div className={styles["form-default"]}>
-          <CustomInput
+          {/* <CustomInput
             typeInput="text"
             nameInput="nombreSet"
             valueInput={dataFabricacion.nombreSet}
             onChange={handleChange}
             nameLabel="Nombre del Set"
             required={true}
-            // readonly={true}
-          />
+          /> */}
+          <span className={styles.containerAgrupFields}>
+            <span className={styles.selectContainer}>
+              <b>Nombre Set:</b>
+              <select name="nombreSet" onChange={handleChange} required>
+                {dataFabricacion.nombreSet ? (
+                  <option
+                    key={dataFabricacion.nombreSet}
+                    value={dataFabricacion.nombreSet}
+                    selected
+                  >
+                    {dataFabricacion.nombreSet}
+                  </option>
+                ) : (
+                  <option value="" label="Elegir Set de Fabricación"></option>
+                )}
+                <option
+                  value="Estructura Aluminio"
+                  label="Estructura Aluminio"
+                ></option>
+                <option
+                  value="Accesorios Estructura"
+                  label="Accesorios Estructura"
+                ></option>
+                <option
+                  value="Mano de Obra Estructura"
+                  label="Mano de Obra Estructura"
+                ></option>
+                <option value="Varios" label="Varios"></option>
+              </select>
+            </span>
+          </span>
           <div className={styles.buttonContainerBig}>
             <button
               onClick={() => {

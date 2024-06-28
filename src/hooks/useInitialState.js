@@ -268,41 +268,48 @@ const useInitialState = () => {
   //Para añadir o quitar items de la factura
   //Payload se usa para el objeto que quiero pasar al estado en este caso un item
   const addItemFact = (payload, idItemSearch) => {
-    if (state.itemsCotiza.length === 0) {
-      console.log("ingreso a añadir");
-      setState({
-        ...state,
-        itemsCotiza: [...state.itemsCotiza, payload],
-        showModalDimen: false,
-      });
-      // showModalDimen();
-    } else {
-      let searchItemsId = [];
-      searchItemsId = state.itemsCotiza
-        .map(({ idItem }) => idItem)
-        .filter((idItem) => idItem === idItemSearch);
+    console.log(`Se añade el item ${idItemSearch}`);
+    setState({
+      ...state,
+      itemsCotiza: [...state.itemsCotiza, payload],
+      showModalDimen: false,
+    });
+    //ESTA SECCION SOLO APLICA PARA AUMENTAR AUTOMATICAMENTE UN ITEM SI YA EXISTE PREVIAMENTE
+    //PERO EN ESTE CASO NO SE VA A CONSIDERAR ESA CARACTERISTICA PORQUE CADA VENTANA PUEDE VOLVER A INGRESARTSE
+    //CON OTRAS MEDIDAS, POR ESE MOTIVO SE PODRÁ AÑADIR EL MISMO ITEM CON SUS CARACTERISTICAS AL ARRAY
+    // if (state.itemsCotiza.length === 0) {
+    //   console.log("ingreso a añadir");
+    //   setState({
+    //     ...state,
+    //     itemsCotiza: [...state.itemsCotiza, payload],
+    //     showModalDimen: false,
+    //   });
+    // } else {
+    //   let searchItemsId = [];
+    //   searchItemsId = state.itemsCotiza
+    //     .map(({ idItem }) => idItem)
+    //     .filter((idItem) => idItem === idItemSearch);
 
-      if (searchItemsId.length === 0) {
-        setState({
-          ...state,
-          itemsCotiza: [...state.itemsCotiza, payload],
-        });
-      } else {
-        setState({
-          ...state,
-          itemsCotiza: [
-            ...state.itemsCotiza.map((item) => {
-              if (item.idItem !== idItemSearch) return item;
-              return {
-                ...item,
-                cantidad: item.cantidad + 1,
-              };
-            }),
-          ],
-        });
-      }
-      // showModalDimen();
-    }
+    //   if (searchItemsId.length === 0) {
+    //     setState({
+    //       ...state,
+    //       itemsCotiza: [...state.itemsCotiza, payload],
+    //     });
+    //   } else {
+    //     setState({
+    //       ...state,
+    //       itemsCotiza: [
+    //         ...state.itemsCotiza.map((item) => {
+    //           if (item.idItem !== idItemSearch) return item;
+    //           return {
+    //             ...item,
+    //             cantidad: item.cantidad + 1,
+    //           };
+    //         }),
+    //       ],
+    //     });
+    //   }
+    // }
   };
 
   const reduceCantItemFact = (idItemSearch) => {
@@ -408,16 +415,19 @@ const useInitialState = () => {
       const itemsCotizaTotales = itemSetTotales.map((item) => {
         return {
           ...item,
-          totalItem: [
-            ...item.sets.map((set) => {
-              return set.totalSet;
-            }),
-          ]
-            .reduce(acumulador, 0)
-            .toFixed(2),
+          totalItem: Number(
+            [
+              ...item.sets.map((set) => {
+                return set.totalSet;
+              }),
+            ]
+              .reduce(acumulador, 0)
+              .toFixed(2)
+          ),
         };
       });
 
+      console.log({ itemsCotizaTotales });
       const obtenerPrecioTotal = (item) => item.totalItem;
       const precioTotalIva = itemsCotizaTotales
         .map(obtenerPrecioTotal)
@@ -436,7 +446,8 @@ const useInitialState = () => {
       // });
       setState({
         ...state,
-        itemsCotiza: itemSetTotales,
+        // itemsCotiza: itemSetTotales,
+        itemsCotiza: itemsCotizaTotales,
         showTotalesSet: true,
         totalesCotiza: {
           ivaTotal: 0,

@@ -28,7 +28,7 @@ const DetalleCotiza = ({ detalle }) => {
                 flexWrap: "wrap",
               }}
             >
-              <h4>{`${item.idItem} - ${item.itemReceta.nombreProducto}`}</h4>
+              <h4>{`${item.idItem} - ${item.nombreProducto}`}</h4>
               <p>
                 <i>Cantidad:</i> {item.cantidad}
               </p>
@@ -124,6 +124,24 @@ const DetalleCotiza = ({ detalle }) => {
                 </div>
               );
             })}
+
+            {(state.showTotalesSet || item.totalItem) && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  background: "#57b1fc",
+                  color: "white",
+                  margin: "2px 0",
+                  fontSize: "22px",
+                  padding: "4px 30px",
+                }}
+              >
+                <b>{`TOTAL ${item.idItem} - ${item.nombreProducto}: `}</b>
+                <b>{item.totalItem} $</b>
+              </div>
+            )}
           </div>
         );
       })}

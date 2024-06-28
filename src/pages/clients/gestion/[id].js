@@ -28,6 +28,7 @@ const Page = () => {
     emailAlter: "",
     idVendedor: "",
     observac: "",
+    proyecto: "",
     estatus: true,
   };
   const [dataClient, setDataClient] = useState(initialState);

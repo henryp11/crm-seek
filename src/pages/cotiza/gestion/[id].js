@@ -5,6 +5,7 @@ import { useRouter as useNextRouter } from "next/router"; //para extraer el quer
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import Appcontext from "../../../context/AppContext";
+import TableReport from "../../../components/TableReport";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import {
   collection,
@@ -59,6 +60,7 @@ const Page = () => {
       email: "",
       emailAlter: "",
       observac: "",
+      proyecto: "",
       telf1: "",
       telf2: "",
     },
@@ -239,6 +241,7 @@ const Page = () => {
       setTimeout(() => {
         toast.dismiss();
       }, 2000);
+      setLoadCreate({ loading: false, error: null });
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
     }
@@ -330,7 +333,7 @@ const Page = () => {
           >
             <span
               className={styles.idField}
-              style={{ gridTemplateColumns: "50% 20% 20%" }}
+              style={{ gridTemplateColumns: "70% 20%" }}
             >
               <span className={styles.selectContainer}>
                 <b>* Cliente:</b>
@@ -352,7 +355,7 @@ const Page = () => {
                         <option
                           key={cliente.idReg}
                           value={cliente.idReg}
-                        >{`${cliente.nombreCliente} | ${cliente.idReg}`}</option>
+                        >{`${cliente.nombreCliente} | ${cliente.idReg} | ${cliente.proyecto}`}</option>
                       );
                     }
                   })}
@@ -366,14 +369,14 @@ const Page = () => {
                 nameLabel="Fecha Elaboración"
                 required={true}
               />
-              <CustomInput
+              {/* <CustomInput
                 typeInput="date"
                 nameInput="fechaValid"
                 valueInput={valueState.fechaValid}
                 onChange={handleChange}
                 nameLabel="Fecha Validación"
                 required={true}
-              />
+              /> */}
             </span>
             <span className={styles.containerAgrupFields}>
               <CustomInput
@@ -403,7 +406,9 @@ const Page = () => {
                       value={valueState.tipoAluminio}
                       selected
                     >
-                      {valueState.tipoAluminio}
+                      {valueState.tipoAluminio === "claro"
+                        ? "Aluminio Natural"
+                        : "Aluminio Negro"}
                     </option>
                   ) : (
                     <option value="" label="Elegir tipo de Aluminio"></option>
@@ -445,6 +450,9 @@ const Page = () => {
               }}
             >
               <h3 style={{ color: "#1a73e8" }}>Detalle Cotización:</h3>
+              {loadCreate.loading === false && (
+                <TableReport dataCotiza={valueState} />
+              )}
               {valueState.tipoAluminio && valueState.tipoVidrio && (
                 <button
                   onClick={() => {
