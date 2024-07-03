@@ -19,13 +19,12 @@ const TableReport = ({ dataCotiza }) => {
       <div
         style={{
           display: "flex",
-          width: "100%",
-          padding: "4px",
+          width: "300px",
           justifyContent: "space-evenly",
           alignItems: "center",
-          gap: "12px",
-          borderBottom: "1px solid #444a8d",
-          fontSize: "1.2em",
+          position: "absolute",
+          right: "200px",
+          bottom: "15px",
         }}
       >
         <button
@@ -128,13 +127,17 @@ const TableReport = ({ dataCotiza }) => {
           {dataCotiza.productos.map((item) => {
             return (
               <>
-                <tr key={item.idItem}>
-                  <td>
+                <tr key={item.idItem} bgcolor="#57b1fc">
+                  <td colSpan="3">
                     <strong>{item.nombreProducto}</strong>
                   </td>
                   <td>
                     <strong>Cantidad:</strong>
                     {item.cantidad}
+                  </td>
+                  <td>
+                    <strong>Area:</strong>
+                    {item.area} m2
                   </td>
                 </tr>
                 {item.sets.map((set) => {
@@ -175,7 +178,7 @@ const TableReport = ({ dataCotiza }) => {
                       })}
                       <tr bgcolor="#fed421" align="right">
                         <td colspan="5">
-                          <strong>Total:</strong>
+                          <strong>Total {set.nombreSet}: </strong>
                         </td>
                         <td>
                           <strong>
@@ -186,10 +189,28 @@ const TableReport = ({ dataCotiza }) => {
                     </>
                   );
                 })}
+                <tr bgcolor="#57b1fc">
+                  <td colSpan="5" align="right">
+                    <strong>Total {item.nombreProducto}: </strong>
+                  </td>
+                  <td align="right">
+                    <strong>{item.totalItem}</strong>
+                  </td>
+                </tr>
               </>
             );
           })}
         </tbody>
+        <tfoot>
+          <tr align="right" bgcolor="#21c063">
+            <td colSpan="5">
+              <strong>Total Cotización: </strong>
+            </td>
+            <td>
+              <strong>{dataCotiza.totalesCotiza?.subTotIva}</strong>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   );

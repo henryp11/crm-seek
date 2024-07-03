@@ -64,6 +64,10 @@ const ProductDetail = (props) => {
             <h3 className={styles.itemWrapTittles}>Costo</h3>
             <p>{itemDetail.costo}</p>
           </span>
+          <span className={styles.itemWrapFields}>
+            <h3 className={styles.itemWrapTittles}>¿Es Componente?</h3>
+            <p>{itemDetail.isCompon ? "SI" : "NO"}</p>
+          </span>
         </div>
       )}
     </>

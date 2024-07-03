@@ -172,30 +172,98 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
           />
         </span>
         <span className={styles.containerAgrupFields}>
-          <CustomInput
-            typeInput="text"
-            nameInput="categoria"
-            valueInput={valueState.categoria}
-            onChange={handleChange}
-            nameLabel="Categoría"
-            required={true}
-          />
-          <CustomInput
-            typeInput="text"
-            nameInput="subCategoria"
-            valueInput={valueState.subCategoria}
-            onChange={handleChange}
-            nameLabel="Sub-Categoría"
-            required={true}
-          />
-          <CustomInput
-            typeInput="text"
-            nameInput="unidMed"
-            valueInput={valueState.unidMed}
-            onChange={handleChange}
-            nameLabel="Unidad de Medida"
-            required={true}
-          />
+          <span className={styles.selectContainer}>
+            <b>* Categoría:</b>
+            <select name="categoria" onChange={handleChange} required>
+              {valueState.categoria ? (
+                <option
+                  key={valueState.categoria}
+                  value={valueState.categoria}
+                  selected
+                >
+                  {valueState.categoria}
+                </option>
+              ) : (
+                <option value="" label="Elegir Categoría"></option>
+              )}
+              <option value="Componente" label="Componente"></option>
+              <option
+                value="Producto Terminado"
+                label="Producto Terminado"
+              ></option>
+              <option value="Vidrio" label="Vidrio"></option>
+              <option value="Vidrio Crudo" label="Vidrio Crudo"></option>
+              <option
+                value="Vidrio Procesado"
+                label="Vidrio Procesado"
+              ></option>
+              <option value="Servicio" label="Servicio"></option>
+            </select>
+          </span>
+          <span className={styles.selectContainer}>
+            <b>* Sub-Categoría:</b>
+            <select name="subCategoria" onChange={handleChange} required>
+              {valueState.subCategoria ? (
+                <option
+                  key={valueState.subCategoria}
+                  value={valueState.subCategoria}
+                  selected
+                >
+                  {valueState.subCategoria}
+                </option>
+              ) : (
+                <option value="" label="Elegir Sub-Categoría"></option>
+              )}
+              <option value="Accesorios" label="Accesorios"></option>
+              <option
+                value="Estructura de Aluminio"
+                label="Estructura de Aluminio"
+              ></option>
+              <option value="Mano de Obra" label="Mano de Obra"></option>
+              <option value="Varios" label="Varios"></option>
+              <option value="Ventana" label="Ventana"></option>
+              <option
+                value="Vidrio P. Templado"
+                label="Vidrio P. Templado"
+              ></option>
+              <option
+                value="Vidrio P. Cámara"
+                label="Vidrio P. Cámara"
+              ></option>
+              <option
+                value="Vidrio C. Laminado"
+                label="Vidrio C. Laminado"
+              ></option>
+              <option
+                value="Vidrio C. Flotado"
+                label="Vidrio C. Flotado"
+              ></option>
+            </select>
+          </span>
+          <span className={styles.selectContainer}>
+            <b>* Unidad de Medida:</b>
+            <select name="unidMed" onChange={handleChange} required>
+              {valueState.unidMed ? (
+                <option
+                  key={valueState.unidMed}
+                  value={valueState.unidMed}
+                  selected
+                >
+                  {valueState.unidMed}
+                </option>
+              ) : (
+                <option value="" label="Elegir Unidad de Medida"></option>
+              )}
+              <option value="unid" label="Unidades"></option>
+              <option value="m2" label="Metros Cuadrados"></option>
+              <option value="m" label="Metros"></option>
+              <option value="plancha" label="Planchas"></option>
+              <option value="lb" label="Libras"></option>
+              <option value="kg" label="Kilos"></option>
+              <option value="h" label="Horas"></option>
+              <option value="tubo" label="Tubo"></option>
+            </select>
+          </span>
         </span>
         <span className={styles.containerAgrupFields}>
           <CustomInput
@@ -204,6 +272,7 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             valueInput={valueState.precio}
             onChange={handleChange}
             nameLabel="Precio Aluminio Natural"
+            step="any"
           />
           <CustomInput
             typeInput="number"
@@ -211,6 +280,7 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             valueInput={valueState.precio2}
             onChange={handleChange}
             nameLabel="Precio Aluminio Negro"
+            step="any"
           />
           <CustomInput
             typeInput="number"
@@ -218,6 +288,7 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
             valueInput={valueState.costo}
             onChange={handleChange}
             nameLabel="Costo"
+            step="any"
           />
           <span className={styles.containerAgrupFields}>
             <CustomInput

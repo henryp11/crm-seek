@@ -106,6 +106,11 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
               ...componVidrio,
               idCompon: tipoVidrio.split("|")[0],
               nombreCompon: tipoVidrio.split("|")[1],
+              formula1: stateItemCotiza.planchas
+                ? (
+                    stateItemCotiza.planchas / stateItemCotiza.cantidad
+                  ).toString()
+                : componVidrio.formula1,
             };
           })
           .map((compon) => {
@@ -133,6 +138,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
                             stateItemCotiza.dimensiones.alturaH)
                       )
                       .replace("PLANCHA", stateItemCotiza.planchas)
+                      .replace(",", ".")
                       .trim()})`
                   ),
                   2
@@ -168,7 +174,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
                           )
                           .replace("ENTERO", "Math.round")
                           .replace("ENSUPERIOR", "Math.ceil")
-                          // .replace(/  /g, "")
+                          .replace(",", ".")
                           .trim()}`
                       ),
                       2
@@ -208,7 +214,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
                                 stateItemCotiza.dimensiones.alturaH)
                           )
                           .replace("PLANCHA", stateItemCotiza.planchas)
-                          // .replace(/  /g, "")
+                          .replace(",", ".")
                           .trim()})`
                       ),
                       2
@@ -275,7 +281,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
           ...set,
           totalSet: [
             ...set.componentes.map((compon) => {
-              return compon.precioTot;
+              return redondear(compon.precioTot, 2);
             }),
           ].reduce(acumulador, 0),
         };
@@ -326,6 +332,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
                         .replace("TOTALMATERIAL", totalMateriales)
                         .replace("MANOOBRA", totalManoObra)
                         .replace("AREA", stateItemCotiza.area)
+                        .replace(",", ".")
                         .trim()})`
                     ),
                     2
@@ -465,6 +472,8 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
           onClick={totalizaSets}
           type="button"
           className={styles.formButton}
+          style={{ background: "#448d5f" }}
+          id="totalizaSet"
         >
           Totalizar Sets
         </button>
@@ -516,7 +525,7 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
               <span style={{ width: "100%" }}>
                 <h3
                   style={{ textAlign: "right", padding: "4px 36px" }}
-                >{`Total ${set.nombreSet}= ${set.totalSet}$`}</h3>
+                >{`Total ${set.nombreSet}= ${redondear(set.totalSet, 2)}$`}</h3>
               </span>
             )}
           </div>

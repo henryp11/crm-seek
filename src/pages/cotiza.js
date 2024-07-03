@@ -24,14 +24,14 @@ const moduleHeaders = {
     { id: "col1", name: "Cotización #", show: true },
     { id: "col2", name: "Cliente", show: true },
     { id: "col3", name: "Fecha Elab.", show: true },
-    { id: "col4", name: "Fecha Valid.", show: true },
+    { id: "col4", name: "Responsable", show: true },
     { id: "col5", name: "Total", show: true },
   ],
 };
 
 const Cotiza = () => {
   // Funciones y objetos desde contexto inicial
-  const { getSimpleDataDb, dataList, loadData, lastCode } =
+  const { getSimpleDataDb, deleteDocument, dataList, loadData, lastCode } =
     useContext(Appcontext);
   const isMobile = useScreenSize();
 
@@ -103,8 +103,10 @@ const Cotiza = () => {
                   </span>
                   <span>{item.cliente?.nombreCliente}</span>
                   <span>{item.fechaElab}</span>
-                  <span className="hideElement">{item.fechaValid}</span>
-                  <span>{item.totalesCotiza?.subTotIva}</span>
+                  <span className="hideElement">{item.responsable}</span>
+                  <span style={{ textAlign: "right" }}>
+                    {item.totalesCotiza?.subTotIva}$
+                  </span>
                   <span className="icons-container">
                     <button
                       title="Ver Detalles"
@@ -153,6 +155,32 @@ const Cotiza = () => {
                         />
                       </svg>
                     </Link>
+                    <span className="icons-container delete">
+                      <button
+                        title="ELIMINAR COTIZACION"
+                        onClick={() => {
+                          deleteDocument(
+                            item.id,
+                            "Cotizaciones",
+                            "¿Desea eliminar permanentemente esta cotización?"
+                          );
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+                          />
+                        </svg>
+                      </button>
+                    </span>
                   </span>
                   {itemCapture === item.id && (
                     <CotizaDetail

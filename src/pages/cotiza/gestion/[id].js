@@ -82,6 +82,7 @@ const Page = () => {
     loading: false,
     error: null,
     confirmSave: false, //Para mostrar el botón de confirmación para guardar la cotización
+    showExport: false,
   });
 
   useEffect(() => {
@@ -111,7 +112,7 @@ const Page = () => {
             showTotalesSet: true,
             totalesCotiza: cotiza.totalesCotiza,
           });
-          setLoadCreate({ loading: false, error: null });
+          setLoadCreate({ loading: false, error: null, showExport: true });
         } else {
           toast.error("Cotización no encontrado!!");
           setTimeout(() => {
@@ -303,7 +304,7 @@ const Page = () => {
       productos: state.itemsCotiza,
       totalesCotiza: state.totalesCotiza,
     });
-    setLoadCreate({ ...loadCreate, confirmSave: true });
+    setLoadCreate({ ...loadCreate, confirmSave: true, showExport: true });
   };
 
   console.log(valueState);
@@ -450,13 +451,18 @@ const Page = () => {
               }}
             >
               <h3 style={{ color: "#1a73e8" }}>Detalle Cotización:</h3>
-              {loadCreate.loading === false && (
+              {loadCreate.loading === false && loadCreate.showExport && (
                 <TableReport dataCotiza={valueState} />
               )}
               {valueState.tipoAluminio && valueState.tipoVidrio && (
                 <button
                   onClick={() => {
                     showModal();
+                    setLoadCreate({
+                      ...loadCreate,
+                      confirmSave: false,
+                      showExport: false,
+                    });
                   }}
                   type="button"
                   className={stylesCot.buttonAddItems}
@@ -548,6 +554,7 @@ const Page = () => {
                           setLoadCreate({
                             ...loadCreate,
                             confirmSave: false,
+                            showExport: false,
                           });
                         }}
                       >

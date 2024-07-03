@@ -176,7 +176,8 @@ input:-webkit-autofill:active {
   width: 100%;
   margin: 0;
   position: relative;
-  height: 100vh;
+  /* height: 100vh; */
+  height: calc(100vh - 60px);
   align-items: flex-start;
 }
 
@@ -209,6 +210,8 @@ input:-webkit-autofill:active {
   width: 100%;
   text-align: center;
   font-size: var(--font-nm);
+  height: 80vh;
+  overflow-y: auto;
 }
 
 .generalContainerDetails > div:nth-of-type(odd) {

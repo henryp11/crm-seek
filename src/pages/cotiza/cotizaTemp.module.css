@@ -256,11 +256,11 @@
 }
 
 .confirmSaveCotiza button {
-  height: 44px;
-  width: 44px;
-  border: 2px solid #1a73e8;
+  height: 44px !important;
+  width: 44px !important;
+  border: 2px solid #1a73e8 !important;
   cursor: pointer;
-  background: #e3f7dbf8;
+  background: #e3f7dbf8 !important;
   transition: all 0.2s ease;
 }
 
@@ -272,26 +272,26 @@
 }
 
 .confirmSaveCotiza button:hover {
-  background: var(--background-hk2);
+  background: var(--background-hk2) !important;
 }
 
 .confirmSaveCotiza svg {
-  scale: 0.7;
+  scale: 0.7 !important;
 }
 .saveButton svg {
-  color: var(--save-button);
+  color: var(--save-button) !important;
 }
 
 .saveButton:hover svg {
-  color: var(--save-button-hover);
+  color: var(--save-button-hover) !important;
 }
 
 #returnButton svg {
-  color: var(--cancel-alert);
+  color: var(--cancel-alert) !important;
 }
 
 #returnButton:hover svg {
-  color: var(--delete-alert);
+  color: var(--delete-alert) !important;
 }
 
 .detalleRecContainer {

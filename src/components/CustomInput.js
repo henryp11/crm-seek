@@ -17,6 +17,7 @@ const CustomInput = ({
   onClickSearch,
   readonly,
   isChecked,
+  step,
 }) => {
   return (
     <>
@@ -33,6 +34,7 @@ const CustomInput = ({
             disabled={disabled}
             readOnly={readonly}
             required={required}
+            step={step}
           />
           <label
             className={

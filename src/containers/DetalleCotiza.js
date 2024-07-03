@@ -118,7 +118,7 @@ const DetalleCotiza = ({ detalle }) => {
                       }}
                     >
                       <b>Total {set.nombreSet}: </b>
-                      <b>{set.totalSet} $</b>
+                      <b>{redondear(set.totalSet, 2)} $</b>
                     </div>
                   )}
                 </div>
@@ -139,7 +139,7 @@ const DetalleCotiza = ({ detalle }) => {
                 }}
               >
                 <b>{`TOTAL ${item.idItem} - ${item.nombreProducto}: `}</b>
-                <b>{item.totalItem} $</b>
+                <b>{redondear(item.totalItem, 2)} $</b>
               </div>
             )}
           </div>

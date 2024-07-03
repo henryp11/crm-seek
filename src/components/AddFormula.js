@@ -6,6 +6,7 @@ import styles from "../styles/forms.module.css";
 
 const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
   const [dataComponente, setDataComponente] = useState(componente);
+  const [openHelp, setOpenHelp] = useState(false);
 
   const handleChange = (e) => {
     setDataComponente({
@@ -19,8 +20,8 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
       ...dataComponente,
       [e.target.name]:
         formula === 1
-          ? dataComponente.formula1.concat(" ", e.target.value)
-          : dataComponente.formula2.concat(" ", e.target.value),
+          ? dataComponente.formula1.concat("", e.target.value)
+          : dataComponente.formula2.concat("", e.target.value),
     });
   };
 
@@ -32,6 +33,7 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
         <button
           tittle="Cerrar"
           className="icons-container closeModal"
+          type="button"
           onClick={() => {
             openModal();
           }}
@@ -51,9 +53,96 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
           </svg>
         </button>
         <div className={styles["form-default"]}>
-          <h3>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             {`Agregar Fórmula para: ${dataComponente.nombreCompon} [${dataComponente.idCompon}]`}
+            <button
+              type="button"
+              className="icons-container"
+              onClick={() => {
+                setOpenHelp(!openHelp);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                />
+              </svg>
+            </button>
           </h3>
+          {openHelp && (
+            <span
+              style={{
+                background: "#495057",
+                color: "white",
+                padding: "8px 4px",
+                paddingTop: "2px",
+                margin: "2px",
+                marginBottom: "6px",
+                fontSize: "13px",
+                borderRadius: "8px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "6px",
+              }}
+            >
+              <h4>Palabras Clave</h4>
+              <p>
+                <b>anchoA | anchoB:</b> Representa a los valores de los posibles
+                anchos de la ventana solo se permiten estos 2.
+              </p>
+
+              <p>
+                <b>alturaH | alturaI | alturaJ: </b> Representa a los valores de
+                las posibles alturas de la ventana solo se permiten estos 3.
+              </p>
+              <p>
+                <b>ENTERO:</b> Para Redondear el resultado al entero mas cercano
+                <i>
+                  (Ejemplo si el resultado es 20.49 redondeará a 20, si es 20.5
+                  redondeará a 21).
+                </i>{" "}
+                Se debe colocan entre paréntesis.
+                <i>EJ: ENTERO(anchoA * AlturaH)</i>
+              </p>
+              <p>
+                <b>ENSUPERIOR:</b> Para Redondear el resultado al entero mayor o
+                igual más próximo a un número dado.
+                <i>
+                  (Ejemplo si el resultado es 0.95 redondeará a 1, si es 7.04
+                  redondeará a 8).
+                </i>{" "}
+                Se debe colocan entre paréntesis{" "}
+                <i>EJ: ENSUPERIOR(anchoA * AlturaH)</i>
+              </p>
+              <p>
+                <b>F1:</b> Para realizar el cáculo en base al resultado de la
+                primera fórmula (Aplica para obtener #de Perfiles y se usa
+                especificamente en la fórmula 2).
+              </p>
+              <p>
+                <b>AREA:</b> Para que calcule el Area de la ventana en base a su
+                ancho y su alto.
+              </p>
+              <p>
+                <b>TOTALMATERIAL:</b> Para usar el resultado TOTAL de la
+                sumatoria de los sets de "Estructura de Alumino" y "Accesorios".
+                (Aplica para fórmulas en set "VARIOS")
+              </p>
+              <p>
+                <b>MANOOBRA:</b> Para usar el resultado TOTAL del set de "MANO
+                DE OBRA ESTRUCTURA". (Aplica para fórmulas en set "VARIOS")
+              </p>
+            </span>
+          )}
           <span
             className={`${styles["input-container"]} ${styles.containerSelect}`}
           >
@@ -62,6 +151,7 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
               name="formula1"
               value={dataComponente.formula1}
               onChange={handleChange}
+              autoFocus={true}
             />
             <label
               className={
@@ -146,25 +236,6 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
             >
               Guardar Fórmula
             </span>
-            {/* {!idSetEdit ? (
-              <span
-                onClick={() => {
-                  addSetButton(dataFabricacion);
-                }}
-                className={styles.formButton}
-              >
-                Crear Set
-              </span>
-            ) : (
-              <span
-                onClick={() => {
-                  addSetButton(dataFabricacion, true, idSetEdit);
-                }}
-                className={styles.formButton}
-              >
-                Actualizar
-              </span>
-            )} */}
           </div>
         </div>
       </section>

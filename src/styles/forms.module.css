@@ -449,6 +449,30 @@
   grid-template-columns: 1fr !important;
 }
 
+#excelExport {
+  background: transparent;
+  border: 1px solid #31be7d;
+  color: #31be7d;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  margin: 0;
+  flex-wrap: wrap;
+  font-size: 22px;
+  gap: 8px;
+}
+
+#excelExport:hover {
+  box-shadow: inset 0 -2px 2px 2px #63af8c;
+  color: #63af8c;
+}
+
+#excelExport:hover svg {
+  scale: 1.1;
+}
+
 /* RESPONSIVE DESIGN */
 @media screen and (max-width: 768px) {
   /* Tablet  */

@@ -64,7 +64,8 @@ const useInitialState = () => {
         });
         setDataList(docs);
         //Extraigo el último código para control de secuencias de idReg
-        const lastCodeInTable = docs.map(({ idReg }) => idReg).reverse()[0];
+        const lastCodeInTable =
+          docs.length === 0 ? 0 : docs.map(({ idReg }) => idReg).reverse()[0];
         setLastCode(lastCodeInTable);
         setLoadData({ loading: false, error: null });
       });
@@ -380,7 +381,7 @@ const useInitialState = () => {
                 ...set,
                 totalSet: [
                   ...set.componentes.map((compon) => {
-                    return compon.precioTot;
+                    return redondear(compon.precioTot, 2);
                   }),
                 ].reduce(acumulador, 0),
               };
