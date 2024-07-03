@@ -22,5 +22,7 @@ module.exports = {
     "react-hooks/exhaustive-deps": "off",
     "@next/next/no-img-element": "off",
     "no-unused-vars": "off",
+    "react/no-unescaped-entities": "off",
+    "jsx-a11y/no-autofocus": "off",
   },
 };
