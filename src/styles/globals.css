@@ -28,7 +28,7 @@
   --font-xl: 20px;
   --font-xxl: 28px;
   /* GRIDS */
-  --grid-column-items: 13% repeat(2, 30%) 10% 10%;
+  --grid-column-items: 13% 30% repeat(2, 20%) 15%;
   --grid-column-clients: 10% 35% 15% 25% 10%;
   --grid-column-items-modal: 15% repeat(2, 30%) 20%;
   --grid-column-items-col2-modal: 60% 35%;
@@ -364,6 +364,22 @@ svg:active {
 
 .showElement {
   display: none;
+}
+
+.signOut {
+  background: var(--background-hk2);
+  border-radius: 50%;
+  padding: 2px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.signOut:hover {
+  border-radius: 0;
+  background: var(--letters-hk2);
 }
 
 /* Estilos ventana de items para añadir receta */

@@ -3,6 +3,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useRouter as useNextRouter } from "next/router";
+import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -66,6 +67,7 @@ const Page = () => {
     if (!isEdit) {
       getImgRef();
     }
+    redirectJwt(navigate);
   }, [ruta]);
 
   //Obtengo referencia para llamar imagen desde firestore/sotrage ya que al pasar la url como param envía encriptado

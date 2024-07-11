@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { redirectJwt } from "../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link.js";
@@ -28,6 +30,7 @@ const moduleHeaders = {
 // Pantalla principal que muestra los items que ya tengan recetas
 
 const Recetas = () => {
+  const router = useRouter();
   const {
     getSimpleDataDb,
     deleteDocument,
@@ -47,6 +50,7 @@ const Recetas = () => {
 
   useEffect(() => {
     getSimpleDataDb("Recetas");
+    redirectJwt(router);
   }, []);
 
   return (

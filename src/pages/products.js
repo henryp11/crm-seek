@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { redirectJwt } from "../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
 import ProductDetail from "../containers/ProductDetail";
@@ -10,11 +12,9 @@ const HeadersColumns = dynamic(
   { ssr: false }
 );
 import useScreenSize from "../hooks/useScreenSize";
-//import MenuLateral from "../components/MenuLateral";
 import SectionSearch from "../containers/SectionSearch";
 import Appcontext from "../context/AppContext";
 import useSearchSimple from "../hooks/useSearchSimple";
-//import styles from "../styles/products.module.css";
 
 const moduleHeaders = {
   classEspec: ["item_grid"],
@@ -27,8 +27,10 @@ const moduleHeaders = {
 };
 
 const Products = () => {
+  const router = useRouter();
   // Funciones y objetos desde contexto inicial
-  const { getSimpleDataDb, dataList, loadData } = useContext(Appcontext);
+  const { getSimpleDataDb, deleteDocument, dataList, loadData } =
+    useContext(Appcontext);
   const isMobile = useScreenSize();
 
   const [openItem, setOpenItem] = useState(false);
@@ -38,6 +40,7 @@ const Products = () => {
 
   useEffect(() => {
     getSimpleDataDb("Productos");
+    redirectJwt(router);
   }, []);
 
   return (
@@ -129,7 +132,10 @@ const Products = () => {
                         />
                       </svg>
                     </button>
-                    <Link href={`/products/gestion/${item.id}`}>
+                    <Link
+                      href={`/products/gestion/${item.id}`}
+                      title="Editar Registro"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -144,6 +150,37 @@ const Products = () => {
                         />
                       </svg>
                     </Link>
+                    {!item.haveRecipe &&
+                      item.nombreItem !== "Vidrio" &&
+                      item.categoria !== "Componente" &&
+                      item.categoria !== "Servicio" && (
+                        <span className="icons-container delete">
+                          <button
+                            title="ELIMINAR ITEM"
+                            onClick={() => {
+                              deleteDocument(
+                                item.id,
+                                "Productos",
+                                "¿Desea eliminar permanentemente este item?"
+                              );
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      )}
                   </span>
                   {itemCapture === item.id && (
                     <ProductDetail

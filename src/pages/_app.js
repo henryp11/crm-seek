@@ -16,8 +16,7 @@ export default function App({ Component, pageProps }) {
   return (
     <Appcontext.Provider value={initialState}>
       <Head>
-        {/* Titulo por default en páginas si importa la equiqueta Head */}
-        <title>Defualt Tittle</title>
+        <title>Gestor de Cotizaciones</title>
       </Head>
       <Header />
       <Component {...pageProps} />

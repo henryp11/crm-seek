@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { redirectJwt } from "../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
 import CotizaDetail from "../containers/CotizaDetail";
@@ -30,6 +32,7 @@ const moduleHeaders = {
 };
 
 const Cotiza = () => {
+  const router = useRouter();
   // Funciones y objetos desde contexto inicial
   const { getSimpleDataDb, deleteDocument, dataList, loadData, lastCode } =
     useContext(Appcontext);
@@ -42,6 +45,7 @@ const Cotiza = () => {
   const ruta = usePathname();
   useEffect(() => {
     getSimpleDataDb("Cotizaciones");
+    redirectJwt(router);
   }, [ruta]);
 
   console.log(dataList);

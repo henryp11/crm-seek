@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { redirectJwt } from "../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
 import ClientDetail from "../containers/ClientDetail";
@@ -28,6 +30,7 @@ const moduleHeaders = {
 };
 
 const Clients = () => {
+  const router = useRouter();
   // Funciones y objetos desde contexto inicial
   const { getSimpleDataDb, dataList, loadData } = useContext(Appcontext);
   const isMobile = useScreenSize();
@@ -39,6 +42,7 @@ const Clients = () => {
 
   useEffect(() => {
     getSimpleDataDb("Clientes");
+    redirectJwt(router);
   }, []);
 
   return (

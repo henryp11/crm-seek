@@ -80,3 +80,13 @@ export const addZeroIdCotiza = (numRep) => {
     return `CT${"0".repeat(9 - numRep)}`;
   }
 };
+
+//Se utiliza en todas las páginas para redireccionar al home su se encuentra un token jwt proveniente de Firebase
+//Cuando se haya logueado un usuario. En las pantallas que se lo invoque usarán la librería de useRouter de next/navigation
+//para que se pueda usar la función "push" y hacer el redireccionamiento
+export const redirectJwt = (router) => {
+  const tokenLS = localStorage.getItem("jwt");
+  if (tokenLS === null) {
+    router.push("/");
+  }
+};

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRouter as useNextRouter } from "next/router";
+import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import ClientForm from "../../../containers/ClientForm";
 import { toast } from "react-hot-toast";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
@@ -39,6 +40,7 @@ const Page = () => {
 
   useEffect(() => {
     getClient();
+    redirectJwt(navigate);
   }, [ruta]);
 
   // Obtengo datos del Cliente a modificar (funciones Firebase)

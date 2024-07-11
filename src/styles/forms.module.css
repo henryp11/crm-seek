@@ -548,6 +548,21 @@
   }
 }
 
+.registerButton {
+  margin: 16px auto;
+  border: 1px solid #51cf66;
+  background: transparent;
+  color: #51cf66;
+  width: 30%;
+  padding: 6px;
+  box-shadow: inset 0px -2px 2px 0px #51cf66;
+}
+
+.registerButton:hover {
+  background: #51cf66;
+  color: white;
+}
+
 @media screen and (max-width: 480px) {
   /* Movil  */
 

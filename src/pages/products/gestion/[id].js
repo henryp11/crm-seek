@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 // import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useRouter as useNextRouter } from "next/router";
+import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import ProductForm from "../../../containers/ProductForm";
 import { toast } from "react-hot-toast";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
@@ -50,6 +51,7 @@ const Page = () => {
 
   useEffect(() => {
     getProduct();
+    redirectJwt(navigate);
   }, [ruta]);
 
   // Obtengo datos del Producto a modificar (funciones Firebase)

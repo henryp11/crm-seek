@@ -2,6 +2,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useRouter as useNextRouter } from "next/router"; //para extraer el query params de la ruta (el id de cada registro de firebase)
+import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import Appcontext from "../../../context/AppContext";
@@ -93,6 +94,7 @@ const Page = () => {
     getSimpleDataDb("Clientes");
     getVidrio();
     getRecetas();
+    redirectJwt(navigate);
   }, [ruta]);
 
   // Obtengo datos de la Cotización a modificar (funciones Firebase)

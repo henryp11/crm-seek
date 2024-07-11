@@ -2,8 +2,8 @@
 // sitio es decir la aplicaicón como tal ya que las rutas en next se manejan por archivos
 
 import Head from "next/head";
-import ModulesMain from "../containers/ModulesMain";
-
+// import ModulesMain from "../containers/ModulesMain";
+import Login from "../containers/Login";
 export default function Home() {
   return (
     <>
@@ -12,7 +12,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ModulesMain />
+      {/* <ModulesMain /> */}
+      <Login />
     </>
   );
 }
