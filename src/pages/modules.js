@@ -9,7 +9,7 @@ const Modules = () => {
   const router = useRouter();
   const auth = getAuth();
 
-  const [emailVerified, setMailVerified] = useState(false);
+  const [emailVerified, setMailVerified] = useState(true);
   const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {

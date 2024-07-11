@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   onAuthStateChanged,
   getAuth,
@@ -14,15 +14,19 @@ import styles from "../styles/modulGeneral.module.css";
 const Header = () => {
   const router = useRouter();
   const auth = getAuth();
-  onAuthStateChanged(autentication, async (user) => {
-    const userProfile = auth.currentUser;
-    console.log(userProfile);
-    if (user && userProfile.emailVerified) {
-      setShowMenu(true);
-    } else {
-      console.log("Sesión Cerrada!");
-    }
-  });
+  const ruta = usePathname();
+
+  useEffect(() => {
+    onAuthStateChanged(autentication, async (user) => {
+      const userProfile = auth.currentUser;
+      console.log(userProfile);
+      if (user && userProfile.emailVerified) {
+        setShowMenu(true);
+      } else {
+        console.log("Sesión Cerrada!");
+      }
+    });
+  }, [ruta]);
 
   const [showMenu, setShowMenu] = useState(false);
 
