@@ -25,6 +25,7 @@ import CustomInput from "../../../components/CustomInput";
 import SelectItems from "../../../containers/SelectItems";
 import DetalleCotiza from "../../../containers/DetalleCotiza";
 import { addZeroIdCotiza } from "../../../helpers/FunctionsHelps";
+import { redondear } from "../../../helpers/FunctionsHelps";
 import styles from "../../../styles/forms.module.css";
 import stylesCot from "../cotizaTemp.module.css";
 
@@ -603,7 +604,7 @@ const Page = () => {
                     Total Global cotización:
                     <b
                       style={{ color: "white", fontWeight: "500" }}
-                    >{`${state.totalesCotiza.subTotIva} $`}</b>
+                    >{`${redondear(state.totalesCotiza.subTotIva, 2)} $`}</b>
                   </h2>
                 </span>
               </span>

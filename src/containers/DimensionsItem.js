@@ -20,10 +20,13 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
     idItem: itemReceta.idReg,
     nombreProducto: itemReceta.nombreProducto,
     dimensiones: { anchoA: 0, anchoB: 0, alturaH: 0, alturaI: 0, alturaJ: 0 },
+    condiciones: itemReceta.condiciones,
     sets: itemReceta.setFabricacion,
     totMaterial: 0,
     totManoObra: 0,
   });
+
+  const [alertTotaliza, setAlertTotaliza] = useState(false);
 
   useEffect(() => {
     // if (state.showModal) {
@@ -87,6 +90,98 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
   };
 
   const aplicaFormulas = () => {
+    //Primero evaluo las condiciones
+    if (stateItemCotiza.condiciones) {
+      let condicionTranslate = {
+        anchoA: eval(
+          `${stateItemCotiza.condiciones.anchoA
+            .replace(/anchoA/g, stateItemCotiza.dimensiones.anchoA)
+            .replace(/anchoB/g, stateItemCotiza.dimensiones.anchoB)
+            .replace(",", ".")
+            .trim()}`
+        ),
+        anchoB: eval(
+          `${stateItemCotiza.condiciones.anchoB
+            .replace(/anchoA/g, stateItemCotiza.dimensiones.anchoA)
+            .replace(/anchoB/g, stateItemCotiza.dimensiones.anchoB)
+            .replace(",", ".")
+            .trim()}`
+        ),
+        alturaI: eval(
+          `${stateItemCotiza.condiciones.alturaI
+            .replace(/alturaI/g, stateItemCotiza.dimensiones.alturaI)
+            .replace(/alturaJ/g, stateItemCotiza.dimensiones.alturaJ)
+            .replace(/alturaH/g, stateItemCotiza.dimensiones.alturaH)
+            .replace(",", ".")
+            .trim()}`
+        ),
+        alturaJ: eval(
+          `${stateItemCotiza.condiciones.alturaJ
+            .replace(/alturaI/g, stateItemCotiza.dimensiones.alturaI)
+            .replace(/alturaJ/g, stateItemCotiza.dimensiones.alturaJ)
+            .replace(/alturaH/g, stateItemCotiza.dimensiones.alturaH)
+            .replace(",", ".")
+            .trim()}`
+        ),
+        alturaH: eval(
+          `${stateItemCotiza.condiciones.alturaH
+            .replace(/alturaI/g, stateItemCotiza.dimensiones.alturaI)
+            .replace(/alturaJ/g, stateItemCotiza.dimensiones.alturaJ)
+            .replace(/alturaH/g, stateItemCotiza.dimensiones.alturaH)
+            .replace(",", ".")
+            .trim()}`
+        ),
+      };
+
+      if (!condicionTranslate.anchoA && condicionTranslate.anchoA !== undefined)
+        return alert(
+          `Ancho A Inválido. Condición: ${
+            stateItemCotiza.condiciones.anchoA &&
+            stateItemCotiza.condiciones.anchoA
+          }`
+        );
+      if (!condicionTranslate.anchoB && condicionTranslate.anchoB !== undefined)
+        return alert(
+          `Ancho B Inválido. Condición: ${
+            stateItemCotiza.condiciones.anchoB &&
+            stateItemCotiza.condiciones.anchoB
+          }`
+        );
+      if (
+        !condicionTranslate.alturaH &&
+        condicionTranslate.alturaH !== undefined
+      )
+        return alert(
+          `Altura H Inválido. Condición: ${
+            stateItemCotiza.condiciones.alturaH &&
+            stateItemCotiza.condiciones.alturaH
+          }`
+        );
+      if (
+        !condicionTranslate.alturaI &&
+        condicionTranslate.alturaI !== undefined
+      )
+        return alert(
+          `Altura I Inválido. Condición: ${
+            stateItemCotiza.condiciones.alturaI &&
+            stateItemCotiza.condiciones.alturaI
+          }`
+        );
+      if (
+        !condicionTranslate.alturaJ &&
+        condicionTranslate.alturaJ !== undefined
+      )
+        return alert(
+          `Altura J Inválido. Condición: ${
+            stateItemCotiza.condiciones.alturaJ &&
+            stateItemCotiza.condiciones.alturaJ
+          }`
+        );
+
+      console.log(condicionTranslate);
+      setAlertTotaliza(true);
+    }
+
     //colocar valores de dimensiones en las formulas de cada set
     //Se Itera dentro de cada set, luego al llegar a los Arrays de componentes se evalua si existen las fórmulas
     //Y si se encuentra fórmula se evalua la misma mediante expresiones regulares para reemplazar la palabra de la
@@ -468,24 +563,38 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
         >
           Calcular
         </button>
-        <button
-          onClick={totalizaSets}
-          type="button"
-          className={styles.formButton}
-          style={{ background: "#448d5f" }}
-          id="totalizaSet"
-        >
-          Totalizar Sets
-        </button>
-        <button
-          onClick={() => {
-            addItemFact(stateItemCotiza, stateItemCotiza.idItem);
+        <div
+          style={{
+            width: "60%",
+            display: "flex",
+            justifyContent: "center",
+            gap: "8px",
           }}
-          type="button"
-          className={styles.formButton}
         >
-          Añadir
-        </button>
+          <button
+            onClick={totalizaSets}
+            type="button"
+            className={
+              alertTotaliza
+                ? `${styles.formButton} ButtonTotalizaSet`
+                : styles.formButton
+            }
+            style={{ background: "#448d5f" }}
+            id="totalizaSet"
+          >
+            Totalizar Sets
+          </button>
+          <button
+            onClick={() => {
+              addItemFact(stateItemCotiza, stateItemCotiza.idItem);
+            }}
+            type="button"
+            className={styles.formButton}
+            style={{ background: "#00cde8db" }}
+          >
+            Añadir
+          </button>
+        </div>
       </div>
       {stateItemCotiza.sets.map((set) => {
         return (

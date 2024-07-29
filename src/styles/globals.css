@@ -569,6 +569,35 @@ svg:active {
   transition: all ease 0.2s;
 }
 
+/*Componentes con animación*/
+
+.ButtonTotalizaSet {
+  box-shadow: 0 0px 5px 3px;
+  transition: 0.3s;
+  animation-name: beat;
+  animation-duration: 1.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+}
+
+@keyframes beat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* RESPONSIVE DESIGN */
 @media screen and (max-width: 768px) {
   /* Tablet  */

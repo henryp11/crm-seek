@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import moment from "moment";
-// import { redondear } from "../helpers/FunctionsHelps";
+import { redondear } from "../helpers/FunctionsHelps";
 import styles from "../styles/forms.module.css";
 
 const TableReport = ({ dataCotiza }) => {
@@ -13,7 +13,7 @@ const TableReport = ({ dataCotiza }) => {
     sheet: `Cot. #${dataCotiza.idReg}`,
   });
 
-  console.log(dataCotiza);
+  console.log({ dataToReport: dataCotiza });
   return (
     <div className={styles.previewReports}>
       <div
@@ -114,12 +114,21 @@ const TableReport = ({ dataCotiza }) => {
             <th rowSpan="2">ESPECIFICACIONES:</th>
             <th>TIPO ALUMINIO VIDRIO</th>
             <th>TIPO VIDRIO</th>
-            <th>AREA VIDRIO</th>
+            <th>AREA TOTAL VIDRIO</th>
           </tr>
           <tr>
-            <td>{dataCotiza.tipoAluminio}</td>
+            <td align="center">{dataCotiza.tipoAluminio}</td>
             <td>{dataCotiza.tipoVidrio}</td>
-            <td>Area todos los vidrios</td>
+            <td align="center">
+              {dataCotiza.productos
+                ?.map((item) => {
+                  return item.area;
+                })
+                .reduce((acumula, area) => {
+                  return acumula + area;
+                }, 0)}{" "}
+              m2
+            </td>
             {/* <td>{dataCotiza.productos[0].area}</td> */}
           </tr>
         </thead>
@@ -194,7 +203,7 @@ const TableReport = ({ dataCotiza }) => {
                     <strong>Total {item.nombreProducto}: </strong>
                   </td>
                   <td align="right">
-                    <strong>{item.totalItem}</strong>
+                    <strong>{redondear(item.totalItem, 2)}</strong>
                   </td>
                 </tr>
               </>
@@ -207,7 +216,9 @@ const TableReport = ({ dataCotiza }) => {
               <strong>Total Cotización: </strong>
             </td>
             <td>
-              <strong>{dataCotiza.totalesCotiza?.subTotIva}</strong>
+              <strong>
+                {redondear(dataCotiza.totalesCotiza?.subTotIva, 2)}
+              </strong>
             </td>
           </tr>
         </tfoot>

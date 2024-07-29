@@ -4,28 +4,12 @@
 import React, { useState } from "react";
 import styles from "../styles/forms.module.css";
 
-const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
-  const [dataComponente, setDataComponente] = useState(componente);
+const AddConditions = ({
+  dataItem,
+  handleConditions,
+  setOpenModalCondition,
+}) => {
   const [openHelp, setOpenHelp] = useState(false);
-
-  const handleChange = (e) => {
-    setDataComponente({
-      ...dataComponente,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleChangeSelect = (formula) => (e) => {
-    setDataComponente({
-      ...dataComponente,
-      [e.target.name]:
-        formula === 1
-          ? dataComponente.formula1.concat("", e.target.value)
-          : dataComponente.formula2.concat("", e.target.value),
-    });
-  };
-
-  console.log({ formula: dataComponente });
 
   return (
     <div className="mainContainer modal modalSelectCompon modalFormulas">
@@ -35,7 +19,7 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
           className="icons-container closeModal"
           type="button"
           onClick={() => {
-            openModal();
+            setOpenModalCondition();
           }}
         >
           <svg
@@ -54,7 +38,7 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
         </button>
         <div className={styles["form-default"]}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            {`Agregar Fórmula para: ${dataComponente.nombreCompon} [${dataComponente.idCompon}]`}
+            {`Agregar condiciones para: ${dataItem.idReg} [${dataItem.nombreProducto}]`}
             <button
               type="button"
               className="icons-container"
@@ -105,44 +89,6 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
                 las posibles alturas de la ventana solo se permiten estos 3.
               </p>
               <p>
-                <b>ENTERO:</b> Para Redondear el resultado al entero mas cercano
-                <i>
-                  (Ejemplo si el resultado es 20.49 redondeará a 20, si es 20.50
-                  redondeará a 21).
-                </i>{" "}
-                Se debe colocan entre paréntesis.
-                <br />
-                <i>EJ: ENTERO(anchoA * AlturaH)</i>
-              </p>
-              <p>
-                <b>ENSUPERIOR:</b> Para Redondear el resultado al entero mayor o
-                igual más próximo a un número dado.
-                <i>
-                  (Ejemplo si el resultado es 0.95 redondeará a 1, si es 7.04
-                  redondeará a 8).
-                </i>{" "}
-                Se debe colocan entre paréntesis <br />
-                <i>EJ: ENSUPERIOR(anchoA * AlturaH)</i>
-              </p>
-              <p>
-                <b>F1:</b> Para realizar el cáculo en base al resultado de la
-                primera fórmula (Aplica para obtener #de Perfiles y se usa
-                especificamente en la fórmula 2).
-              </p>
-              <p>
-                <b>AREA:</b> Para que calcule el Area de la ventana en base a su
-                ancho y su alto.
-              </p>
-              <p>
-                <b>TOTALMATERIAL:</b> Para usar el resultado TOTAL de la
-                sumatoria de los sets de "Estructura de Alumino" y "Accesorios".
-                (Aplica para fórmulas en set "VARIOS")
-              </p>
-              <p>
-                <b>MANOOBRA:</b> Para usar el resultado TOTAL del set de "MANO
-                DE OBRA ESTRUCTURA". (Aplica para fórmulas en set "VARIOS")
-              </p>
-              <p>
                 <b>CONDICIONALES:</b> Cuando se quiera obtener un resultado en
                 base a una condición (Como una condición SI-ENTONCES -
                 VERDAERO|FALSO), se debe colocar la condición a evaluar, luego
@@ -169,96 +115,112 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
           )}
           <span
             className={`${styles["input-container"]} ${styles.containerSelect}`}
+            style={{ gridTemplateColumns: "auto" }}
           >
             <input
               type="text"
-              name="formula1"
-              value={dataComponente.formula1}
-              onChange={handleChange}
-              autoFocus={true}
+              name="anchoA"
+              value={dataItem.condiciones?.anchoA}
+              onChange={handleConditions}
             />
             <label
               className={
-                dataComponente.formula1.length > 0
+                dataItem.condiciones?.anchoA.length > 0
                   ? styles["activate-label-position"]
                   : ""
               }
             >
-              Fórmula 1
+              anchoA
             </label>
-            {/* Extraigo dimensiones elegidas para mostrar en pantalla */}
-            {dataComponente.dimensiones && (
-              <select
-                name="formula1"
-                className={styles.inputSelect}
-                onChange={handleChangeSelect(1)}
-              >
-                <option value="" selected disabled label="Medida"></option>
-                {/* Transformo objeto a array para extraer el nombre de la key de las medidas seleccionadas (True) para mostrarlas en pantalla */}
-                {Object.entries(dataComponente.dimensiones)
-                  .filter((activate) => {
-                    return activate[1] === true;
-                  })
-                  .map((dimension, pos) => {
-                    return (
-                      <option key={pos} value={dimension[0]}>
-                        {dimension[0]}
-                      </option>
-                    );
-                  })}
-              </select>
-            )}
           </span>
           <span
             className={`${styles["input-container"]} ${styles.containerSelect}`}
+            style={{ gridTemplateColumns: "auto" }}
           >
             <input
               type="text"
-              name="formula2"
-              value={dataComponente.formula2}
-              onChange={handleChange}
+              name="anchoB"
+              value={dataItem.condiciones?.anchoB}
+              onChange={handleConditions}
             />
             <label
               className={
-                dataComponente.formula2.length > 0
+                dataItem.condiciones?.anchoB.length > 0
                   ? styles["activate-label-position"]
                   : ""
               }
             >
-              Fórmula 2
+              anchoB
             </label>
-            {/* Extraigo dimensiones elegidas para mostrar en pantalla */}
-            {dataComponente.dimensiones && (
-              <select
-                name="formula2"
-                className={styles.inputSelect}
-                onChange={handleChangeSelect(2)}
-              >
-                <option value="" selected disabled label="Medida"></option>
-
-                {/* Transformo objeto a array para extraer el nombre de la key de las medidas seleccionadas (True) para mostrarlas en pantalla */}
-                {Object.entries(dataComponente.dimensiones)
-                  .filter((activate) => {
-                    return activate[1] === true;
-                  })
-                  .map((dimension, pos) => {
-                    return (
-                      <option key={pos} value={dimension[0]}>
-                        {dimension[0]}
-                      </option>
-                    );
-                  })}
-              </select>
-            )}
+          </span>
+          <span
+            className={`${styles["input-container"]} ${styles.containerSelect}`}
+            style={{ gridTemplateColumns: "auto" }}
+          >
+            <input
+              type="text"
+              name="alturaH"
+              value={dataItem.condiciones?.alturaH}
+              onChange={handleConditions}
+            />
+            <label
+              className={
+                dataItem.condiciones?.alturaH.length > 0
+                  ? styles["activate-label-position"]
+                  : ""
+              }
+            >
+              alturaH
+            </label>
+          </span>
+          <span
+            className={`${styles["input-container"]} ${styles.containerSelect}`}
+            style={{ gridTemplateColumns: "auto" }}
+          >
+            <input
+              type="text"
+              name="alturaI"
+              value={dataItem.condiciones?.alturaI}
+              onChange={handleConditions}
+            />
+            <label
+              className={
+                dataItem.condiciones?.alturaI.length > 0
+                  ? styles["activate-label-position"]
+                  : ""
+              }
+            >
+              alturaI
+            </label>
+          </span>
+          <span
+            className={`${styles["input-container"]} ${styles.containerSelect}`}
+            style={{ gridTemplateColumns: "auto" }}
+          >
+            <input
+              type="text"
+              name="alturaJ"
+              value={dataItem.condiciones?.alturaJ}
+              onChange={handleConditions}
+            />
+            <label
+              className={
+                dataItem.condiciones?.alturaJ.length > 0
+                  ? styles["activate-label-position"]
+                  : ""
+              }
+            >
+              alturaJ
+            </label>
           </span>
           <div className={styles.buttonContainerBig}>
             <span
               onClick={() => {
-                addFormula(dataComponente, idSet, componente.idCompon);
+                setOpenModalCondition();
               }}
               className={styles.formButton}
             >
-              Guardar Fórmula
+              Aceptar Condiciones
             </span>
           </div>
         </div>
@@ -267,4 +229,4 @@ const AddFormula = ({ componente, openModal, idSet, addFormula }) => {
   );
 };
 
-export default AddFormula;
+export default AddConditions;

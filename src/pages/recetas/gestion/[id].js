@@ -9,6 +9,7 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import AddSetFab from "../../../components/AddSetFab";
 import AddFormula from "../../../components/AddFormula";
+import AddConditions from "../../../components/AddConditions";
 import Appcontext from "../../../context/AppContext";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import { storage } from "../../../server/firebase";
@@ -40,6 +41,13 @@ const Page = () => {
     nombreProducto: "",
     url: "",
     setFabricacion: [],
+    condiciones: {
+      anchoA: "",
+      anchoB: "",
+      alturaH: "",
+      alturaI: "",
+      alturaJ: "",
+    },
   };
   const [valueState, setValueState] = useState(initialState);
   // const [loadCreate, setLoadCreate] = useState({
@@ -56,6 +64,9 @@ const Page = () => {
   const [idSetSelect, setIdSetSelect] = useState("");
   const [componFormula, setComponFormula] = useState({});
 
+  //Para añadir modal de condiciones
+  const [openModalCondition, setOpenModalCondition] = useState(false);
+
   useEffect(() => {
     if (state.showModal) {
       showModal();
@@ -70,7 +81,7 @@ const Page = () => {
     redirectJwt(navigate);
   }, [ruta]);
 
-  //Obtengo referencia para llamar imagen desde firestore/sotrage ya que al pasar la url como param envía encriptado
+  //Obtengo referencia para llamar imagen desde firestore/storage ya que al pasar la url como param envía encriptado
   const getImgRef = async () => {
     if (imgUrl) {
       try {
@@ -105,7 +116,7 @@ const Page = () => {
     }
   };
 
-  // Obtengo datos de la receta a modificar Funciones Firebase
+  // Obtengo datos de la receta a modificar (Funciones Firebase)
   const getRecetaItem = async () => {
     // setLoadCreate({ loading: true, error: null });
     try {
@@ -114,7 +125,23 @@ const Page = () => {
 
       if (docSnap.exists()) {
         const receta = docSnap.data();
-        setValueState({ ...receta, id: idFirebase });
+        //Evaluo si la receta posee el objeto de condiciones, ya que es un campo añadido en nueva versión
+        if (receta.condiciones) {
+          setValueState({ ...receta, id: idFirebase });
+        } else {
+          setValueState({
+            ...receta,
+            id: idFirebase,
+            condiciones: {
+              anchoA: "",
+              anchoB: "",
+              alturaH: "",
+              alturaI: "",
+              alturaJ: "",
+            },
+          });
+        }
+        // setValueState({ ...receta, id: idFirebase });
         // setLoadCreate({ loading: false, error: null });
       } else {
         window.alert("Item no encontrado!!");
@@ -316,11 +343,20 @@ const Page = () => {
     setOpenModalFormula(!openModalFormula);
   };
 
+  const handleConditions = (e) => {
+    setValueState({
+      ...valueState,
+      condiciones: {
+        ...valueState.condiciones,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
   console.log({ statePageReceta: valueState });
   console.log({ setEdit: setToEdit });
   console.log({ idComponFormula: idComponSelect });
   console.log({ objectoComponente: componFormula });
-  console.log(imgUrl);
 
   return (
     <>
@@ -348,17 +384,31 @@ const Page = () => {
               {/* <img src={imgUrl} alt="imagen normal" /> */}
             </figure>
           )}
-
-          <button
-            className={`${styles.formButton} ${stylesRec.addButton}`}
-            title="Crear Set"
-            onClick={() => {
-              showModalNewSet();
-            }}
-            type="button"
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "8px" }}
           >
-            Agregar Set de Fabricación
-          </button>
+            <button
+              className={`${styles.formButton} ${stylesRec.addButton}`}
+              title="Crear Set"
+              onClick={() => {
+                showModalNewSet();
+              }}
+              type="button"
+            >
+              Agregar Set de Fabricación
+            </button>
+            <button
+              className={`${styles.formButton} ${stylesRec.addButton}`}
+              title="Añadir Condiciones"
+              onClick={() => {
+                setOpenModalCondition(!openModalCondition);
+              }}
+              type="button"
+            >
+              Condiciones
+            </button>
+          </div>
+
           <div className={stylesRec.detalleRecContainer}>
             {valueState.setFabricacion.map((setFab, pos) => {
               return (
@@ -484,7 +534,22 @@ const Page = () => {
               secuencial={secuencial}
             />
           )}
-          <span className={styles.buttonContainer}>
+          {openModalCondition && (
+            <AddConditions
+              dataItem={valueState}
+              handleConditions={handleConditions}
+              setOpenModalCondition={setOpenModalCondition}
+            />
+          )}
+          <span
+            className={styles.buttonContainer}
+            style={{
+              position: "absolute",
+              bottom: "8vh",
+              left: "10%",
+              width: "20%",
+            }}
+          >
             <button
               title="Guardar"
               id="create"

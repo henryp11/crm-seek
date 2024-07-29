@@ -60,6 +60,8 @@
   grid-template-columns: 25% auto;
   grid-template-rows: auto auto auto;
   gap: 8px;
+  height: 83vh;
+  overflow: auto;
 }
 
 .crudRecContainer figure {
