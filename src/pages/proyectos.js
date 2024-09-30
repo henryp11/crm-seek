@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import { redirectJwt } from "../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
-import ClientDetail from "../containers/ClientDetail";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
@@ -12,48 +11,43 @@ const HeadersColumns = dynamic(
   { ssr: false }
 );
 import useScreenSize from "../hooks/useScreenSize";
-//import MenuLateral from "../components/MenuLateral";
 import SectionSearch from "../containers/SectionSearch";
 import Appcontext from "../context/AppContext";
 import useSearchSimple from "../hooks/useSearchSimple";
-//import styles from "../styles/products.module.css";
 
 const moduleHeaders = {
-  classEspec: ["client_grid"],
+  classEspec: ["proy_grid"],
   columnTitles: [
-    // { id: "col1", name: "Id.Cliente", show: true },
-    { id: "col1", name: "RUC / Cédula", show: true },
-    { id: "col2", name: "Nombre", show: true },
-    { id: "col3", name: "Teléfono", show: true },
-    { id: "col4", name: "Correo", show: true },
+    { id: "col1", name: "Nombre Proyecto", show: true },
+    { id: "col2", name: "Fecha Inicio", show: true },
+    { id: "col3", name: "Observaciones", show: true },
   ],
 };
 
-const Clients = () => {
+const Proyectos = () => {
   const router = useRouter();
   // Funciones y objetos desde contexto inicial
   const { getSimpleDataDb, deleteDocument, dataList, loadData } =
     useContext(Appcontext);
   const isMobile = useScreenSize();
 
-  const [openItem, setOpenItem] = useState(false);
-  const [itemCapture, setItemCapture] = useState("");
-  const [dataItemCap, setDataItemCap] = useState({});
+  // const [openItem, setOpenItem] = useState(false);
+  // const [itemCapture, setItemCapture] = useState("");
+  // const [dataItemCap, setDataItemCap] = useState({});
   const { query, setQuery, filteredItems } = useSearchSimple(dataList);
 
   useEffect(() => {
-    getSimpleDataDb("Clientes");
+    getSimpleDataDb("Proyectos");
     redirectJwt(router);
   }, []);
 
   return (
     <div className="mainContainer">
-      {/* <MenuLateral /> */}
       <section className="generalContainer">
         <SectionSearch
           query={query}
           setQuery={setQuery}
-          placeholder={"Buscar Cliente por su Nombre / Doc. Identificación"}
+          placeholder={"Buscar Proyecto por su Nombre"}
         />
         <HeadersColumns
           classEsp={moduleHeaders.classEspec}
@@ -70,7 +64,7 @@ const Clients = () => {
           <h1>loading...</h1>
         ) : (
           <div className="generalContainerDetails">
-            <Link href="/clients/gestion/new">
+            <Link href="/proyectos/gestion/new">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -78,7 +72,7 @@ const Clients = () => {
                 strokeWidth={1.5}
                 stroke="currentColor"
                 id="iconAdd"
-                tittle="Crear Nuevo"
+                title="Crear Nuevo"
               >
                 <path
                   strokeLinecap="round"
@@ -94,17 +88,15 @@ const Clients = () => {
                   key={item.id}
                   className={
                     item.estatus
-                      ? "client_grid item_detail"
-                      : "client_grid item_detail registerNulled"
+                      ? "proy_grid item_detail"
+                      : "proy_grid item_detail registerNulled"
                   }
                 >
-                  {/* <span>{item.codTribut}</span> */}
-                  <span>{item.idReg}</span>
-                  <span>{item.nombreCliente}</span>
-                  <span className="hideElement">{item.telf1}</span>
-                  <span>{item.email}</span>
+                  <span>{item.nombreProy}</span>
+                  <span>{item.fechaIni}</span>
+                  <span>{item.observac}</span>
                   <span className="icons-container">
-                    <button
+                    {/* <button
                       title="Ver Detalles"
                       onClick={() => {
                         if (openItem) {
@@ -135,8 +127,8 @@ const Clients = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                    </button>
-                    <Link href={`/clients/gestion/${item.id}`}>
+                    </button> */}
+                    <Link href={`/proyectos/gestion/${item.id}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -153,12 +145,12 @@ const Clients = () => {
                     </Link>
                     <span className="icons-container delete">
                       <button
-                        title="ELIMINAR CLIENTE"
+                        title="ELIMINAR PROYECTO"
                         onClick={() => {
                           deleteDocument(
                             item.id,
-                            "Clientes",
-                            "¿Desea eliminar PERMANENTEMENTE este cliente?"
+                            "Proyectos",
+                            "¿Desea eliminar PERMANENTEMENTE este proyecto?"
                           );
                         }}
                       >
@@ -178,12 +170,6 @@ const Clients = () => {
                       </button>
                     </span>
                   </span>
-                  {itemCapture === item.id && (
-                    <ClientDetail
-                      openItem={openItem}
-                      itemDetail={dataItemCap}
-                    />
-                  )}
                 </div>
               );
             })}
@@ -194,4 +180,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Proyectos;

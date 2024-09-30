@@ -123,6 +123,29 @@ de cada registro para  pantallas principales para cada módulo */
   color: var(--subtittles-hk);
 }
 
+/*Para listado de productos en cada cotización en vista rápida*/
+
+.productDetails {
+  display: grid;
+  grid-template-columns: 25% repeat(2, 9%) repeat(3, 13%);
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+  text-align: end;
+  border-bottom: 1px solid #396947;
+  margin: 4px 0;
+  padding: 2px;
+}
+
+.productDetails h4:first-child,
+.productDetails span:first-child {
+  text-align: start;
+}
+
+.productDetails h4 {
+  color: #396947;
+}
+
 /* RESPONSIVE DESIGN */
 /* Tablet  */
 @media screen and (max-width: 768px) {

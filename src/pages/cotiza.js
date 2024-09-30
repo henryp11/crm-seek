@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { redirectJwt } from "../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
@@ -23,7 +22,8 @@ import { addZeroIdCotiza } from "../helpers/FunctionsHelps";
 const moduleHeaders = {
   classEspec: ["cotiza_grid"],
   columnTitles: [
-    { id: "col1", name: "Cotización #", show: true },
+    { id: "col0", name: "Cotización #", show: true },
+    { id: "col1", name: "Tipo CT", show: true },
     { id: "col2", name: "Cliente", show: true },
     { id: "col3", name: "Fecha Elab.", show: true },
     { id: "col4", name: "Responsable", show: true },
@@ -73,23 +73,21 @@ const Cotiza = () => {
           <h1>loading...</h1>
         ) : (
           <div className="generalContainerDetails">
-            <Link href={`/cotiza/gestion/new?idRes=${lastCode}`}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                id="iconAdd"
-                tittle="Crear Nuevo"
+            <span className="containerNewCotiza">
+              <Link
+                href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Ventanas`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </Link>
+                Crear CT Ventanas
+              </Link>
+              <Link
+                href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Mamparas`}
+              >
+                Crear CT Mamparas
+              </Link>
+              <Link href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Puertas`}>
+                Crear CT Puertas
+              </Link>
+            </span>
             {filteredItems.length <= 0 && <p>No Existen registros</p>}
             {filteredItems.map((item) => {
               return (
@@ -105,7 +103,15 @@ const Cotiza = () => {
                     {addZeroIdCotiza(item.idReg.toString().length)}
                     {item.idReg}
                   </span>
-                  <span>{item.cliente?.nombreCliente}</span>
+                  <span>{item.tipo}</span>
+                  <span>
+                    {item.cliente?.nombreCliente}
+                    <br />
+                    <i>
+                      {/* Proyecto: <b>{item.cliente?.proyecto}</b> */}
+                      Proyecto: <b>{item.proyectoCotiza}</b>
+                    </i>
+                  </span>
                   <span>{item.fechaElab}</span>
                   <span className="hideElement">{item.responsable}</span>
                   <span style={{ textAlign: "right" }}>
@@ -144,7 +150,7 @@ const Cotiza = () => {
                         />
                       </svg>
                     </button>
-                    <Link href={`/cotiza/gestion/${item.id}`}>
+                    <Link href={`/cotiza/gestion/${item.id}?tipo=${item.tipo}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

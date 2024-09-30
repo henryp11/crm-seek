@@ -13,7 +13,7 @@
 .containerCardMod {
   background: var(--background-hk);
   width: 280px;
-  height: 120px;
+  height: 170px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -23,6 +23,22 @@
   border-radius: 8px;
   transition: all 0.3s ease;
   cursor: pointer;
+}
+
+.linkOptions {
+  width: 100%;
+  padding: 4px 2px 4px 6px;
+  margin: 1px 0;
+  box-shadow: inset 2px 0 0px 0 var(--button-color-hk);
+  transition: all 0.2s ease;
+  font-size: small;
+  justify-self: flex-start;
+  width: 100%;
+  font-weight: bolder;
+}
+
+.linkOptions:hover {
+  background: var(--letters-hk2);
 }
 
 .containerCardMod:hover {
@@ -42,7 +58,8 @@
   color: var(--button-color-hk-hover);
 }
 
-.containerCardMod:hover p {
+.containerCardMod:hover p,
+.containerCardMod:hover .linkOptions {
   color: var(--background-hk);
 }
 

@@ -20,6 +20,34 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
   const [nameImgInicial, setNameImgInicial] = useState(data.image.name); //Se utiliza al editar un producto para capturar el nombre de la imagen si existe y poderla eliminar si se requiere
   console.log(data);
 
+  const categories = [
+    "Componente",
+    "Ventanas",
+    "Mamparas",
+    "Puertas",
+    "Vidrio",
+    "Vidrio Crudo",
+    "Vidrio Procesado",
+    "Servicio",
+  ];
+
+  const subCateg = [
+    "Accesorios",
+    "Estructura de Aluminio",
+    "Mano de Obra",
+    "Varios",
+    "Vidrio P. Templado",
+    "Vidrio P. Cámara",
+    "Vidrio C. Laminado",
+    "Vidrio C. Flotado",
+    "Vent. Proyectable",
+    "Vent. Corrediza T45",
+    "Vent. Corrediza 4 perfiles",
+    "Puerta Corrediza T45",
+    "Puerta Corrediza estándar",
+    "Puerta Batiente",
+  ];
+
   const handleChange = (e) => {
     setValueState({
       ...valueState,
@@ -186,23 +214,16 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
               ) : (
                 <option value="" label="Elegir Categoría"></option>
               )}
-              <option value="Componente" label="Componente"></option>
-              <option
-                value="Producto Terminado"
-                label="Producto Terminado"
-              ></option>
-              <option value="Vidrio" label="Vidrio"></option>
-              <option value="Vidrio Crudo" label="Vidrio Crudo"></option>
-              <option
-                value="Vidrio Procesado"
-                label="Vidrio Procesado"
-              ></option>
-              <option value="Servicio" label="Servicio"></option>
+              {categories.map((categ, index) => {
+                return (
+                  <option key={index} value={categ} label={categ}></option>
+                );
+              })}
             </select>
           </span>
           <span className={styles.selectContainer}>
-            <b>* Sub-Categoría:</b>
-            <select name="subCategoria" onChange={handleChange} required>
+            <b>Sub-Categoría:</b>
+            <select name="subCategoria" onChange={handleChange}>
               {valueState.subCategoria ? (
                 <option
                   key={valueState.subCategoria}
@@ -214,30 +235,15 @@ const ProductForm = ({ funCreate, funUpdate, idDoc, data }) => {
               ) : (
                 <option value="" label="Elegir Sub-Categoría"></option>
               )}
-              <option value="Accesorios" label="Accesorios"></option>
-              <option
-                value="Estructura de Aluminio"
-                label="Estructura de Aluminio"
-              ></option>
-              <option value="Mano de Obra" label="Mano de Obra"></option>
-              <option value="Varios" label="Varios"></option>
-              <option value="Ventana" label="Ventana"></option>
-              <option
-                value="Vidrio P. Templado"
-                label="Vidrio P. Templado"
-              ></option>
-              <option
-                value="Vidrio P. Cámara"
-                label="Vidrio P. Cámara"
-              ></option>
-              <option
-                value="Vidrio C. Laminado"
-                label="Vidrio C. Laminado"
-              ></option>
-              <option
-                value="Vidrio C. Flotado"
-                label="Vidrio C. Flotado"
-              ></option>
+              {subCateg.map((subcateg, index) => {
+                return (
+                  <option
+                    key={index}
+                    value={subcateg}
+                    label={subcateg}
+                  ></option>
+                );
+              })}
             </select>
           </span>
           <span className={styles.selectContainer}>

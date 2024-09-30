@@ -17,6 +17,7 @@ import {
   onSnapshot,
   updateDoc,
   query,
+  where,
   orderBy,
   startAt,
   endAt,
@@ -48,6 +49,7 @@ const Page = () => {
   const ruta = usePathname();
   const queryParams = useSearchParams(); //usado desde next/navigation para extraer los parametros como variables enviados (despues de ?)
   const idRes = +queryParams.get("idRes"); //Obtengo el último número de cotización de la tabla enviado en el link anterior como parámetro
+  const tipoCT = queryParams.get("tipo"); //Obtengo el tipo de cotización
 
   const conectTbRecetas = collection(db, "Recetas");
   const conectTbCotiza = collection(db, "Cotizaciones");
@@ -72,8 +74,12 @@ const Page = () => {
     tipoAluminio: "",
     tipoVidrio: "",
     responsable: "",
+    tipo: tipoCT,
+    unificado: false,
+    cotizaUnif: "",
     estatus: true,
     productos: [],
+    proyectoCotiza: "",
     totalesCotiza: { ivaTotal: 0, subTotIva: 0, subTotIva0: 0, totalDcto: 0 },
   };
 
@@ -170,24 +176,21 @@ const Page = () => {
   const getRecetas = async () => {
     setLoadCreate({ loading: true, error: null });
     try {
-      onSnapshot(conectTbRecetas, (querySnapshot) => {
-        const docs = [];
-        querySnapshot.forEach((doc) => {
-          docs.push({ ...doc.data(), id: doc.id });
-        });
-        // Ordeno los datos por id_producto
-        docs.sort((a, b) => {
-          if (a.idReg < b.idReg) {
-            return -1;
-          }
-          if (a.idReg > b.idReg) {
-            return 1;
-          }
-          return 0;
-        });
-        setRecetas(docs);
-        setLoadCreate({ loading: false, error: null });
+      const docs = [];
+      const queryDb = query(
+        collection(db, "Recetas"),
+        where("categoria", "==", tipoCT),
+        orderBy("idReg")
+      );
+
+      console.log(queryDb);
+
+      const querySnapshot = await getDocs(queryDb);
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...doc.data(), id: doc.id });
       });
+      setRecetas(docs);
+      setLoadCreate({ loading: false, error: null });
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
       console.log(error);
@@ -273,7 +276,11 @@ const Page = () => {
     const clientSelected = dataList.filter((cliente) => {
       return cliente.idReg === e.target.value;
     });
-    setValueState({ ...valueState, cliente: clientSelected[0] });
+    setValueState({
+      ...valueState,
+      cliente: clientSelected[0],
+      proyectoCotiza: clientSelected[0].proyecto,
+    });
   };
 
   // const handleCheck = (field) => {
@@ -322,10 +329,10 @@ const Page = () => {
       >
         <h2>
           {idDoc === "new"
-            ? `Creando Cotización # ${addZeroIdCotiza(
+            ? `Creando Cotización de ${tipoCT} # ${addZeroIdCotiza(
                 valueState.idReg.toString().length
               )}${valueState.idReg}`
-            : `Editando Cotización # ${addZeroIdCotiza(
+            : `Editando Cotización de ${tipoCT} # ${addZeroIdCotiza(
                 valueState.idReg.toString().length
               )}${valueState.idReg}`}
         </h2>
@@ -348,7 +355,7 @@ const Page = () => {
                       value={valueState.cliente.idReg}
                       selected
                     >
-                      {valueState.cliente.nombreCliente}
+                      {`${valueState.cliente.nombreCliente} | ${valueState.cliente.idReg} | ${valueState.cliente.proyecto}`}
                     </option>
                   ) : (
                     <option value="" label="Elegir Cliente"></option>
@@ -373,14 +380,6 @@ const Page = () => {
                 nameLabel="Fecha Elaboración"
                 required={true}
               />
-              {/* <CustomInput
-                typeInput="date"
-                nameInput="fechaValid"
-                valueInput={valueState.fechaValid}
-                onChange={handleChange}
-                nameLabel="Fecha Validación"
-                required={true}
-              /> */}
             </span>
             <span className={styles.containerAgrupFields}>
               <CustomInput

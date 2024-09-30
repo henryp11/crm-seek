@@ -36,6 +36,7 @@ const useInitialState = () => {
   const [state, setState] = useState(initialState); //Modifica el estado principal
   const [dataList, setDataList] = useState([]); //Trae todos los registros de cualquier tabla
   const [itemPtList, setItemPtList] = useState([]); //Trae Productos terminados
+  const [cotizaProyList, setCotizaProyList] = useState([]); //Trae Cotizaciones x Proyecto para unificar
   const [itemComponList, setItemComponList] = useState([]); //Trae componentes
   const [loadData, setLoadData] = useState({
     loading: false,
@@ -230,6 +231,37 @@ const useInitialState = () => {
         console.log(docsPrecio);
         setItemComponList(docsPrecio);
       }
+      setLoadData({ loading: false, error: null });
+    } catch (error) {
+      setLoadData({ loading: false, error: error });
+    }
+  };
+
+  // Llamar las cotizaciones de un proyecto vinculado, que no este unificadas. Para pantalla de unificación
+  const getAllCotizaProy = async (nombreProy) => {
+    setLoadData({ loading: true, error: null });
+    try {
+      const docs = [];
+      const queryDb = query(
+        collection(db, "Cotizaciones"),
+        where("proyectoCotiza", "==", nombreProy),
+        where("unificado", "==", false)
+      );
+      const querySnapshot = await getDocs(queryDb);
+      querySnapshot.forEach((doc) => {
+        docs.push({ ...doc.data(), id: doc.id });
+      });
+      // Ordeno los datos por id_producto
+      docs.sort((a, b) => {
+        if (a.idReg < b.idReg) {
+          return -1;
+        }
+        if (a.idReg > b.idReg) {
+          return 1;
+        }
+        return 0;
+      });
+      setCotizaProyList(docs);
       setLoadData({ loading: false, error: null });
     } catch (error) {
       setLoadData({ loading: false, error: error });
@@ -526,9 +558,11 @@ const useInitialState = () => {
     dataList,
     itemPtList,
     itemComponList,
+    cotizaProyList,
     lastCode,
     getProdTerminado,
     getComponPrecio,
+    getAllCotizaProy,
     loadData,
     getSimpleDataDb,
     deleteDocument,

@@ -9,12 +9,16 @@ const ClientDetail = (props) => {
       {openItem && (
         <div className={styles.itemWrapContainer}>
           <span className={styles.itemWrapFields}>
+            <h3 className={styles.itemWrapTittles}>Ruc / Cédula</h3>
+            <p>{itemDetail.idReg}</p>
+          </span>
+          <span className={styles.itemWrapFields}>
             <h3 className={styles.itemWrapTittles}>Nombre / Razón Social</h3>
             <p>{itemDetail.nombreCliente}</p>
           </span>
           <span className={styles.itemWrapFields}>
-            <h3 className={styles.itemWrapTittles}>Ruc / Cédula</h3>
-            <p>{itemDetail.codTribut}</p>
+            <h3 className={styles.itemWrapTittles}>Proyecto Asignado</h3>
+            <p>{itemDetail.proyecto}</p>
           </span>
           <span className={styles.itemWrapFields}>
             <h3 className={styles.itemWrapTittles}>Dirección</h3>

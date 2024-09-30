@@ -114,12 +114,14 @@ const Page = () => {
     console.log({ itemRefReceta: refUpdateReceta });
 
     //Con el id de la receta obtenido, se procede a actualizar
-    // los campos que se requiere en la receta (nombre del item, URL de la imagen)
+    // los campos que se requiere en la receta (nombre del item, URL de la imagen, categoria y subcategoria)
     try {
       const docUpdate = doc(db, "Recetas", refUpdateReceta);
       await updateDoc(docUpdate, {
         nombreProducto: productObject.nombreItem,
         url: productObject.image.url,
+        categoria: productObject.categoria,
+        subCategoria: productObject.subCategoria,
       });
     } catch (error) {
       console.log(error);

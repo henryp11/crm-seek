@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useRouter as useNextRouter } from "next/router";
 import { redirectJwt } from "../../../helpers/FunctionsHelps";
-import ClientForm from "../../../containers/ClientForm";
+import ProyForm from "../../../containers/ProyForm";
 import { toast } from "react-hot-toast";
-import Appcontext from "../../../context/AppContext";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; //Conectarse a colecciones y traer los datos
 import stylesCli from "../clients.module.css";
@@ -18,20 +17,11 @@ const Page = () => {
   const ruta = usePathname();
   // Funciones y objetos desde contexto inicial
   // const { showModal, state } = useContext(Appcontext);
-  const conectTbClientes = collection(db, "Clientes");
-  // Funciones y objetos desde contexto inicial
-  const { getSimpleDataDb, dataList } = useContext(Appcontext);
+  const conectTbProyectos = collection(db, "Proyectos");
   const initialState = {
-    idReg: "", //Cédula / RUC
-    nombreCliente: "",
-    direccion: "",
-    telf1: "",
-    telf2: "",
-    email: "",
-    emailAlter: "",
-    idVendedor: "",
+    nombreProy: "",
     observac: "",
-    proyecto: "",
+    fechaIni: "",
     estatus: true,
   };
   const [dataClient, setDataClient] = useState(initialState);
@@ -42,17 +32,16 @@ const Page = () => {
 
   useEffect(() => {
     getClient();
-    getSimpleDataDb("Proyectos");
     redirectJwt(navigate);
   }, [ruta]);
 
-  // Obtengo datos del Cliente a modificar (funciones Firebase)
+  // Obtengo datos del Proyecto a modificar (funciones Firebase)
   const getClient = async () => {
     if (idFirebase !== "new") {
       console.log(idFirebase);
       setLoadCreate({ loading: true, error: null });
       try {
-        const docRef = doc(db, "Clientes", idFirebase);
+        const docRef = doc(db, "Proyectos", idFirebase);
         const docSnap = await getDoc(docRef); //Obtengo el dato por su id único de Firebase
 
         if (docSnap.exists()) {
@@ -60,7 +49,7 @@ const Page = () => {
           setDataClient({ ...cliente, id: idFirebase });
           setLoadCreate({ loading: false, error: null });
         } else {
-          toast.error("Cliente no encontrado!!");
+          toast.error("Proyecto no encontrado!!");
         }
       } catch (error) {
         setLoadCreate({ loading: false, error: error });
@@ -71,13 +60,13 @@ const Page = () => {
   const createClient = async (clientObject) => {
     setLoadCreate({ loading: true, error: null });
     try {
-      await setDoc(doc(conectTbClientes), clientObject);
+      await setDoc(doc(conectTbProyectos), clientObject);
       setLoadCreate({ loading: false, error: null });
       toast.success("Registro creado con éxito");
       setTimeout(() => {
         toast.dismiss();
       }, 2000);
-      navigate.push("/clients");
+      navigate.push("/proyectos");
     } catch (error) {
       setLoadCreate({ loading: false, error: error });
     }
@@ -86,7 +75,7 @@ const Page = () => {
   const updateClient = async (clientObject) => {
     setLoadCreate({ loading: true, error: null });
     try {
-      const docRef = doc(db, "Clientes", idFirebase); //Me conecto a la BD firebase y busco el cliente por su Id
+      const docRef = doc(db, "Proyectos", idFirebase); //Me conecto a la BD firebase y busco el cliente por su Id
       await updateDoc(docRef, clientObject);
       toast.success("Registro actualizado con éxito");
       setTimeout(() => {
@@ -107,12 +96,11 @@ const Page = () => {
           {idFirebase === "new" ? "Creando Registro" : "Editando Registro"}
         </h2>
         {loadCreate.loading === false ? (
-          <ClientForm
+          <ProyForm
             funCreate={createClient}
             funUpdate={updateClient}
             idDoc={idFirebase}
             data={dataClient}
-            dataProyectos={dataList}
           />
         ) : (
           <h1>Loading...</h1>

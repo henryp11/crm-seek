@@ -35,41 +35,43 @@ const SelectItems = ({ recetas, tipoAluminio, tipoVidrio }) => {
         </svg>
       </button>
       <div className="itemsCotizaModal">
-        {recetas.map((receta) => {
-          return (
-            <div key={receta.id} className="recetaCard">
-              {receta.url ? (
-                <figure>
-                  <Image
-                    src={receta.url}
-                    alt={receta.idReg}
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </figure>
-              ) : (
-                <figure>
-                  <Image
-                    src="https://i.imgur.com/yZu4sx6.jpeg"
-                    alt="Sin imagen"
-                    layout="fill"
-                    objectFit="contain"
-                  />
-                </figure>
-              )}
-              <button
-                type="button"
-                className="recetaCardDescripButton"
-                onClick={() => {
-                  setItemCapture(receta);
-                  showModalDimen();
-                }}
-              >
-                {receta.idReg} | {receta.nombreProducto}
-              </button>
-            </div>
-          );
-        })}
+        {recetas.length === 0
+          ? "No existen Recetas para esta categoría"
+          : recetas.map((receta) => {
+              return (
+                <div key={receta.id} className="recetaCard">
+                  {receta.url ? (
+                    <figure>
+                      <Image
+                        src={receta.url}
+                        alt={receta.idReg}
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    </figure>
+                  ) : (
+                    <figure>
+                      <Image
+                        src="https://i.imgur.com/yZu4sx6.jpeg"
+                        alt="Sin imagen"
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    </figure>
+                  )}
+                  <button
+                    type="button"
+                    className="recetaCardDescripButton"
+                    onClick={() => {
+                      setItemCapture(receta);
+                      showModalDimen();
+                    }}
+                  >
+                    {receta.idReg} | {receta.nombreProducto}
+                  </button>
+                </div>
+              );
+            })}
       </div>
       {state.showModalDimen && (
         <DimensionsItem

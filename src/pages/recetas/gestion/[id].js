@@ -32,6 +32,8 @@ const Page = () => {
   const nameItem = queryParams.get("name");
   const imgUrl = queryParams.get("img");
   const isEdit = queryParams.get("edit");
+  const categ = queryParams.get("categ");
+  const subCateg = queryParams.get("subCateg");
 
   const conectTbRecetas = collection(db, "Recetas");
 
@@ -40,6 +42,8 @@ const Page = () => {
     idDocItem: "",
     nombreProducto: "",
     url: "",
+    categoria: "",
+    subCategoria: "",
     setFabricacion: [],
     condiciones: {
       anchoA: "",
@@ -50,10 +54,10 @@ const Page = () => {
     },
   };
   const [valueState, setValueState] = useState(initialState);
-  // const [loadCreate, setLoadCreate] = useState({
-  //   loading: false,
-  //   error: null,
-  // });
+  const [loadCreate, setLoadCreate] = useState({
+    loading: false,
+    error: null,
+  });
   const [secuencial, setSecuencial] = useState(0);
   //Se usara para editar set's ya añadidos en la creación
   const [setToEdit, setSetToEdit] = useState({});
@@ -94,6 +98,8 @@ const Page = () => {
           idDocItem: idFirebase, //Al añadir receta, el idFirebase es el idDoc del item al cual se añade la receta
           nombreProducto: nameItem,
           url: urlArchivo,
+          categoria: categ,
+          subCategoria: subCateg,
         });
       } catch (error) {
         console.log(`Referencia no encontrada error: ${error}`);
@@ -103,6 +109,8 @@ const Page = () => {
           idDocItem: idFirebase, //Al añadir receta, el idFirebase es el idDoc del item al cual se añade la receta
           nombreProducto: nameItem,
           url: "",
+          categoria: categ,
+          subCategoria: subCateg,
         });
       }
     } else {
@@ -112,23 +120,34 @@ const Page = () => {
         idDocItem: idFirebase, //Al añadir receta, el idFirebase es el idDoc del item al cual se añade la receta
         nombreProducto: nameItem,
         url: "",
+        categoria: categ,
+        subCategoria: subCateg,
       });
     }
   };
 
   // Obtengo datos de la receta a modificar (Funciones Firebase)
   const getRecetaItem = async () => {
-    // setLoadCreate({ loading: true, error: null });
+    setLoadCreate({ loading: true, error: null });
     try {
       const docRef = doc(db, "Recetas", idFirebase);
       const docSnap = await getDoc(docRef); //Obtengo el dato por el id de Firebase
 
       if (docSnap.exists()) {
         const receta = docSnap.data();
-        //Evaluo si la receta posee el objeto de condiciones, ya que es un campo añadido en nueva versión
-        if (receta.condiciones) {
+        //Evaluo si la receta posee el objeto de condiciones, categorios y subcategorias,
+        //ya que es un campo añadido en nueva versión
+        console.log(receta);
+
+        if (receta.condiciones && receta.categoria && receta.subCategoria) {
           setValueState({ ...receta, id: idFirebase });
-        } else {
+          console.log(receta);
+          console.log("RECETA TIENE TODAS LAS OPCIONES");
+        } else if (
+          !receta.condiciones &&
+          !receta.categoria &&
+          !receta.subCategoria
+        ) {
           setValueState({
             ...receta,
             id: idFirebase,
@@ -139,16 +158,41 @@ const Page = () => {
               alturaI: "",
               alturaJ: "",
             },
+            subCategoria: "",
+            categoria: "",
           });
+          console.log("RECETA NO TIENE TODAS LAS NEW OPCIONES");
+        } else if (
+          receta.condiciones &&
+          !receta.categoria &&
+          !receta.subCategoria
+        ) {
+          setValueState({
+            ...receta,
+            id: idFirebase,
+            subCategoria: "",
+            categoria: "",
+          });
+          console.log("RECETA SOLO TIENE CONDICIONES");
+        } else if (
+          receta.condiciones &&
+          receta.categoria &&
+          !receta.subCategoria
+        ) {
+          setValueState({
+            ...receta,
+            id: idFirebase,
+            subCategoria: "",
+          });
+          console.log("RECETA SIN SUBCATEGORIA");
         }
-        // setValueState({ ...receta, id: idFirebase });
-        // setLoadCreate({ loading: false, error: null });
+        setLoadCreate({ loading: false, error: null });
       } else {
         window.alert("Item no encontrado!!");
       }
     } catch (error) {
       console.log(error);
-      // setLoadCreate({ loading: false, error: error });
+      setLoadCreate({ loading: false, error: error });
     }
   };
 
@@ -362,9 +406,19 @@ const Page = () => {
     <>
       <div className={stylesRec.crudRecContainer}>
         {!isEdit ? (
-          <h2>{`Creando Receta: ${valueState.idReg} - ${valueState.nombreProducto}`}</h2>
+          <span>
+            <h2>{`Creando Receta: ${valueState.idReg} - ${valueState.nombreProducto}`}</h2>
+            <h3
+              style={{ textAlign: "center" }}
+            >{`Categoria: ${valueState.categoria} | ${valueState.subCategoria}`}</h3>
+          </span>
         ) : (
-          <h2>{`Editando Receta: ${valueState.idReg} - ${valueState.nombreProducto}`}</h2>
+          <span>
+            <h2>{`Editando Receta: ${valueState.idReg} - ${valueState.nombreProducto}`}</h2>
+            <h3
+              style={{ textAlign: "center" }}
+            >{`Categoria: ${valueState.categoria} | ${valueState.subCategoria}`}</h3>
+          </span>
         )}
 
         <form

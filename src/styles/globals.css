@@ -14,6 +14,7 @@
   --save-button: #1a73e8;
   --save-button-hover: #00cde8db;
   /* --acept-button: #bcffcf; */
+  /* --acept-button: #396947; */
   --acept-button: #313131f0;
   --cancel-alert: rgb(155, 32, 32);
   --delete-alert: rgb(228, 59, 59);
@@ -30,10 +31,11 @@
   /* GRIDS */
   --grid-column-items: 13% 30% repeat(2, 20%) 15%;
   --grid-column-clients: 10% 35% 15% 25% 10%;
-  --grid-column-items-modal: 15% repeat(2, 30%) 20%;
+  --grid-column-proy: 35% 15% 35% 11%;
+  --grid-column-items-modal: 15% 30% repeat(2, 18%) 10%;
   --grid-column-items-col2-modal: 60% 35%;
   --grid-column-items-tablet: 13% repeat(2, 30%) 10% 15%;
-  --grid-column-cotiza: 10% 30% repeat(2, 15%) 10% 15%;
+  --grid-column-cotiza: 10% 8% 28% 11% 14% 9% 15%;
   --grid-column-items-mobile: 13% repeat(2, 31%) 25%;
   --grid-column-mobile5: 13% 25% 20% 29% 10%;
 }
@@ -254,6 +256,17 @@ input:-webkit-autofill:active {
 .client_grid {
   display: grid;
   grid-template-columns: var(--grid-column-clients);
+  width: 100%;
+  padding: 4px 0;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+}
+
+.proy_grid {
+  display: grid;
+  grid-template-columns: var(--grid-column-proy);
   width: 100%;
   padding: 4px 0;
   gap: 4px;
@@ -596,6 +609,42 @@ svg:active {
   100% {
     transform: scale(1);
   }
+}
+
+/*Para container de varios botones para añadir diferentes tipos de cotizacion*/
+
+.containerNewCotiza {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: fixed;
+  left: 3%;
+  bottom: 12px;
+  z-index: 2;
+  opacity: 0.8;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.containerNewCotiza a {
+  position: sticky;
+  border: 1px solid var(--button-color-hk);
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--button-color-hk);
+  background: var(--tittles-hk);
+  margin: 4px;
+  font-size: medium;
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+
+.containerNewCotiza a:hover {
+  background: var(--button-color-hk);
+  color: white;
+  font-weight: bold;
+  transform: scale(1.1);
 }
 
 /* RESPONSIVE DESIGN */

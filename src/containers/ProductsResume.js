@@ -20,7 +20,8 @@ const moduleHeaders = {
   columnTitles: [
     { id: "col1", name: "Id.Prod", show: true },
     { id: "col2", name: "Nombre", show: true },
-    { id: "col3", name: "Clase", show: true },
+    { id: "col3", name: "Categoría", show: true },
+    { id: "col4", name: "SubCategoría", show: true },
   ],
 };
 
@@ -37,7 +38,7 @@ const ProductsResume = () => {
 
   useEffect(() => {
     // En la función envio si quiero ver componentes(true) o no (false)
-    // Segundo param es para ver los items con o si receta
+    // Segundo param es para ver los items con o sin receta
     getProdTerminado(false, false);
   }, []);
 
@@ -76,7 +77,7 @@ const ProductsResume = () => {
           columnTitles={
             isMobile
               ? moduleHeaders.columnTitles.map((column) => {
-                  if (column.id !== "col4") return column;
+                  if (column.id !== "col5") return column;
                   return { ...column, show: false };
                 })
               : moduleHeaders.columnTitles
@@ -94,11 +95,15 @@ const ProductsResume = () => {
                 <div key={item.id} className="item_receta_grid item_detail">
                   <span>{item.idReg}</span>
                   <span>{item.nombreItem}</span>
+                  <span>{item.categoria}</span>
                   <span>{item.subCategoria}</span>
                   {/* <span className="hideElement">{item.precio}</span> */}
-                  <span className="icons-container" tittle="Añadir Receta">
+                  <span
+                    className="icons-container"
+                    title="Añadir Receta para este Item"
+                  >
                     <Link
-                      href={`/recetas/gestion/${item.id}?item=${item.idReg}&name=${item.nombreItem}&img=${item.image.name}`}
+                      href={`/recetas/gestion/${item.id}?item=${item.idReg}&name=${item.nombreItem}&img=${item.image.name}&categ=${item.categoria}&subCateg=${item.subCategoria}`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

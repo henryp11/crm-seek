@@ -1,66 +1,78 @@
+"use client";
 import React, { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/navigation";
-import { redirectJwt } from "../helpers/FunctionsHelps";
+import { useRouter, usePathname } from "next/navigation";
+import { useRouter as useNextRouter } from "next/router";
+import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
-import ClientDetail from "../containers/ClientDetail";
+import CotizaDetailUnif from "../../../containers/CotizaDetailUnif";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
 const HeadersColumns = dynamic(
-  () => import("../components/HeadersColumns.js"),
+  () => import("../../../components/HeadersColumns.js"),
   { ssr: false }
 );
-import useScreenSize from "../hooks/useScreenSize";
-//import MenuLateral from "../components/MenuLateral";
-import SectionSearch from "../containers/SectionSearch";
-import Appcontext from "../context/AppContext";
-import useSearchSimple from "../hooks/useSearchSimple";
-//import styles from "../styles/products.module.css";
+import useScreenSize from "../../../hooks/useScreenSize";
+import SectionSearch from "../../../containers/SectionSearch";
+import Appcontext from "../../../context/AppContext";
+import useSearchSimple from "../../../hooks/useSearchSimple";
+import { addZeroIdCotiza } from "../../../helpers/FunctionsHelps";
+
+import { toast } from "react-hot-toast";
+import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"; //Conectarse a colecciones y traer los datos
+import stylesCli from "../clients.module.css";
 
 const moduleHeaders = {
-  classEspec: ["client_grid"],
+  classEspec: ["cotiza_grid"],
   columnTitles: [
-    // { id: "col1", name: "Id.Cliente", show: true },
-    { id: "col1", name: "RUC / Cédula", show: true },
-    { id: "col2", name: "Nombre", show: true },
-    { id: "col3", name: "Teléfono", show: true },
-    { id: "col4", name: "Correo", show: true },
+    { id: "col0", name: "Cotización #", show: true },
+    { id: "col1", name: "Tipo CT", show: true },
+    { id: "col2", name: "Cliente", show: true },
+    { id: "col3", name: "Fecha Elab.", show: true },
+    { id: "col4", name: "Responsable", show: true },
+    { id: "col5", name: "Total", show: true },
   ],
 };
 
-const Clients = () => {
-  const router = useRouter();
+const Page = () => {
+  const navigate = useRouter(); //Usado de next/navigation para realizar push a otras rutas
+  const nextRouter = useNextRouter(); //usado de next/router para extraer el query params de la ruta (el id de cada registro de firebase)
+  // const idFirebase = nextRouter.query.id;
+  const idProy = nextRouter.query.id;
+  const ruta = usePathname();
   // Funciones y objetos desde contexto inicial
-  const { getSimpleDataDb, deleteDocument, dataList, loadData } =
+  const { getAllCotizaProy, cotizaProyList, loadData, lastCode } =
     useContext(Appcontext);
   const isMobile = useScreenSize();
 
   const [openItem, setOpenItem] = useState(false);
   const [itemCapture, setItemCapture] = useState("");
   const [dataItemCap, setDataItemCap] = useState({});
-  const { query, setQuery, filteredItems } = useSearchSimple(dataList);
+  const { query, setQuery, filteredItems } = useSearchSimple(cotizaProyList);
 
   useEffect(() => {
-    getSimpleDataDb("Clientes");
-    redirectJwt(router);
-  }, []);
+    getAllCotizaProy(idProy);
+    redirectJwt(navigate);
+  }, [ruta]);
+
+  console.log(cotizaProyList);
 
   return (
     <div className="mainContainer">
-      {/* <MenuLateral /> */}
       <section className="generalContainer">
         <SectionSearch
           query={query}
           setQuery={setQuery}
-          placeholder={"Buscar Cliente por su Nombre / Doc. Identificación"}
+          placeholder={"Buscar Cotización"}
         />
         <HeadersColumns
           classEsp={moduleHeaders.classEspec}
           columnTitles={
             isMobile
               ? moduleHeaders.columnTitles.map((column) => {
-                  if (column.id !== "col5") return column;
+                  if (column.id !== "col4") return column;
                   return { ...column, show: false };
                 })
               : moduleHeaders.columnTitles
@@ -70,39 +82,44 @@ const Clients = () => {
           <h1>loading...</h1>
         ) : (
           <div className="generalContainerDetails">
-            <Link href="/clients/gestion/new">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                id="iconAdd"
-                tittle="Crear Nuevo"
+            <span className="containerNewCotiza">
+              <Link
+                href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Ventanas`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </Link>
-            {filteredItems.length <= 0 && <p>No Existe</p>}
+                Crear Cotización Unificada
+              </Link>
+            </span>
+            {filteredItems.length <= 0 && <p>No Existen registros</p>}
             {filteredItems.map((item) => {
               return (
                 <div
                   key={item.id}
                   className={
                     item.estatus
-                      ? "client_grid item_detail"
-                      : "client_grid item_detail registerNulled"
+                      ? "cotiza_grid item_detail"
+                      : "cotiza_grid item_detail registerNulled"
                   }
                 >
-                  {/* <span>{item.codTribut}</span> */}
-                  <span>{item.idReg}</span>
-                  <span>{item.nombreCliente}</span>
-                  <span className="hideElement">{item.telf1}</span>
-                  <span>{item.email}</span>
+                  <span>
+                    {addZeroIdCotiza(item.idReg.toString().length)}
+                    {item.idReg}
+                  </span>
+                  <span>
+                    <strong>{item.tipo}</strong>
+                  </span>
+                  <span>
+                    {item.cliente?.nombreCliente}
+                    <br />
+                    <i>
+                      {/* Proyecto: <b>{item.cliente?.proyecto}</b> */}
+                      Proyecto: <b>{item.proyectoCotiza}</b>
+                    </i>
+                  </span>
+                  <span>{item.fechaElab}</span>
+                  <span className="hideElement">{item.responsable}</span>
+                  <span style={{ textAlign: "center" }}>
+                    <b>$ {item.totalesCotiza?.subTotIva}</b>
+                  </span>
                   <span className="icons-container">
                     <button
                       title="Ver Detalles"
@@ -136,7 +153,7 @@ const Clients = () => {
                         />
                       </svg>
                     </button>
-                    <Link href={`/clients/gestion/${item.id}`}>
+                    <Link href={`/cotiza/gestion/${item.id}?tipo=${item.tipo}`}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -151,37 +168,11 @@ const Clients = () => {
                         />
                       </svg>
                     </Link>
-                    <span className="icons-container delete">
-                      <button
-                        title="ELIMINAR CLIENTE"
-                        onClick={() => {
-                          deleteDocument(
-                            item.id,
-                            "Clientes",
-                            "¿Desea eliminar PERMANENTEMENTE este cliente?"
-                          );
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
-                          />
-                        </svg>
-                      </button>
-                    </span>
                   </span>
                   {itemCapture === item.id && (
-                    <ClientDetail
-                      openItem={openItem}
-                      itemDetail={dataItemCap}
+                    <CotizaDetailUnif
+                      openRegister={openItem}
+                      registerDetail={dataItemCap}
                     />
                   )}
                 </div>
@@ -194,4 +185,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Page;

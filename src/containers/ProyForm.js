@@ -4,7 +4,7 @@ import Link from "next/link.js";
 import CustomInput from "../components/CustomInput";
 import styles from "../styles/forms.module.css";
 
-const ClientForm = ({ funCreate, funUpdate, idDoc, data, dataProyectos }) => {
+const ProyForm = ({ funCreate, funUpdate, idDoc, data }) => {
   const [valueState, setValueState] = useState(data);
 
   const handleChange = (e) => {
@@ -39,105 +39,24 @@ const ClientForm = ({ funCreate, funUpdate, idDoc, data, dataProyectos }) => {
       className={`${styles["form-default"]}`}
     >
       <div>
-        <span
-          className={styles.idField}
-          style={{ gridTemplateColumns: "20% 40% 40%" }}
-        >
-          <CustomInput
-            typeInput="text"
-            nameInput="idReg"
-            valueInput={valueState.idReg}
-            onChange={handleChange}
-            nameLabel="RUC / Cédula"
-            required={true}
-          />
-          <CustomInput
-            typeInput="text"
-            nameInput="nombreCliente"
-            valueInput={valueState.nombreCliente}
-            onChange={handleChange}
-            nameLabel="Nombre / Razón Social"
-            required={true}
-          />
-          <span
-            className={styles.selectContainer}
-            style={{
-              flexWrap: "nowrap",
-              gap: "0 4px",
-              margin: "8px",
-              width: "90%",
-            }}
-          >
-            <b>Proyecto:</b>
-            <select name="proyecto" onChange={handleChange} required>
-              {valueState.proyecto ? (
-                <option
-                  key={valueState.proyecto}
-                  value={valueState.proyecto}
-                  selected
-                >
-                  {valueState.proyecto}
-                </option>
-              ) : (
-                <option value="" label="Vincular con Proyecto"></option>
-              )}
-              {dataProyectos.map((proyecto) => {
-                if (proyecto.estatus) {
-                  return (
-                    <option
-                      key={proyecto.id}
-                      value={proyecto.nombreProy}
-                      label={proyecto.nombreProy}
-                    ></option>
-                  );
-                }
-              })}
-            </select>
-          </span>
-        </span>
         <span className={styles.containerAgrupFields}>
           <CustomInput
             typeInput="text"
-            nameInput="direccion"
-            valueInput={valueState.direccion}
+            nameInput="nombreProy"
+            valueInput={valueState.nombreProy}
             onChange={handleChange}
-            nameLabel="Dirección"
+            nameLabel="Nombre del Proyecto"
             required={true}
           />
           <CustomInput
-            typeInput="telf"
-            nameInput="telf1"
-            valueInput={valueState.telf1}
+            typeInput="date"
+            nameInput="fechaIni"
+            valueInput={valueState.fechaIni}
             onChange={handleChange}
-            nameLabel="Telf. Principal"
-            required={true}
-          />
-          <CustomInput
-            typeInput="telf"
-            nameInput="telf2"
-            valueInput={valueState.telf2}
-            onChange={handleChange}
-            nameLabel="Telf. Secundario"
-            required={false}
+            nameLabel="Fecha Inicio Proyecto"
           />
         </span>
         <span className={styles.containerAgrupFields}>
-          <CustomInput
-            typeInput="mail"
-            nameInput="email"
-            valueInput={valueState.email}
-            onChange={handleChange}
-            nameLabel="Correo electrónico"
-            required={true}
-          />
-          <CustomInput
-            typeInput="mail"
-            nameInput="emailAlter"
-            valueInput={valueState.emailAlter}
-            onChange={handleChange}
-            nameLabel="Correo Alterno"
-            required={false}
-          />
           <CustomInput
             typeInput="text"
             nameInput="observac"
@@ -194,7 +113,7 @@ const ClientForm = ({ funCreate, funUpdate, idDoc, data, dataProyectos }) => {
             className={`${styles.formButton}`}
             id="cancelButton"
           >
-            <Link href="/clients" className={`${styles.cancelButton}`}>
+            <Link href="/proyectos" className={`${styles.cancelButton}`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -216,4 +135,4 @@ const ClientForm = ({ funCreate, funUpdate, idDoc, data, dataProyectos }) => {
   );
 };
 
-export default ClientForm;
+export default ProyForm;

@@ -181,7 +181,7 @@ const Recetas = () => {
                       </svg>
                     </button>
                     <Link
-                      href={`/recetas/gestion/${item.id}?item=${item.idReg}&name=${item.nombreProducto}&img=${item.url}&edit=true`}
+                      href={`/recetas/gestion/${item.id}?item=${item.idReg}&name=${item.nombreProducto}&img=${item.url}&edit=true&categ=${item.categoria}&subCateg=${item.subCategoria}`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
