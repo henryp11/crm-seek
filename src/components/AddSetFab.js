@@ -7,7 +7,7 @@ const HeadersColumns = dynamic(
 );
 import { toast } from "react-hot-toast";
 import useScreenSize from "../hooks/useScreenSize";
-import CustomInput from "../components/CustomInput";
+// import CustomInput from "../components/CustomInput"; Anteriormente se escribía el nombre del set, ahora se lo elige de lista desplegable porque se mantienen nombres de sets únicos para todos los productos
 import SectionSearch from "../containers/SectionSearch";
 import useSearchSimple from "../hooks/useSearchSimple";
 import Appcontext from "../context/AppContext";
@@ -20,13 +20,6 @@ const moduleHeaders = {
     { id: "col2", name: "Clase", show: true },
   ],
 };
-
-// const setsFabricación = [
-//   {
-//     idSet: 1,
-
-//   }
-// ]
 
 // Modal para añadir set´s de fabricación, sus componentes y medidas
 
@@ -166,7 +159,7 @@ const AddSetFab = ({
     <div className="mainContainer modal modalSelectCompon">
       <section className="generalContainer">
         <button
-          tittle="Cerrar"
+          title="Cerrar"
           className="icons-container closeModal"
           onClick={() => {
             showModal();

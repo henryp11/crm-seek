@@ -6,6 +6,7 @@ import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
 import CotizaDetailUnif from "../../../containers/CotizaDetailUnif";
+import AddCotizaUnif from "../../../components/AddCotizaUnif";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
@@ -175,6 +176,7 @@ const Page = () => {
                       registerDetail={dataItemCap}
                     />
                   )}
+                  <AddCotizaUnif idCotizaUnif="" proyecto="" />
                 </div>
               );
             })}
