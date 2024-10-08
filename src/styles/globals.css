@@ -16,7 +16,7 @@
   /* --acept-button: #bcffcf; */
   /* --acept-button: #396947; */
   --acept-button: #313131f0;
-  --cancel-alert: rgb(155, 32, 32);
+  --cancel-alert: #9d2020;
   --delete-alert: rgb(228, 59, 59);
   --background-rows: rgb(247, 247, 247);
   /* BOTONES */
@@ -239,7 +239,7 @@ input:-webkit-autofill:active {
   gap: 4px;
   justify-content: center;
   align-items: center;
-  word-break: break-all;
+  /* word-break: break-all; */
 }
 
 .item_detail {
@@ -645,6 +645,48 @@ svg:active {
   color: white;
   font-weight: bold;
   transform: scale(1.1);
+}
+
+/*Cambio para pantalla especial de selección de proyecto para unificación*/
+
+.selectProyUnifContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 200px));
+  gap: 20px;
+  padding: 8px;
+}
+
+.selectProyUnifContainer .item_detail {
+  display: flex;
+  word-break: normal;
+  height: 100px;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.selectProyUnifContainer .item_detail:hover {
+  border-radius: 4px;
+  background: var(--button-color-hk);
+  box-shadow: inset 0px 0px 10px 3px var(--tittles-hk);
+}
+
+.selectProyUnifContainer .item_detail a {
+  color: var(--button-color-hk);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectProyUnifContainer .item_detail:hover a {
+  color: var(--tittles-hk);
+  transform: scale(1.1);
+}
+
+.selectProyUnifContainer .item_detail strong {
+  font-size: larger;
 }
 
 /* RESPONSIVE DESIGN */

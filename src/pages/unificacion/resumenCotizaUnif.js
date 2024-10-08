@@ -1,35 +1,40 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { redirectJwt, addZeroIdCotiza } from "../helpers/FunctionsHelps";
+import { redirectJwt, addZeroIdCotiza } from "../../helpers/FunctionsHelps";
 import dynamic from "next/dynamic";
 import Link from "next/link.js";
-import CotizaDetail from "../containers/CotizaDetail";
+import CotizaDetailUnifFinal from "../../containers/CotizaDetailUnifFinal";
 //Importo este componente con la función dynamic de Next para deshabilitar el SSR (Server side rendering)
 //En este caso es necesario solo esa sección ya que requiero del objeto window para obtener el ancho de la
 //pantalla del cliente y en base a ello aplicar cambios en el renderizado para mobile, tablet, laptop y desktop
 const HeadersColumns = dynamic(
-  () => import("../components/HeadersColumns.js"),
+  () => import("../../components/HeadersColumns.js"),
   { ssr: false }
 );
-import useScreenSize from "../hooks/useScreenSize";
-import SectionSearch from "../containers/SectionSearch";
-import Appcontext from "../context/AppContext";
-import useSearchSimple from "../hooks/useSearchSimple";
+import useScreenSize from "../../hooks/useScreenSize";
+import SectionSearch from "../../containers/SectionSearch";
+import Appcontext from "../../context/AppContext";
+import useSearchSimple from "../../hooks/useSearchSimple";
 
 const moduleHeaders = {
   classEspec: ["cotiza_grid"],
   columnTitles: [
     { id: "col0", name: "Cotización #", show: true },
-    { id: "col1", name: "Tipo CT", show: true },
+    { id: "col1", name: "Proyecto", show: true },
     { id: "col2", name: "Cliente", show: true },
     { id: "col3", name: "Fecha Elab.", show: true },
-    { id: "col4", name: "Responsable", show: true },
-    { id: "col5", name: "Total", show: true, style: { textAlign: "right" } },
+    { id: "col4", name: "# Cot. Anexadas", show: true },
+    {
+      id: "col5",
+      name: "Total Final",
+      show: true,
+      style: { textAlign: "right" },
+    },
   ],
 };
 
-const Cotiza = () => {
+const ResumenCotizaUnif = () => {
   const router = useRouter();
   // Funciones y objetos desde contexto inicial
   const { getSimpleDataDb, deleteDocument, dataList, loadData, lastCode } =
@@ -42,7 +47,7 @@ const Cotiza = () => {
   const { query, setQuery, filteredItems } = useSearchSimple(dataList);
   const ruta = usePathname();
   useEffect(() => {
-    getSimpleDataDb("Cotizaciones");
+    getSimpleDataDb("CotizacionesUnificadas");
     redirectJwt(router);
   }, [ruta]);
 
@@ -72,50 +77,35 @@ const Cotiza = () => {
         ) : (
           <div className="generalContainerDetails">
             <span className="containerNewCotiza">
-              <Link
-                href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Ventanas`}
-              >
-                Crear CT Ventanas
-              </Link>
-              <Link
-                href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Mamparas`}
-              >
-                Crear CT Mamparas
-              </Link>
-              <Link href={`/cotiza/gestion/new?idRes=${lastCode}&tipo=Puertas`}>
-                Crear CT Puertas
+              <Link href={`/unificacion`}>
+                Crear nueva Cotización Unificada
               </Link>
             </span>
             {filteredItems.length <= 0 && <p>No Existen registros</p>}
             {filteredItems.map((item) => {
               return (
-                <div
-                  key={item.id}
-                  className={
-                    item.estatus
-                      ? "cotiza_grid item_detail"
-                      : "cotiza_grid item_detail registerNulled"
-                  }
-                >
+                <div key={item.id} className="cotiza_grid item_detail">
                   <span>
                     {addZeroIdCotiza(
-                      item.idReg && item.idReg.toString().length
+                      item.idReg && item.idReg.toString().length,
+                      "CTU"
                     )}
                     {item.idReg}
                   </span>
-                  <span>{item.tipo}</span>
+                  <span>{item.proyectName}</span>
                   <span>
                     {item.cliente?.nombreCliente}
-                    <br />
+                    {/* <br />
                     <i>
-                      {/* Proyecto: <b>{item.cliente?.proyecto}</b> */}
                       Proyecto: <b>{item.proyectoCotiza}</b>
-                    </i>
+                    </i> */}
                   </span>
-                  <span>{item.fechaElab}</span>
-                  <span className="hideElement">{item.responsable}</span>
+                  <span>{item.fecha}</span>
+                  <span className="hideElement">
+                    {item.cotizaciones?.length}
+                  </span>
                   <span style={{ textAlign: "right" }}>
-                    {item.totalesCotiza?.subTotIva}$
+                    {item.totalFinalCotizaUnif?.totalFinal}$
                   </span>
                   <span className="icons-container">
                     <button
@@ -150,7 +140,9 @@ const Cotiza = () => {
                         />
                       </svg>
                     </button>
-                    <Link href={`/cotiza/gestion/${item.id}?tipo=${item.tipo}`}>
+                    <Link
+                      href={`/unificacion/gestion/${item.proyectName}?id=${item.id}`}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -167,12 +159,12 @@ const Cotiza = () => {
                     </Link>
                     <span className="icons-container delete">
                       <button
-                        title="ELIMINAR COTIZACION"
+                        title="ELIMINAR COTIZACION UNIFICADA"
                         onClick={() => {
                           deleteDocument(
                             item.id,
-                            "Cotizaciones",
-                            "¿Desea eliminar permanentemente esta cotización?"
+                            "CotizacionesUnificadas",
+                            "¿Desea eliminar permanentemente esta cotización unificada?"
                           );
                         }}
                       >
@@ -193,7 +185,7 @@ const Cotiza = () => {
                     </span>
                   </span>
                   {itemCapture === item.id && (
-                    <CotizaDetail
+                    <CotizaDetailUnifFinal
                       openRegister={openItem}
                       registerDetail={dataItemCap}
                     />
@@ -208,4 +200,4 @@ const Cotiza = () => {
   );
 };
 
-export default Cotiza;
+export default ResumenCotizaUnif;

@@ -267,6 +267,87 @@
   backdrop-filter: invert(100%);
 }
 
+/*Ligeros cambios para pantalla de unificación de cotizaciones*/
+.cotizaSelectContainer {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  gap: 0 16px;
+  padding: 8px;
+  backdrop-filter: brightness(90%);
+  border-bottom: 2px solid white;
+  align-items: center;
+}
+
+.cotizaSelectContainer:hover {
+  backdrop-filter: invert(50%);
+}
+
+.cotizaSelectContainer span {
+  font-size: 0.8em;
+}
+
+.containerTotalesCotizaUnif {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--acept-button);
+  border: 1px solid white;
+  margin: 2px;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerTotalesCotizaUnif button {
+  display: flex;
+  background: #00cde8db;
+  margin: 2px auto;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.containerTotalesCotizaUnif button svg {
+  color: white;
+  margin: 0 4px;
+  padding: 0;
+}
+
+.containerTotalesCotizaUnif button:hover,
+.containerTotalesCotizaUnif button:hover svg {
+  color: var(--tittles-hk);
+}
+
+.containerTotalesCotizaUnif span {
+  width: 95%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  margin: 2px;
+  padding: 4px;
+  border-radius: 8px;
+  text-align: end;
+  font-size: 0.9em;
+}
+
+.containerTotalesCotizaUnif h3 {
+  text-align: center;
+  color: var(--tittles-hk);
+  font-size: 1em;
+  margin-top: 2px;
+}
+.containerTotalesCotizaUnif span h4 {
+  text-align: start;
+  color: var(--tittles-hk);
+}
+
+.containerTotalesCotizaUnif span:last-child {
+  background: var(--button-color-hk-hover);
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+/*FIN Ligeros cambios para pantalla de unificación de cotizaciones*/
+
 .componSelectName {
   width: 100%;
   grid-column: 1 /-1;

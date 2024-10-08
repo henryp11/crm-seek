@@ -258,7 +258,10 @@ const Page = () => {
   const updateLastCode = async (codeReserva) => {
     try {
       const docRef = doc(db, "Codificacion", "reserva");
-      await updateDoc(docRef, { codigos: { cotiza: codeReserva } });
+      // await updateDoc(docRef, { codigos: { cotiza: codeReserva } });
+      await updateDoc(docRef, {
+        "codigos.cotiza": codeReserva,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -656,7 +659,7 @@ const Page = () => {
                 )}
 
                 <button
-                  tittle="Cancelar"
+                  title="Cancelar"
                   className={`${styles.formButton}`}
                   id="cancelButton"
                   onClick={() => {

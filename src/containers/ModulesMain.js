@@ -99,7 +99,7 @@ const ModulesMain = () => {
           { name: "Unificar Cotizaciones", route: "/unificacion" },
           {
             name: "Resumen Cotizaciones x Proyecto",
-            route: "/unificar/resumen",
+            route: "/unificacion/resumenCotizaUnif",
           },
         ]}
       />

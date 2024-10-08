@@ -14,7 +14,11 @@ const ModuleCard = ({ name, descrip, icon, route, options }) => {
           {/* <p>{descrip}</p> */}
           {options.map((option) => {
             return (
-              <Link href={option.route} className={styles.linkOptions}>
+              <Link
+                href={option.route}
+                className={styles.linkOptions}
+                key={option.name}
+              >
                 {option.name}
               </Link>
             );

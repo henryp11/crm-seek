@@ -64,7 +64,8 @@ const useInitialState = () => {
           return 0;
         });
         setDataList(docs);
-        //Extraigo el último código para control de secuencias de idReg
+        //Extraigo el último código para control de secuencias de idReg.Aplica para códigos de cotizaciones y cotizaciones unificadas,
+        //importante este es el valor a usar en otras pantallas (lastCode)
         const lastCodeInTable =
           docs.length === 0 ? 0 : docs.map(({ idReg }) => idReg).reverse()[0];
         setLastCode(lastCodeInTable);

@@ -73,15 +73,23 @@ export const formatoFechaDMA = () => {
   return fechaFormat;
 };
 
-export const addZeroIdCotiza = (numRep) => {
-  if (9 - numRep < 0) {
-    return `CT${"0".repeat(9)}`;
+export const addZeroIdCotiza = (numRep, tipo) => {
+  if (tipo) {
+    if (6 - numRep < 0) {
+      return `${tipo}${"0".repeat(6)}`;
+    } else {
+      return `${tipo}${"0".repeat(6 - numRep)}`;
+    }
   } else {
-    return `CT${"0".repeat(9 - numRep)}`;
+    if (7 - numRep < 0) {
+      return `CT${"0".repeat(7)}`;
+    } else {
+      return `CT${"0".repeat(7 - numRep)}`;
+    }
   }
 };
 
-//Se utiliza en todas las páginas para redireccionar al home su se encuentra un token jwt proveniente de Firebase
+//Se utiliza en todas las páginas para redireccionar al home si se encuentra un token jwt proveniente de Firebase
 //Cuando se haya logueado un usuario. En las pantallas que se lo invoque usarán la librería de useRouter de next/navigation
 //para que se pueda usar la función "push" y hacer el redireccionamiento
 export const redirectJwt = (router) => {
@@ -89,4 +97,11 @@ export const redirectJwt = (router) => {
   if (tokenLS === null) {
     router.push("/");
   }
+};
+
+// Esta función evita que al dar varios clics sobre el botón de "crear" cualquier registro
+// añada otro registro. Problema encontrado al guardar un nuevo registro y pulsar doble clic sobre el botón
+//Considerar que el botón de guardado debera tener el atributo id="create"
+export const blockButton = () => {
+  document.getElementById("create").disabled = true;
 };

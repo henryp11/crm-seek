@@ -20,9 +20,14 @@ const CotizaDetailUnif = (props) => {
             <h3 className={styles.itemWrapTittles}>Tipo Vidrio</h3>
             <p>{registerDetail.tipoVidrio}</p>
           </span>
-          <span className={styles.itemWrapFields}>
-            <h3 className={styles.itemWrapTittles}>Total Cotización</h3>
-            <p>
+          <span className={styles.itemWrapFields} style={{ alignItems: "end" }}>
+            <h3
+              className={styles.itemWrapTittles}
+              style={{ textAlign: "right" }}
+            >
+              Total Cotización
+            </h3>
+            <p style={{ textAlign: "right", color: "#c92a2a" }}>
               <b>$ {registerDetail.totalesCotiza?.subTotIva}</b>
             </p>
           </span>
@@ -42,12 +47,12 @@ const CotizaDetailUnif = (props) => {
               <h4>Área</h4>
               <h4>Cantidad</h4>
               <h4>Total Materiales</h4>
-              <h4>Total Mano de Obra</h4>
+              <h4>Total MO</h4>
               <h4>Total Final</h4>
             </div>
             {registerDetail.productos.map((product) => {
               return (
-                <div className={styles.productDetails}>
+                <div className={styles.productDetails} key={product.idItem}>
                   <span>
                     {product.idItem} - {product.nombreProducto}
                   </span>
@@ -57,7 +62,7 @@ const CotizaDetailUnif = (props) => {
                   <span>$ {product.totManoObra}</span>
                   <span>
                     {" "}
-                    <b>$ {product.totalItem}</b>
+                    <b style={{ color: "#c92a2a" }}>$ {product.totalItem}</b>
                   </span>
                 </div>
               );
