@@ -79,7 +79,25 @@ const useInitialState = () => {
 
   //Eliminar documento de cualquier tabla
 
-  const deleteToast = async (table, payload, idDocItem) => {
+  //Este Update actualiza las cotizaciones elegidas al hacer una unifiación el campo "unificado"
+  //Se le pasa como parámetro el id de documento de cada cotización de la colección "Cotizaciones"
+  //Se la usará en el caso de intentar eliminar una cotización unificada para que se actualice ese campo en las cotizaciones usadas
+  const updateCotiza = async (idDocCotiza) => {
+    try {
+      const docRef = doc(db, "Cotizaciones", idDocCotiza); //Me conecto a la BD firebase y busco el registro por su Id
+      await updateDoc(docRef, {
+        cotizaUnif: "",
+        unificado: false,
+      });
+      toast.success(
+        "Las cotizaciones pertenecientes a esta CT Unificada, pueden ser usada en otra cotización unificada"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteToast = async (table, payload, idDocItem, cotizaToUpdate) => {
     //Si se envía el idDocumento de firebase como parámetro al eliminar
     //Se actualiza el campo del producto que se elimino de Recetas para indicar que ya no posee receta
     //Solo se utilizará en esos casos
@@ -88,10 +106,29 @@ const useInitialState = () => {
       await updateDoc(docRef, { haveRecipe: false });
     }
 
+    //esta condición aplica para actualizar el campo de unificado a false en las cotizaciones usadas en una unificación
+    if (table === "CotizacionesUnificadas" && cotizaToUpdate) {
+      //Una vez creada la cotización Unificada, procedo a extraer el id de cada cotización usada
+      const idCotizaToUpdate = cotizaToUpdate.map((cotiza) => {
+        return cotiza.id;
+      });
+
+      //Con el id obtenido de cada una en el array anterior, itero sobre cada resultado para actualizar en la colección de "Cotizaciones" el campo "unificado".
+      idCotizaToUpdate.forEach((idCotiza) => {
+        updateCotiza(idCotiza);
+      });
+    }
+
     await deleteDoc(doc(db, table, payload));
   };
 
-  const deleteDocument = async (payload, table, message, idDocItem) => {
+  const deleteDocument = async (
+    payload,
+    table,
+    message,
+    idDocItem,
+    cotizaToUpdate
+  ) => {
     try {
       toast(
         (t) => (
@@ -113,7 +150,7 @@ const useInitialState = () => {
             <span className="toasterButtons">
               <button
                 onClick={() => {
-                  deleteToast(table, payload, idDocItem);
+                  deleteToast(table, payload, idDocItem, cotizaToUpdate);
                   toast.dismiss(t.id);
                   toast.success("Registro Eliminado!", {
                     style: {

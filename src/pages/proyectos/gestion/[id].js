@@ -22,6 +22,7 @@ const Page = () => {
     nombreProy: "",
     observac: "",
     fechaIni: "",
+    direccion: "",
     estatus: true,
   };
   const [dataClient, setDataClient] = useState(initialState);

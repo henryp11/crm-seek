@@ -31,7 +31,7 @@
   /* GRIDS */
   --grid-column-items: 13% 30% repeat(2, 20%) 15%;
   --grid-column-clients: 10% 35% 15% 25% 10%;
-  --grid-column-proy: 35% 15% 35% 11%;
+  --grid-column-proy: 25% 10% 25% 25% 11%;
   --grid-column-items-modal: 15% 30% repeat(2, 18%) 10%;
   --grid-column-items-col2-modal: 60% 35%;
   --grid-column-items-tablet: 13% repeat(2, 30%) 10% 15%;

@@ -6,7 +6,8 @@ import { redirectJwt } from "../../../helpers/FunctionsHelps";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import Appcontext from "../../../context/AppContext";
-import TableReport from "../../../components/TableReport";
+// import TableReport from "../../../components/TableReport"; // Export con librería antigua export-to-excel
+import TableReportNew from "../../../components/TableReportNew";
 import { db } from "../../../server/firebase"; //Traigo conexión a firebase desde configuración realizada en el archivo firebase.js
 import {
   collection,
@@ -457,7 +458,10 @@ const Page = () => {
             >
               <h3 style={{ color: "#1a73e8" }}>Detalle Cotización:</h3>
               {loadCreate.loading === false && loadCreate.showExport && (
-                <TableReport dataCotiza={valueState} />
+                <>
+                  {/* <TableReport dataCotiza={valueState} /> */}
+                  <TableReportNew dataCotiza={valueState} />
+                </>
               )}
               {valueState.tipoAluminio && valueState.tipoVidrio && (
                 <button

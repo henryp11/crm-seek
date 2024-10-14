@@ -1,4 +1,5 @@
 import React from "react";
+import { redondear } from "../helpers/FunctionsHelps";
 import styles from "../styles/registerDetails.module.css";
 
 const CotizaDetailUnif = (props) => {
@@ -58,11 +59,13 @@ const CotizaDetailUnif = (props) => {
                   </span>
                   <span>{product.area} m²</span>
                   <span>{product.cantidad}</span>
-                  <span>$ {product.totMaterial}</span>
-                  <span>$ {product.totManoObra}</span>
+                  <span>$ {redondear(product.totMaterial, 2)}</span>
+                  <span>$ {redondear(product.totManoObra, 2)}</span>
                   <span>
                     {" "}
-                    <b style={{ color: "#c92a2a" }}>$ {product.totalItem}</b>
+                    <b style={{ color: "#c92a2a" }}>
+                      $ {redondear(product.totalItem, 2)}
+                    </b>
                   </span>
                 </div>
               );

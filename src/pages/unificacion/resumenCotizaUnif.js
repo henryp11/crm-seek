@@ -164,7 +164,9 @@ const ResumenCotizaUnif = () => {
                           deleteDocument(
                             item.id,
                             "CotizacionesUnificadas",
-                            "¿Desea eliminar permanentemente esta cotización unificada?"
+                            "¿Desea eliminar permanentemente esta cotización unificada?",
+                            null,
+                            item.cotizaciones
                           );
                         }}
                       >

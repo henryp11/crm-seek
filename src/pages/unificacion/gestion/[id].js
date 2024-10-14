@@ -273,7 +273,7 @@ const Page = () => {
         toast.dismiss();
       }, 2000);
 
-      //Una vez creada la cotización Unificada, proceso a extraer el id de cada cotización usada
+      //Una vez creada la cotización Unificada, procedo a extraer el id de cada cotización usada
       const cotizaToUpdate = cotizaUsed.map((cotiza) => {
         return cotiza.id;
       });

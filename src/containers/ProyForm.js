@@ -49,6 +49,14 @@ const ProyForm = ({ funCreate, funUpdate, idDoc, data }) => {
             required={true}
           />
           <CustomInput
+            typeInput="text"
+            nameInput="direccion"
+            valueInput={valueState.direccion}
+            onChange={handleChange}
+            nameLabel="Dirección / Ubicación de Proyecto"
+            required={true}
+          />
+          <CustomInput
             typeInput="date"
             nameInput="fechaIni"
             valueInput={valueState.fechaIni}

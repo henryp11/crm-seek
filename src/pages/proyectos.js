@@ -20,7 +20,8 @@ const moduleHeaders = {
   columnTitles: [
     { id: "col1", name: "Nombre Proyecto", show: true },
     { id: "col2", name: "Fecha Inicio", show: true },
-    { id: "col3", name: "Observaciones", show: true },
+    { id: "col3", name: "Dirección / Ubicación", show: true },
+    { id: "col4", name: "Observaciones", show: true },
   ],
 };
 
@@ -94,6 +95,7 @@ const Proyectos = () => {
                 >
                   <span>{item.nombreProy}</span>
                   <span>{item.fechaIni}</span>
+                  <span>{item.direccion}</span>
                   <span>{item.observac}</span>
                   <span className="icons-container">
                     {/* <button
