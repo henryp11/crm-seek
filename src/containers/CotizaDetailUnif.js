@@ -2,6 +2,8 @@ import React from "react";
 import { redondear } from "../helpers/FunctionsHelps";
 import styles from "../styles/registerDetails.module.css";
 
+//Componente que muestra el detalle de los items de cada cotización al momento de visualizarlo en la pantalla de unificación.
+
 const CotizaDetailUnif = (props) => {
   const { openRegister, registerDetail } = props;
 
@@ -49,6 +51,7 @@ const CotizaDetailUnif = (props) => {
               <h4>Cantidad</h4>
               <h4>Total Materiales</h4>
               <h4>Total MO</h4>
+              <h4>Total Otros</h4>
               <h4>Total Final</h4>
             </div>
             {registerDetail.productos.map((product) => {
@@ -61,6 +64,15 @@ const CotizaDetailUnif = (props) => {
                   <span>{product.cantidad}</span>
                   <span>$ {redondear(product.totMaterial, 2)}</span>
                   <span>$ {redondear(product.totManoObra, 2)}</span>
+                  <span>
+                    ${" "}
+                    {redondear(
+                      product.totalItem -
+                        product.totMaterial -
+                        product.totManoObra,
+                      2
+                    )}
+                  </span>
                   <span>
                     {" "}
                     <b style={{ color: "#c92a2a" }}>

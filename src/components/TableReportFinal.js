@@ -172,7 +172,9 @@ const TableReportFinal = ({ dataCotizaUnif, closeModal }) => {
                 </td>
                 <td align="center">m2</td>
                 <td align="center">{item.cantidad}</td>
-                <td align="right">{item.totalItem}</td>
+                <td align="right">
+                  {redondear(item.totalItem / item.cantidad, 3)}
+                </td>
                 <td align="right">{item.totalItem}</td>
               </tr>
             );

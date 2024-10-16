@@ -67,6 +67,8 @@ const Page = () => {
 
   const { query, setQuery, filteredItems } = useSearchSimple(cotizaProyList);
 
+  console.log({ cotizacDelProyElegido: cotizaProyList });
+
   //Estado para cotización unificada
   const [dataCotizaUnif, setDataCotizaUnif] = useState({
     idReg: "",
@@ -346,7 +348,7 @@ const Page = () => {
                 className="containerNewCotiza"
                 title="Cancelar / Regresar"
                 style={{
-                  left: "48%",
+                  left: "50%",
                   background: "#555fc2",
                   padding: "1px",
                   borderRadius: "12px",
@@ -360,7 +362,7 @@ const Page = () => {
                   style={{
                     color: "#9d2020",
                     fontWeight: "bolder",
-                    fontSize: "small",
+                    fontSize: "smaller",
                     borderRadius: "12px",
                   }}
                 >
@@ -370,7 +372,7 @@ const Page = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    style={{ color: "#9d2020" }}
+                    style={{ color: "#9d2020", width: "20px", heigth: "20px" }}
                   >
                     <path
                       strokeLinecap="round"

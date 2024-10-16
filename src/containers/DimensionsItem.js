@@ -333,13 +333,15 @@ const DimensionsItem = ({ itemReceta, tipoAluminio, tipoVidrio }) => {
     setStateItemCotiza({
       ...stateItemCotiza,
       sets: setsFormula,
-      area:
+      area: redondear(
         stateItemCotiza.cantidad *
-        ((stateItemCotiza.dimensiones.anchoA +
-          stateItemCotiza.dimensiones.anchoB) *
-          (stateItemCotiza.dimensiones.alturaI +
-            stateItemCotiza.dimensiones.alturaJ +
-            stateItemCotiza.dimensiones.alturaH)),
+          ((stateItemCotiza.dimensiones.anchoA +
+            stateItemCotiza.dimensiones.anchoB) *
+            (stateItemCotiza.dimensiones.alturaI +
+              stateItemCotiza.dimensiones.alturaJ +
+              stateItemCotiza.dimensiones.alturaH)),
+        2
+      ),
     });
   };
 

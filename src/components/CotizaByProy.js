@@ -5,7 +5,9 @@ import { redondear, addZeroIdCotiza } from "../helpers/FunctionsHelps";
 import CustomInput from "./CustomInput";
 import TableReportFinal from "./TableReportFinal";
 import styles from "../styles/forms.module.css";
-// Modal para crear cotizaciones x proyecto unificando sus cotizaciones de varios tipos en una sola
+// Muestra dentro de la pantalla de unificación, en el lado derecho el resumen de las cotizaciones seleccionadas
+//Para unificación, donde procede a realizar los cálculos para la cotización final, así como mostrar el formulario
+//que guardara la CTU a la base de datos, así como el preview de la tabla de resultados para exportar.
 
 const CotizaByProy = ({
   cotizaciones,
@@ -39,7 +41,15 @@ const CotizaByProy = ({
         </h2>
         {cotizaciones.map((cotiza) => {
           return (
-            <div className={styles.cotizaSelectContainer} key={cotiza.id}>
+            <div
+              className={styles.cotizaSelectContainer}
+              key={cotiza.id}
+              style={{
+                width: "100%",
+                gridTemplateColumns: "7% 15% 16% 16% 16% 16% 10%",
+                gridGap: "0 5px",
+              }}
+            >
               <h4
                 className={styles.componSelectName}
                 style={{
@@ -54,10 +64,10 @@ const CotizaByProy = ({
                 <h5>Tipo:</h5>
                 <span>{cotiza.tipo}</span>
               </div>
-              <div style={{ textAlign: "right" }}>
+              {/* <div style={{ textAlign: "right" }}>
                 <h5>Fecha CT:</h5>
                 <span>{cotiza.fechaElab}</span>
-              </div>
+              </div> */}
               <div style={{ textAlign: "right" }}>
                 <h5>Tot. Mat.:</h5>
                 <span>
@@ -86,6 +96,36 @@ const CotizaByProy = ({
                       .reduce((acumulador, totalMO) => {
                         return acumulador + totalMO;
                       }, 0),
+                    2
+                  )}
+                </span>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <h5>Tot. Otros:</h5>
+                <span>
+                  ${" "}
+                  {redondear(
+                    redondear(cotiza.totalesCotiza.subTotIva, 2) -
+                      redondear(
+                        cotiza.productos
+                          .map(({ totMaterial }) => {
+                            return totMaterial;
+                          })
+                          .reduce((acumulador, totalMat) => {
+                            return acumulador + totalMat;
+                          }, 0),
+                        2
+                      ) -
+                      redondear(
+                        cotiza.productos
+                          .map(({ totManoObra }) => {
+                            return totManoObra;
+                          })
+                          .reduce((acumulador, totalMO) => {
+                            return acumulador + totalMO;
+                          }, 0),
+                        2
+                      ),
                     2
                   )}
                 </span>
@@ -155,6 +195,15 @@ const CotizaByProy = ({
               {finalState.totalFinalCotizaUnif.totalFinalMO}
             </span>
             <span>
+              <h4>Total Otros/Varios:</h4> ${" "}
+              {redondear(
+                finalState.totalFinalCotizaUnif.totalFinal -
+                  finalState.totalFinalCotizaUnif.totalFinalMat -
+                  finalState.totalFinalCotizaUnif.totalFinalMO,
+                2
+              )}
+            </span>
+            <span>
               <h4>Total Cotización Unificada:</h4> ${" "}
               {finalState.totalFinalCotizaUnif.totalFinal}
             </span>
@@ -181,7 +230,6 @@ const CotizaByProy = ({
                 valueInput={finalState.observac}
                 onChange={handleChange}
                 nameLabel="Observaciones"
-                required={true}
               />
             </span>
             <button

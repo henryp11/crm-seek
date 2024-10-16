@@ -127,7 +127,7 @@ de cada registro para  pantallas principales para cada módulo */
 
 .productDetails {
   display: grid;
-  grid-template-columns: 25% repeat(2, 9%) repeat(3, 13%);
+  grid-template-columns: 24% repeat(2, 9%) repeat(4, 13%);
   width: 100%;
   align-items: center;
   justify-content: space-around;
