@@ -57,7 +57,7 @@ const CotizaDetailUnif = (props) => {
                   <span>
                     {product.idItem} - {product.nombreProducto}
                   </span>
-                  <span>{product.area} m²</span>
+                  <span>{redondear(product.area, 2)} m²</span>
                   <span>{product.cantidad}</span>
                   <span>$ {redondear(product.totMaterial, 2)}</span>
                   <span>$ {redondear(product.totManoObra, 2)}</span>

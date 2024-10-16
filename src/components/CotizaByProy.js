@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { redondear, addZeroIdCotiza } from "../helpers/FunctionsHelps";
 import CustomInput from "./CustomInput";
+import TableReportFinal from "./TableReportFinal";
 import styles from "../styles/forms.module.css";
 // Modal para crear cotizaciones x proyecto unificando sus cotizaciones de varios tipos en una sola
 
@@ -16,6 +17,7 @@ const CotizaByProy = ({
   handleSubmit,
   updateLastCode,
 }) => {
+  const [showPreview, setShowPreview] = useState(false);
   return (
     <div
       className="mainContainer"
@@ -25,6 +27,7 @@ const CotizaByProy = ({
         height: "91vh",
         overflowX: "hidden",
         overflowY: "auto",
+        position: "static",
       }}
     >
       <section className={styles.sectionComponSelect} style={{ width: "100%" }}>
@@ -181,8 +184,25 @@ const CotizaByProy = ({
                 required={true}
               />
             </span>
+            <button
+              title="Previsualizar Cotización a exportar"
+              className={styles.formButton}
+              style={{ width: "100%", background: "#396947" }}
+              type="button"
+              onClick={() => {
+                setShowPreview(!showPreview);
+              }}
+            >
+              Previsualizar Cuadro Totales
+            </button>
             <span className={styles.buttonContainer}>
               {/* {state.itemsCotiza.length > 0 && ( */}
+              {showPreview && (
+                <TableReportFinal
+                  dataCotizaUnif={finalState}
+                  closeModal={setShowPreview}
+                />
+              )}
               <button
                 title="Unificar"
                 id="create"
@@ -209,7 +229,6 @@ const CotizaByProy = ({
                 </svg>
               </button>
               {/* )} */}
-
               <button
                 title="Cancelar"
                 className={`${styles.formButton}`}
