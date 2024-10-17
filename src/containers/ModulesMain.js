@@ -5,22 +5,8 @@ const ModulesMain = () => {
   return (
     <section className={styles.containerModGeneral}>
       <ModuleCard
-        name="Productos"
-        descrip="Gestión de todos los items tanto productos a fabricar como materiales y accesorios"
-        icon={
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
-          </svg>
-        }
-        route="/products"
-      />
-      <ModuleCard
-        name="Recetas"
-        descrip="Gestión de recetas de fabricación para productos terminados, controla componentes, accesorios y cantidades"
+        name="Proyectos"
+        descrip="Gestión de Proyectos y vinculación de cotizaciones a un proyecto especifico"
         icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,12 +15,21 @@ const ModulesMain = () => {
           >
             <path
               fillRule="evenodd"
-              d="M10.5 3.798v5.02a3 3 0 01-.879 2.121l-2.377 2.377a9.845 9.845 0 015.091 1.013 8.315 8.315 0 005.713.636l.285-.071-3.954-3.955a3 3 0 01-.879-2.121v-5.02a23.614 23.614 0 00-3 0zm4.5.138a.75.75 0 00.093-1.495A24.837 24.837 0 0012 2.25a25.048 25.048 0 00-3.093.191A.75.75 0 009 3.936v4.882a1.5 1.5 0 01-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0115 8.818V3.936z"
+              d="M17.663 3.118c.225.015.45.032.673.05C19.876 3.298 21 4.604 21 6.109v9.642a3 3 0 01-3 3V16.5c0-5.922-4.576-10.775-10.384-11.217.324-1.132 1.3-2.01 2.548-2.114.224-.019.448-.036.673-.051A3 3 0 0113.5 1.5H15a3 3 0 012.663 1.618zM12 4.5A1.5 1.5 0 0113.5 3H15a1.5 1.5 0 011.5 1.5H12z"
               clipRule="evenodd"
             />
+            <path d="M3 8.625c0-1.036.84-1.875 1.875-1.875h.375A3.75 3.75 0 019 10.5v1.875c0 1.036.84 1.875 1.875 1.875h1.875A3.75 3.75 0 0116.5 18v2.625c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625v-12z" />
+            <path d="M10.5 10.5a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963 5.23 5.23 0 00-3.434-1.279h-1.875a.375.375 0 01-.375-.375V10.5z" />
           </svg>
         }
-        route="/recetas"
+        route="/proyectos"
+        options={[
+          { name: "Gestión Proyectos", route: "/proyectos" },
+          {
+            name: "Resumen Cotizaciones x Proyecto",
+            route: "/unificacion/resumenCotizaUnif",
+          },
+        ]}
       />
       <ModuleCard
         name="Clientes"
@@ -74,10 +69,32 @@ const ModulesMain = () => {
           </svg>
         }
         route="/cotiza"
+        options={[
+          { name: "Crear Cotizaciones", route: "/cotiza" },
+          { name: "Unificar Cotizaciones x Proyectos", route: "/unificacion" },
+          {
+            name: "Resumen Cotizaciones x Proyecto",
+            route: "/unificacion/resumenCotizaUnif",
+          },
+        ]}
       />
       <ModuleCard
-        name="Proyectos"
-        descrip="Gestión de Proyectos y vinculación de cotizaciones a un proyecto especifico"
+        name="Productos"
+        descrip="Gestión de todos los items tanto productos a fabricar como materiales y accesorios"
+        icon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
+          </svg>
+        }
+        route="/products"
+      />
+      <ModuleCard
+        name="Recetas"
+        descrip="Gestión de recetas de fabricación para productos terminados, controla componentes, accesorios y cantidades"
         icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -86,22 +103,12 @@ const ModulesMain = () => {
           >
             <path
               fillRule="evenodd"
-              d="M17.663 3.118c.225.015.45.032.673.05C19.876 3.298 21 4.604 21 6.109v9.642a3 3 0 01-3 3V16.5c0-5.922-4.576-10.775-10.384-11.217.324-1.132 1.3-2.01 2.548-2.114.224-.019.448-.036.673-.051A3 3 0 0113.5 1.5H15a3 3 0 012.663 1.618zM12 4.5A1.5 1.5 0 0113.5 3H15a1.5 1.5 0 011.5 1.5H12z"
+              d="M10.5 3.798v5.02a3 3 0 01-.879 2.121l-2.377 2.377a9.845 9.845 0 015.091 1.013 8.315 8.315 0 005.713.636l.285-.071-3.954-3.955a3 3 0 01-.879-2.121v-5.02a23.614 23.614 0 00-3 0zm4.5.138a.75.75 0 00.093-1.495A24.837 24.837 0 0012 2.25a25.048 25.048 0 00-3.093.191A.75.75 0 009 3.936v4.882a1.5 1.5 0 01-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0115 8.818V3.936z"
               clipRule="evenodd"
             />
-            <path d="M3 8.625c0-1.036.84-1.875 1.875-1.875h.375A3.75 3.75 0 019 10.5v1.875c0 1.036.84 1.875 1.875 1.875h1.875A3.75 3.75 0 0116.5 18v2.625c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625v-12z" />
-            <path d="M10.5 10.5a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963 5.23 5.23 0 00-3.434-1.279h-1.875a.375.375 0 01-.375-.375V10.5z" />
           </svg>
         }
-        route="/proyectos"
-        options={[
-          { name: "Gestión Proyectos", route: "/proyectos" },
-          { name: "Unificar Cotizaciones", route: "/unificacion" },
-          {
-            name: "Resumen Cotizaciones x Proyecto",
-            route: "/unificacion/resumenCotizaUnif",
-          },
-        ]}
+        route="/recetas"
       />
       <ModuleCard
         name="Administración"

@@ -81,7 +81,13 @@ const Page = () => {
     estatus: true,
     productos: [],
     proyectoCotiza: "",
-    totalesCotiza: { ivaTotal: 0, subTotIva: 0, subTotIva0: 0, totalDcto: 0 },
+    factor: 1.25,
+    totalesCotiza: {
+      ivaTotal: 0,
+      subTotIva: 0,
+      subTotIva0: 0,
+      totalDcto: 0,
+    },
   };
 
   const [valueState, setValueState] = useState(initialState);
@@ -323,7 +329,7 @@ const Page = () => {
 
   console.log(valueState);
   console.log(state);
-  console.log(itemVidrioList);
+  // console.log(itemVidrioList);
 
   return (
     <>
@@ -348,7 +354,7 @@ const Page = () => {
           >
             <span
               className={styles.idField}
-              style={{ gridTemplateColumns: "70% 20%" }}
+              style={{ gridTemplateColumns: "65% 20% 11%" }}
             >
               <span className={styles.selectContainer}>
                 <b>* Cliente:</b>
@@ -383,6 +389,13 @@ const Page = () => {
                 onChange={handleChange}
                 nameLabel="Fecha Elaboración"
                 required={true}
+              />
+              <CustomInput
+                typeInput="number"
+                nameInput="factor"
+                valueInput={valueState.factor}
+                onChange={handleChange}
+                nameLabel="Factor Venta"
               />
             </span>
             <span className={styles.containerAgrupFields}>
@@ -595,6 +608,8 @@ const Page = () => {
                     justifySelf: "flex-end",
                     margin: "0 10px",
                     borderRadius: "12px",
+                    flexDirection: "column",
+                    gap: "4px",
                   }}
                 >
                   <h2
@@ -605,17 +620,52 @@ const Page = () => {
                       flexWrap: "wrap",
                       textAlign: "end",
                       width: "100%",
+                      borderBottom: "1px solid white",
                     }}
                   >
-                    Total Global cotización:
+                    Sub-Total Cotización:
                     <b
-                      style={{ color: "white", fontWeight: "500" }}
+                      style={{ color: "white", fontWeight: "300" }}
                     >{`${redondear(state.totalesCotiza.subTotIva, 2)} $`}</b>
+                  </h2>
+                  <h2
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      textAlign: "end",
+                      width: "100%",
+                      borderBottom: "1px solid white",
+                    }}
+                  >
+                    Factor Venta:
+                    <b
+                      style={{ color: "white", fontWeight: "300" }}
+                    >{`${redondear(valueState.factor, 2)}`}</b>
+                  </h2>
+                  <h2
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      textAlign: "end",
+                      width: "100%",
+                    }}
+                  >
+                    Total Final Cotización:
+                    <b
+                      style={{ color: "white", fontWeight: "700" }}
+                    >{`${redondear(
+                      state.totalesCotiza.subTotIva * valueState.factor,
+                      2
+                    )} $`}</b>
                   </h2>
                 </span>
               </span>
             )}
-            {!loadCreate.confirmSave && (
+            {!loadCreate.confirmSave ? (
               <span className={styles.buttonContainer}>
                 {state.itemsCotiza.length > 0 && (
                   <button
@@ -692,6 +742,8 @@ const Page = () => {
                   </Link>
                 </button>
               </span>
+            ) : (
+              <span style={{ height: "50px", width: "50px" }}>-</span>
             )}
           </form>
         ) : (
